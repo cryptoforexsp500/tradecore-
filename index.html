@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>TradeCore — Tvoj Trading Hub</title>
+<style>
+:root{
+  --bg:#06080f;--bg2:#080c16;--bg3:#0a0e1a;
+  --border:#141c30;--border2:#1e2a45;
+  --text:#8899cc;--text2:#5a6a99;--text3:#2a3a5a;
+  --blue:#4a7aff;--green:#00e87a;--red:#ff4455;
+  --amber:#f0a500;--purple:#7b68ee;
+  --blue-dim:rgba(74,122,255,0.08);
+  --green-dim:rgba(0,232,122,0.07);
+  --red-dim:rgba(255,68,85,0.07);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Courier New',monospace;background:var(--bg);color:var(--text);font-size:11px}
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-thumb{background:#1a2040}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+@keyframes scan{0%{transform:translateY(-100%)}100%{transform:translateY(100vh)}}
+
+/* ── TOPBAR ── */
+#topbar{
+  background:var(--bg2);border-bottom:1px solid var(--border);
+  height:44px;display:flex;align-items:center;padding:0 16px;gap:0;
+  position:relative;z-index:100;flex-shrink:0;
+}
+.logo{color:var(--blue);font-size:14px;font-weight:bold;letter-spacing:.25em;margin-right:24px;white-space:nowrap}
+.logo span{color:var(--green)}
+.nav-tabs{display:flex;gap:0;height:100%;align-items:stretch}
+.tab{
+  padding:0 16px;display:flex;align-items:center;gap:6px;
+  color:var(--text3);font-size:10px;letter-spacing:.12em;
+  border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;
+  transition:color .2s,border-color .2s;border-right:1px solid var(--border);
+}
+.tab:hover{color:var(--text);background:var(--blue-dim)}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue);background:var(--blue-dim)}
+.tab .dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+.tab-live .dot{animation:pulse 1.5s infinite}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+#clock{color:var(--text3);font-size:10px;letter-spacing:.1em}
+#mkt-badge{font-size:9px;padding:2px 8px;border:1px solid var(--border2);letter-spacing:.1em}
+
+/* ── LAYOUT ── */
+#app{display:flex;flex-direction:column;height:100vh}
+#content{flex:1;overflow:hidden;position:relative}
+.page{position:absolute;inset:0;overflow-y:auto;display:none;animation:fadeIn .2s ease}
+.page.active{display:block}
+
+/* ── SHARED COMPONENTS ── */
+.section-hdr{
+  background:var(--bg2);border-bottom:1px solid var(--border);
+  padding:8px 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  position:sticky;top:0;z-index:10;
+}
+.section-title{color:var(--blue);font-size:11px;letter-spacing:.2em;font-weight:bold}
+select,input[type=text]{
+  background:var(--bg3);border:1px solid var(--border2);color:var(--text);
+  padding:2px 6px;font-size:10px;font-family:inherit;outline:none;
+}
+select:focus,input:focus{border-color:var(--blue)}
+.btn{background:none;border:1px solid var(--border2);color:var(--text);padding:2px 8px;font-size:10px;font-family:inherit;cursor:pointer}
+.btn:hover{border-color:var(--blue);color:var(--blue)}
+.btn-primary{border-color:var(--blue);color:var(--blue)}
+.btn-primary:hover{background:var(--blue-dim)}
+.prog-wrap{display:none;align-items:center;gap:5px}
+.prog-track{width:80px;height:2px;background:#0a0e1a;border-radius:1px;overflow:hidden}
+.prog-fill{height:100%;transition:width .2s}
+
+/* scanner table */
+.scan-grid{display:grid;grid-template-columns:1fr 230px;height:100%}
+.scan-table-wrap{overflow-y:auto}
+.scan-table{width:100%;border-collapse:collapse}
+.scan-table thead th{
+  position:sticky;top:0;background:#050810;z-index:2;
+  color:var(--text3);font-size:9px;letter-spacing:.12em;font-weight:normal;
+  padding:5px 7px;border-bottom:1px solid var(--border);text-align:left;white-space:nowrap;
+}
+.scan-table th.r,.scan-table td.r{text-align:right}
+.scan-table tbody tr{border-bottom:1px solid #090d18}
+.scan-table tbody td{padding:4px 7px;vertical-align:middle}
+.scan-sidebar{background:var(--bg2);border-left:1px solid var(--border);padding:10px;overflow-y:auto}
+.sb-title{color:var(--text3);font-size:9px;letter-spacing:.2em;margin-bottom:6px;border-bottom:1px solid var(--border);padding-bottom:3px;display:flex;justify-content:space-between;align-items:center}
+.sb-stat{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #060910;font-size:10px}
+.acard{padding:7px 8px;margin-bottom:4px;animation:fadeIn .3s ease}
+.bc{background:var(--green-dim);border:1px solid #0a4a2a;border-left:2px solid var(--green)}
+.rc{background:var(--red-dim);border:1px solid #4a1020;border-left:2px solid var(--red)}
+.bb{display:inline-block;padding:1px 5px;font-size:9px;font-weight:bold}
+.bull2{background:rgba(0,232,122,.12);color:var(--green);border:1px solid #0a5a2a}
+.bear2{background:rgba(255,68,85,.12);color:var(--red);border:1px solid #5a0a1a}
+.bull1{background:rgba(0,150,80,.07);color:#00aa55;border:1px solid #083010}
+.bear1{background:rgba(180,40,60,.07);color:#cc3344;border:1px solid #3a0810}
+.pbar{height:3px;border-radius:2px;overflow:hidden;width:55px;background:var(--bg3);display:inline-block;vertical-align:middle}
+.pfill{height:100%;transition:width .5s}
+.banner{padding:4px 14px;font-size:10px;font-weight:bold;display:none;flex-shrink:0}
+.b-bull{background:rgba(0,200,100,.07);border-bottom:1px solid #0a4a2a;color:var(--green)}
+.b-bear{background:rgba(200,50,50,.07);border-bottom:1px solid #4a0a1a;color:var(--red)}
+.b-err{background:rgba(200,120,0,.08);border-bottom:1px solid #5a3a00;color:#ffaa44;display:none;padding:5px 14px;font-size:10px}
+
+/* ── DASHBOARD / HOME ── */
+#page-home{background:var(--bg)}
+.home-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:auto auto 1fr;gap:1px;background:var(--border);height:calc(100vh - 44px)}
+.home-cell{background:var(--bg);padding:16px;overflow:hidden}
+.hc-label{color:var(--text3);font-size:9px;letter-spacing:.2em;margin-bottom:8px}
+.hc-val{font-size:22px;font-weight:bold;letter-spacing:.05em}
+.hc-sub{font-size:9px;color:var(--text3);margin-top:3px}
+.ticker-wrap{overflow:hidden;white-space:nowrap;border-bottom:1px solid var(--border);padding:4px 0;background:var(--bg2)}
+.ticker-inner{display:inline-flex;gap:24px;animation:ticker 40s linear infinite}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.tick-item{font-size:10px;white-space:nowrap}
+.home-feed{grid-column:1/-1;padding:0;overflow-y:auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border)}
+.feed-col{background:var(--bg);padding:14px;overflow-y:auto}
+.feed-title{color:var(--blue);font-size:10px;letter-spacing:.15em;margin-bottom:10px;border-bottom:1px solid var(--border);padding-bottom:5px}
+
+/* ── STRATEGIES ── */
+.strat-grid{display:grid;grid-template-columns:240px 1fr;height:calc(100vh - 44px)}
+.strat-list{background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto}
+.strat-item{padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s}
+.strat-item:hover{background:var(--blue-dim)}
+.strat-item.active{background:var(--blue-dim);border-left:2px solid var(--blue)}
+.strat-item .si-name{color:var(--text);font-size:11px;font-weight:bold;margin-bottom:2px}
+.strat-item .si-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
+.tag{font-size:8px;padding:1px 5px;border:1px solid var(--border2);color:var(--text3);letter-spacing:.08em}
+.tag.bull{border-color:#0a4a2a;color:var(--green)}
+.tag.bear{border-color:#4a0a1a;color:var(--red)}
+.tag.neutral{border-color:#3a4a00;color:var(--amber)}
+.strat-content{padding:20px 28px;overflow-y:auto}
+.sc-title{font-size:16px;color:var(--text);font-weight:bold;margin-bottom:6px}
+.sc-meta{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.sc-badge{font-size:9px;padding:2px 8px;border:1px solid var(--border2);color:var(--text2);letter-spacing:.1em}
+.sc-body{color:var(--text2);line-height:1.9;font-size:11px}
+.sc-body h3{color:var(--blue);font-size:10px;letter-spacing:.15em;margin:14px 0 6px;border-bottom:1px solid var(--border);padding-bottom:3px}
+.sc-body p{margin-bottom:8px}
+.sc-body ul{margin:6px 0 10px 16px}
+.sc-body li{margin-bottom:4px;color:var(--text2)}
+.rule-box{background:var(--bg2);border:1px solid var(--border2);border-left:2px solid var(--blue);padding:10px 14px;margin:10px 0;font-size:10px;color:var(--text)}
+.rule-box.green{border-left-color:var(--green)}
+.rule-box.red{border-left-color:var(--red)}
+.chart-placeholder{background:var(--bg2);border:1px solid var(--border);height:160px;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:9px;letter-spacing:.15em;margin:12px 0;position:relative;overflow:hidden}
+.chart-placeholder canvas{position:absolute;inset:0}
+
+/* ── AFFILIATE ── */
+.aff-layout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);min-height:calc(100vh - 44px)}
+.aff-cell{background:var(--bg);padding:0}
+.aff-head{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 14px;font-size:10px;color:var(--blue);letter-spacing:.15em}
+.aff-inner{padding:14px;overflow-y:auto;height:calc(100vh - 88px)}
+.aff-card{background:var(--bg2);border:1px solid var(--border);padding:12px;margin-bottom:8px;cursor:pointer;transition:border-color .2s}
+.aff-card:hover{border-color:var(--blue-dim)}
+.aff-card .ac-name{font-size:12px;color:var(--text);font-weight:bold;margin-bottom:4px}
+.aff-card .ac-comm{font-size:10px;color:var(--green);margin-bottom:4px}
+.aff-card .ac-desc{font-size:10px;color:var(--text2);line-height:1.7}
+.aff-card .ac-link{display:inline-block;margin-top:6px;font-size:9px;color:var(--blue);border:1px solid var(--border2);padding:1px 7px;text-decoration:none}
+.aff-card .ac-link:hover{background:var(--blue-dim)}
+.stats-row{display:flex;gap:1px;background:var(--border);margin-bottom:1px}
+.stat-box{background:var(--bg2);flex:1;padding:12px 14px}
+.stat-box .sv{font-size:20px;font-weight:bold;color:var(--green);letter-spacing:.05em}
+.stat-box .sl{font-size:9px;color:var(--text3);margin-top:2px;letter-spacing:.1em}
+
+/* ── FORUM ── */
+.forum-layout{display:grid;grid-template-columns:220px 1fr;height:calc(100vh - 44px)}
+.forum-cats{background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto;padding:10px 0}
+.cat-item{padding:8px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s}
+.cat-item:hover{background:var(--blue-dim)}
+.cat-item.active{background:var(--blue-dim);border-left:2px solid var(--blue)}
+.cat-item .ci-name{color:var(--text);font-size:10px;font-weight:bold}
+.cat-item .ci-count{font-size:9px;color:var(--text3);margin-top:2px}
+.forum-main{display:flex;flex-direction:column;overflow:hidden}
+.forum-toolbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:8px 14px;display:flex;align-items:center;gap:8px}
+.forum-threads{flex:1;overflow-y:auto}
+.thread-item{padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;display:grid;grid-template-columns:1fr auto}
+.thread-item:hover{background:var(--blue-dim)}
+.ti-title{font-size:11px;color:var(--text);font-weight:bold;margin-bottom:3px}
+.ti-meta{font-size:9px;color:var(--text3)}
+.ti-stats{text-align:right;font-size:9px;color:var(--text3);padding-left:12px}
+.ti-hot{color:var(--red);font-size:9px}
+/* Thread view */
+.thread-view{display:none;flex-direction:column;height:100%}
+.thread-view.open{display:flex}
+.thread-list-view{display:flex;flex-direction:column;height:100%}
+.thread-list-view.hidden{display:none}
+.post-item{padding:12px 14px;border-bottom:1px solid var(--border);animation:fadeIn .2s ease}
+.post-author{font-size:9px;color:var(--blue);margin-bottom:5px;display:flex;align-items:center;gap:8px}
+.post-rank{font-size:8px;padding:0px 5px;border:1px solid var(--border2);color:var(--text3)}
+.post-body{font-size:11px;color:var(--text);line-height:1.8}
+.post-footer{margin-top:6px;display:flex;gap:10px;font-size:9px;color:var(--text3)}
+.reply-box{background:var(--bg2);border-top:1px solid var(--border);padding:10px 14px;flex-shrink:0}
+textarea{background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:7px;font-family:inherit;font-size:11px;width:100%;resize:none;outline:none;line-height:1.7}
+textarea:focus{border-color:var(--blue)}
+
+/* scan page structure */
+.scan-page{display:flex;flex-direction:column;height:calc(100vh - 44px)}
+.scan-banners{flex-shrink:0}
+.scan-body{flex:1;overflow:hidden;display:grid;grid-template-columns:1fr 230px}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- TOPBAR -->
+<div id="topbar">
+  <div class="logo">TRADE<span>CORE</span></div>
+  <div class="nav-tabs">
+    <div class="tab active" onclick="nav('home')" id="t-home"><span class="dot"></span>HOME</div>
+    <div class="tab tab-live" onclick="nav('crypto')" id="t-crypto"><span class="dot" style="background:var(--green)"></span>CRYPTO</div>
+    <div class="tab tab-live" onclick="nav('sp500')" id="t-sp500"><span class="dot" style="background:var(--amber)"></span>S&amp;P 500</div>
+    <div class="tab" onclick="nav('strat')" id="t-strat"><span class="dot"></span>STRATEGIJE</div>
+    <div class="tab" onclick="nav('aff')" id="t-aff"><span class="dot"></span>AFFILIATE</div>
+    <div class="tab" onclick="nav('forum')" id="t-forum"><span class="dot"></span>FORUM</div>
+  </div>
+  <div class="topbar-right">
+    <div id="mkt-badge">● ZAPRT</div>
+    <div id="clock">--:--:--</div>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div id="content">
+
+<!-- ═══════════════════════════════════ HOME ═══════════════════════════════════ -->
+<div class="page active" id="page-home">
+  <!-- Ticker -->
+  <div class="ticker-wrap">
+    <div class="ticker-inner" id="ticker-inner">
+      <span class="tick-item" style="color:var(--text3)">LOADING TICKERS...</span>
+    </div>
+  </div>
+  <div class="home-grid">
+    <!-- Stat cards -->
+    <div class="home-cell" style="border-bottom:1px solid var(--border)">
+      <div class="hc-label">CRYPTO BULL DIV</div>
+      <div class="hc-val" id="hm-cbull" style="color:var(--green)">—</div>
+      <div class="hc-sub">aktivnih signalov · 5min RSI</div>
+    </div>
+    <div class="home-cell" style="border-bottom:1px solid var(--border);border-left:1px solid var(--border)">
+      <div class="hc-label">S&amp;P 500 BULL DIV</div>
+      <div class="hc-val" id="hm-sbull" style="color:var(--amber)">—</div>
+      <div class="hc-sub">aktivnih signalov · 5min RSI</div>
+    </div>
+    <div class="home-cell" style="border-bottom:1px solid var(--border);border-left:1px solid var(--border)">
+      <div class="hc-label">SKUPAJ SIGNALOV</div>
+      <div class="hc-val" id="hm-total" style="color:var(--blue)">—</div>
+      <div class="hc-sub">bull + bear · zadnjih 60 min</div>
+    </div>
+    <!-- Feed columns -->
+    <div class="home-cell feed-col" style="border-top:1px solid var(--border)">
+      <div class="feed-title">⚡ ZADNJI SIGNALI</div>
+      <div id="hm-feed-signals" style="font-size:10px;color:var(--text3);line-height:2.2">Čakam na podatke...</div>
+    </div>
+    <div class="home-cell feed-col" style="border-left:1px solid var(--border);border-top:1px solid var(--border)">
+      <div class="feed-title">📋 STRATEGIJA DNEVA</div>
+      <div style="font-size:10px;color:var(--text2);line-height:1.9">
+        <div style="color:var(--green);font-size:11px;font-weight:bold;margin-bottom:6px">RSI Bullish Divergence</div>
+        <div style="color:var(--text3);margin-bottom:8px">Iščemo: cena naredi nižji low, RSI naredi višji low.</div>
+        <div class="rule-box green" style="font-size:9px">ENTRY: Ko RSI preseže 30 po divergenci</div>
+        <div class="rule-box red" style="font-size:9px;margin-top:4px">STOP: 1% pod zadnjim lowom</div>
+        <div class="rule-box" style="font-size:9px;margin-top:4px">TARGET: R:R = 1:2 minimum</div>
+        <div style="margin-top:8px"><a onclick="nav('strat')" style="color:var(--blue);cursor:pointer;font-size:9px">→ VEČ STRATEGIJ</a></div>
+      </div>
+    </div>
+    <div class="home-cell feed-col" style="border-left:1px solid var(--border);border-top:1px solid var(--border)">
+      <div class="feed-title">💰 AFFILIATE TOP</div>
+      <div id="hm-aff-top" style="font-size:10px;color:var(--text2);line-height:1.9">
+        <div style="margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)">
+          <div style="color:var(--text);font-weight:bold">Binance</div>
+          <div style="color:var(--green);font-size:9px">20% komisija · spot + futures</div>
+          <a onclick="nav('aff')" style="color:var(--blue);cursor:pointer;font-size:9px">→ POGLEJ</a>
+        </div>
+        <div style="margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)">
+          <div style="color:var(--text);font-weight:bold">TradingView</div>
+          <div style="color:var(--green);font-size:9px">30% komisija · recurring</div>
+          <a onclick="nav('aff')" style="color:var(--blue);cursor:pointer;font-size:9px">→ POGLEJ</a>
+        </div>
+        <div>
+          <div style="color:var(--text);font-weight:bold">Interactive Brokers</div>
+          <div style="color:var(--green);font-size:9px">do $200 po referalu</div>
+          <a onclick="nav('aff')" style="color:var(--blue);cursor:pointer;font-size:9px">→ POGLEJ</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ CRYPTO SCANNER ═══════════════════════════════════ -->
+<div class="page" id="page-crypto">
+  <div class="scan-page">
+    <div class="section-hdr">
+      <span class="section-title">◈ CRYPTO RSI DIV</span>
+      <span style="color:var(--text3);font-size:9px">BINANCE · 5MIN · RSI14+MA14</span>
+      <div style="background:var(--bg3);padding:2px 7px;border:1px solid var(--border2);font-size:10px;display:flex;gap:8px">
+        <span style="color:var(--purple)">RSI 14</span><span style="color:var(--amber)">MA 14</span>
+      </div>
+      <div class="prog-wrap" id="cr-pw">
+        <div class="prog-track"><div class="prog-fill" id="cr-pf" style="width:0%;background:var(--green)"></div></div>
+        <span id="cr-pt" style="color:var(--text3);font-size:9px">0%</span>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:5px;align-items:center;flex-wrap:wrap">
+        <input id="cr-search" placeholder="BTC..." oninput="crGo()" style="width:65px"/>
+        <select id="cr-filter" onchange="crGo()">
+          <option value="all">Vsi</option>
+          <option value="bull">▲ Bullish</option>
+          <option value="bear">▼ Bearish</option>
+          <option value="any">↕ Div</option>
+          <option value="low">RSI &lt;30</option>
+        </select>
+        <select id="cr-srt" onchange="crGo()">
+          <option value="div">Divergenca</option>
+          <option value="str">Moč</option>
+          <option value="rsi">RSI ↑</option>
+          <option value="chg">% ↓</option>
+        </select>
+        <button class="btn" id="cr-snd" onclick="crToggleSnd()" style="color:var(--green)">♪</button>
+        <button class="btn btn-primary" id="cr-rb" onclick="crFetchAll()">↻ <span id="cr-cd">60s</span></button>
+      </div>
+    </div>
+    <div class="scan-banners">
+      <div class="banner b-bull" id="cr-bb">▲ BULL: <span id="cr-bbt"></span></div>
+      <div class="banner b-bear" id="cr-br">▼ BEAR: <span id="cr-brt"></span></div>
+      <div class="b-err" id="cr-err"></div>
+    </div>
+    <div class="scan-body">
+      <div class="scan-table-wrap">
+        <table class="scan-table">
+          <thead><tr>
+            <th>#</th><th>PAR</th><th>DIVERGENCA</th>
+            <th><span style="color:var(--purple)">RSI</span></th>
+            <th><span style="color:var(--amber)">MA</span></th>
+            <th class="r">CENA</th><th class="r">5M%</th><th class="r">MOČ</th>
+          </tr></thead>
+          <tbody id="cr-tb"></tbody>
+        </table>
+      </div>
+      <div class="scan-sidebar">
+        <div class="sb-title">SIGNAL LOG <button onclick="crAlerts=[];crRenderLog()" style="background:none;border:none;color:var(--text3);font-size:9px;cursor:pointer">X</button></div>
+        <div id="cr-log"><div style="color:var(--text3);font-size:10px;line-height:2.2">Čakam...</div></div>
+        <div style="margin-top:10px;border-top:1px solid var(--border);padding-top:8px">
+          <div style="color:var(--text3);font-size:9px;letter-spacing:.1em;margin-bottom:5px">STATISTIKA</div>
+          <div class="sb-stat"><span>Naloženih</span><span id="cr-sl" style="color:var(--blue)">0/100</span></div>
+          <div class="sb-stat"><span>▲ Bullish</span><span id="cr-sb" style="color:var(--text3)">0</span></div>
+          <div class="sb-stat"><span>▼ Bearish</span><span id="cr-sr" style="color:var(--text3)">0</span></div>
+          <div class="sb-stat"><span>~ Šibke</span><span id="cr-sw" style="color:var(--text3)">0</span></div>
+          <div class="sb-stat"><span>RSI &lt;30</span><span id="cr-so" style="color:var(--text3)">0</span></div>
+        </div>
+        <div style="margin-top:8px;border-top:1px solid var(--border);padding-top:8px;font-size:9px;color:var(--text3);line-height:2.2">
+          Pivot LB: 5 · Min ΔRSI: 3<br>Lookback: 50 · Refresh: 60s
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ SP500 SCANNER ═══════════════════════════════════ -->
+<div class="page" id="page-sp500">
+  <div class="scan-page">
+    <div class="section-hdr">
+      <span class="section-title">◈ S&amp;P 500 RSI DIV</span>
+      <span style="color:var(--text3);font-size:9px">YAHOO · 5MIN · RSI14+MA14</span>
+      <div style="background:var(--bg3);padding:2px 7px;border:1px solid var(--border2);font-size:10px;display:flex;gap:8px">
+        <span style="color:var(--purple)">RSI 14</span><span style="color:var(--amber)">MA 14</span>
+      </div>
+      <div class="prog-wrap" id="sp-pw">
+        <div class="prog-track"><div class="prog-fill" id="sp-pf" style="width:0%;background:var(--amber)"></div></div>
+        <span id="sp-pt" style="color:var(--text3);font-size:9px">0%</span>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:5px;align-items:center;flex-wrap:wrap">
+        <input id="sp-search" placeholder="AAPL..." oninput="spGo()" style="width:65px"/>
+        <select id="sp-filter" onchange="spGo()">
+          <option value="all">Vsi</option>
+          <option value="bull">▲ Bullish</option>
+          <option value="bear">▼ Bearish</option>
+          <option value="any">↕ Div</option>
+          <option value="low">RSI &lt;35</option>
+        </select>
+        <select id="sp-sec" onchange="spGo()">
+          <option value="all">Vsi sektorji</option>
+          <option value="Tech">Tech</option>
+          <option value="Health">Health</option>
+          <option value="Finance">Finance</option>
+          <option value="Energy">Energy</option>
+          <option value="Consumer">Consumer</option>
+          <option value="Indust">Indust</option>
+        </select>
+        <select id="sp-srt" onchange="spGo()">
+          <option value="div">Divergenca</option>
+          <option value="str">Moč</option>
+          <option value="rsi">RSI ↑</option>
+          <option value="chg">% ↓</option>
+        </select>
+        <button class="btn" id="sp-snd" onclick="spToggleSnd()" style="color:var(--green)">♪</button>
+        <button class="btn" style="color:var(--amber);border-color:var(--amber)" id="sp-rb" onclick="spFetchAll()">↻ <span id="sp-cd">5m0s</span></button>
+      </div>
+    </div>
+    <div class="scan-banners">
+      <div class="banner b-bull" id="sp-bb">▲ BULL: <span id="sp-bbt"></span></div>
+      <div class="banner b-bear" id="sp-br">▼ BEAR: <span id="sp-brt"></span></div>
+      <div class="b-err" id="sp-err"></div>
+    </div>
+    <div class="scan-body">
+      <div class="scan-table-wrap">
+        <table class="scan-table">
+          <thead><tr>
+            <th>#</th><th>DELNICA</th><th>SEKTOR</th><th>DIVERGENCA</th>
+            <th><span style="color:var(--purple)">RSI</span></th>
+            <th><span style="color:var(--amber)">MA</span></th>
+            <th class="r">CENA</th><th class="r">5M%</th><th class="r">MOČ</th>
+          </tr></thead>
+          <tbody id="sp-tb"></tbody>
+        </table>
+      </div>
+      <div class="scan-sidebar">
+        <div class="sb-title">SIGNAL LOG <button onclick="spAlerts=[];spRenderLog()" style="background:none;border:none;color:var(--text3);font-size:9px;cursor:pointer">X</button></div>
+        <div id="sp-log"><div style="color:var(--text3);font-size:10px;line-height:2.2">Čakam...</div></div>
+        <div style="margin-top:10px;border-top:1px solid var(--border);padding-top:8px">
+          <div style="color:var(--text3);font-size:9px;letter-spacing:.1em;margin-bottom:5px">STATISTIKA</div>
+          <div class="sb-stat"><span>Naloženih</span><span id="sp-sl" style="color:var(--amber)">0/100</span></div>
+          <div class="sb-stat"><span>▲ Bullish</span><span id="sp-sb" style="color:var(--text3)">0</span></div>
+          <div class="sb-stat"><span>▼ Bearish</span><span id="sp-sr" style="color:var(--text3)">0</span></div>
+          <div class="sb-stat"><span>~ Šibke</span><span id="sp-sw" style="color:var(--text3)">0</span></div>
+          <div class="sb-stat"><span>RSI &lt;35</span><span id="sp-so" style="color:var(--text3)">0</span></div>
+        </div>
+        <div style="margin-top:8px;border-top:1px solid var(--border);padding-top:8px;font-size:9px;color:var(--text3);line-height:2.2">
+          Pivot LB: 5 · Min ΔRSI: 3<br>Refresh: 5 min · Yahoo Finance
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ STRATEGIJE ═══════════════════════════════════ -->
+<div class="page" id="page-strat">
+  <div class="strat-grid">
+    <div class="strat-list" id="strat-list"></div>
+    <div class="strat-content" id="strat-content"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ AFFILIATE ═══════════════════════════════════ -->
+<div class="page" id="page-aff">
+  <div class="stats-row">
+    <div class="stat-box"><div class="sv" id="aff-total">—</div><div class="sl">SKUPAJ PROGRAMOV</div></div>
+    <div class="stat-box"><div class="sv" style="color:var(--amber)" id="aff-avg">—</div><div class="sl">POVP. KOMISIJA</div></div>
+    <div class="stat-box"><div class="sv" style="color:var(--purple)">RECURRING</div><div class="sl">NAJBOLJŠI TIP</div></div>
+    <div class="stat-box"><div class="sv" style="color:var(--blue)">30%</div><div class="sl">MAX KOMISIJA</div></div>
+  </div>
+  <div class="aff-layout" id="aff-layout"></div>
+</div>
+
+<!-- ═══════════════════════════════════ FORUM ═══════════════════════════════════ -->
+<div class="page" id="page-forum">
+  <div class="forum-layout">
+    <div class="forum-cats" id="forum-cats"></div>
+    <div class="forum-main">
+      <div class="forum-toolbar">
+        <span id="forum-cat-title" style="color:var(--blue);font-size:10px;letter-spacing:.15em">SPLOŠNO</span>
+        <button class="btn btn-primary" onclick="openNewThread()" style="margin-left:auto">+ NOVA TEMA</button>
+      </div>
+      <div class="thread-list-view" id="thread-list">
+        <div class="forum-threads" id="thread-threads"></div>
+      </div>
+      <div class="thread-view" id="thread-view">
+        <div style="background:var(--bg2);border-bottom:1px solid var(--border);padding:8px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <button class="btn" onclick="closeThread()">← NAZAJ</button>
+          <span id="tv-title" style="color:var(--text);font-size:11px;font-weight:bold"></span>
+        </div>
+        <div id="tv-posts" style="flex:1;overflow-y:auto"></div>
+        <div class="reply-box">
+          <textarea id="tv-reply" rows="2" placeholder="Napiši odgovor..."></textarea>
+          <div style="margin-top:6px;display:flex;gap:6px;align-items:center">
+            <input id="tv-author" placeholder="Vzdevek..." style="width:120px"/>
+            <button class="btn btn-primary" onclick="submitReply()">POŠLJI →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
+</div><!-- /app -->
+
+<script>
+// ════════════════════════ NAVIGATION ════════════════════════
+const TABS=['home','crypto','sp500','strat','aff','forum'];
+let currentPage='home';
+function nav(page){
+  TABS.forEach(t=>{
+    document.getElementById('page-'+t).classList.toggle('active',t===page);
+    document.getElementById('t-'+t).classList.toggle('active',t===page);
+  });
+  currentPage=page;
+  if(page==='strat')renderStrats();
+  if(page==='aff')renderAff();
+  if(page==='forum')renderForum();
+}
+
+// ════════════════════════ CLOCK & MARKET ════════════════════════
+function updateClock(){
+  const now=new Date();
+  document.getElementById('clock').textContent=now.toLocaleTimeString('sl-SI');
+  const et=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'short',hour:'numeric',minute:'numeric',hour12:false}).formatToParts(now);
+  const day=et.find(p=>p.type==='weekday')?.value;
+  const h=parseInt(et.find(p=>p.type==='hour')?.value||0);
+  const m2=parseInt(et.find(p=>p.type==='minute')?.value||0);
+  const open=!['Sat','Sun'].includes(day)&&h*60+m2>=570&&h*60+m2<960;
+  const el=document.getElementById('mkt-badge');
+  el.textContent=open?'● ODPRT':'○ ZAPRT';
+  el.style.color=open?'var(--green)':'var(--text3)';
+}
+setInterval(updateClock,1000);updateClock();
+
+// ════════════════════════ SHARED RSI LOGIC ════════════════════════
+const RSI_LEN=14,MA_LEN=14,PL=5,MIN_D=3,LB=50;
+function rsiSeries(c){
+  const o=[];if(c.length<RSI_LEN+1)return o;
+  let ag=0,al=0;
+  for(let i=1;i<=RSI_LEN;i++){const d=c[i]-c[i-1];if(d>0)ag+=d;else al-=d;}
+  ag/=RSI_LEN;al/=RSI_LEN;o.push(al===0?100:100-100/(1+ag/al));
+  for(let i=RSI_LEN+1;i<c.length;i++){
+    const d=c[i]-c[i-1];
+    ag=(ag*(RSI_LEN-1)+(d>0?d:0))/RSI_LEN;al=(al*(RSI_LEN-1)+(d<0?-d:0))/RSI_LEN;
+    o.push(al===0?100:100-100/(1+ag/al));
+  }return o;
+}
+function sma(a,n){return a.length<n?null:a.slice(-n).reduce((s,v)=>s+v,0)/n;}
+function pivLow(a,lb){const p=[];for(let i=lb;i<a.length-lb;i++){let ok=true;for(let j=1;j<=lb;j++)if(a[i]>=a[i-j]||a[i]>=a[i+j]){ok=false;break;}if(ok)p.push({v:a[i]});}return p;}
+function pivHigh(a,lb){const p=[];for(let i=lb;i<a.length-lb;i++){let ok=true;for(let j=1;j<=lb;j++)if(a[i]<=a[i-j]||a[i]<=a[i+j]){ok=false;break;}if(ok)p.push({v:a[i]});}return p;}
+function detectDiv(lows,highs,rs){
+  const n=Math.min(lows.length,highs.length,rs.length,LB);
+  const sl=lows.slice(-n),sh=highs.slice(-n),sr=rs.slice(-n);
+  const pl=pivLow(sl,PL),rl=pivLow(sr,PL);
+  const ph=pivHigh(sh,PL),rh=pivHigh(sr,PL);
+  let bull=null,bear=null;
+  if(pl.length>=2&&rl.length>=2){
+    const p1=pl[pl.length-2],p2=pl[pl.length-1],r1=rl[rl.length-2],r2=rl[rl.length-1];
+    if(p2.v<p1.v&&r2.v>r1.v+MIN_D){const rd=r2.v-r1.v;let st=rd>8?3:rd>4?2:1;if(r2.v<50)st=Math.min(3,st+1);bull={type:'bull',st,rd,pd:((p1.v-p2.v)/p1.v)*100};}
+  }
+  if(ph.length>=2&&rh.length>=2){
+    const p1=ph[ph.length-2],p2=ph[ph.length-1],r1=rh[rh.length-2],r2=rh[rh.length-1];
+    if(p2.v>p1.v&&r2.v<r1.v-MIN_D){const rd=r1.v-r2.v;let st=rd>8?3:rd>4?2:1;if(r2.v>50)st=Math.min(3,st+1);bear={type:'bear',st,rd,pd:((p2.v-p1.v)/p1.v)*100};}
+  }
+  if(bull&&bear)return bull.st>=bear.st?bull:bear;
+  return bull||bear||{type:null,st:0};
+}
+function beep(type){
+  try{const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    (type==='bull'?[440,660,880]:[880,660,440]).forEach((f,i)=>{
+      const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);
+      o.frequency.value=f;o.type='sine';const t=ctx.currentTime+i*.15;
+      g.gain.setValueAtTime(.2,t);g.gain.exponentialRampToValueAtTime(.001,t+.12);o.start(t);o.stop(t+.12);
+    });
+  }catch(e){}
+}
+const fp=p=>!p?'—':p.toFixed(2);
+const dots=n=>'◆'.repeat(n)+'◇'.repeat(Math.max(0,3-n));
+function badge(div){
+  if(!div?.type)return`<span style="color:var(--text3)">—</span>`;
+  const b=div.type==='bull';
+  return`<span class="bb ${div.st>=2?(b?'bull2':'bear2'):(b?'bull1':'bear1')}">${b?'▲ BULL':'▼ BEAR'} DIV</span>`;
+}
+function barHtml(rsi){
+  if(rsi===null)return`<span style="color:var(--text3)">…</span>`;
+  const pct=Math.min(100,Math.max(0,rsi));
+  const c=rsi<=30?'#7b68ee':rsi<=50?'#3a5a9a':rsi>=70?'#ff6633':'#2a4a7a';
+  const tc=rsi<=30?'#9d8aff':rsi>=70?'#ff8844':'#5577aa';
+  return`<span class="pbar"><span class="pfill" style="width:${pct}%;background:${c};display:block"></span></span> <span style="color:${tc};font-size:10px">${rsi.toFixed(1)}</span>`;
+}
+function updateBanners(bull,bear,bEl,brEl,btEl,brtEl){
+  if(bull.length){bEl.style.display='block';btEl.textContent=bull.map(s=>`${s}[◆]`).join(' · ');}else bEl.style.display='none';
+  if(bear.length){brEl.style.display='block';brtEl.textContent=bear.map(s=>`${s}[◆]`).join(' · ');}else brEl.style.display='none';
+}
+
+// ════════════════════════ CRYPTO SCANNER ════════════════════════
+const CR_SYMS=[
+  {id:'BTCUSDT'},{id:'ETHUSDT'},{id:'BNBUSDT'},{id:'XRPUSDT'},{id:'SOLUSDT'},
+  {id:'ADAUSDT'},{id:'DOGEUSDT'},{id:'AVAXUSDT'},{id:'DOTUSDT'},{id:'MATICUSDT'},
+  {id:'SHIBUSDT'},{id:'TRXUSDT'},{id:'LTCUSDT'},{id:'LINKUSDT'},{id:'UNIUSDT'},
+  {id:'ATOMUSDT'},{id:'XLMUSDT'},{id:'ETCUSDT'},{id:'BCHUSDT'},{id:'APTUSDT'},
+  {id:'FILUSDT'},{id:'HBARUSDT'},{id:'ARBUSDT'},{id:'VETUSDT'},{id:'ICPUSDT'},
+  {id:'NEARUSDT'},{id:'MKRUSDT'},{id:'GRTUSDT'},{id:'ALGOUSDT'},{id:'AAVEUSDT'},
+  {id:'XTZUSDT'},{id:'SANDUSDT'},{id:'MANAUSDT'},{id:'AXSUSDT'},{id:'EOSUSDT'},
+  {id:'FTMUSDT'},{id:'ZECUSDT'},{id:'BATUSDT'},{id:'COMPUSDT'},{id:'SNXUSDT'},
+  {id:'SUSHIUSDT'},{id:'CRVUSDT'},{id:'ZILUSDT'},{id:'NEOUSDT'},{id:'WAVESUSDT'},
+  {id:'ANKRUSDT'},{id:'FLOWUSDT'},{id:'ROSEUSDT'},{id:'IMXUSDT'},{id:'OPUSDT'},
+  {id:'LDOUSDT'},{id:'RNDRUSDT'},{id:'INJUSDT'},{id:'SUIUSDT'},{id:'SEIUSDT'},
+  {id:'TIAUSDT'},{id:'WIFUSDT'},{id:'BONKUSDT'},{id:'PEPEUSDT'},{id:'FLOKIUSDT'},
+  {id:'GALAUSDT'},{id:'CHZUSDT'},{id:'RUNEUSDT'},{id:'EGLDUSDT'},{id:'KAVAUSDT'},
+  {id:'STXUSDT'},{id:'MINAUSDT'},{id:'APEUSDT'},{id:'GMTUSDT'},{id:'FETUSDT'},
+  {id:'AGIXUSDT'},{id:'OCEANUSDT'},{id:'PENDLEUSDT'},{id:'GMXUSDT'},{id:'WLDUSDT'},
+  {id:'ORDIUSDT'},{id:'JUPUSDT'},{id:'PYTHUSDT'},{id:'DYMUSDT'},{id:'STRKUSDT'},
+  {id:'PIXELUSDT'},{id:'MANTAUSDT'},{id:'CAKEUSDT'},{id:'ZETAUSDT'},{id:'BEAMXUSDT'},
+  {id:'NFPUSDT'},{id:'ACEUSDT'},{id:'AIUSDT'},{id:'YFIUSDT'},{id:'ENJUSDT'},
+  {id:'QTUMUSDT'},{id:'ICXUSDT'},{id:'CELOUSDT'},{id:'ANKRUSDT'},{id:'API3USDT'},
+  {id:'ARKMUSDT'},{id:'CYBERUSDT'},{id:'ALTUSDT'},{id:'THETAUSDT'},{id:'ETCUSDT'},
+];
+let crData={},crAlerts=[],crSnd=true,crLoading=false,crCd=60,crPrevDiv={};
+CR_SYMS.forEach(s=>{crData[s.id]={rsi:null,ma:null,price:null,chg:null,div:null,st:'wait'};});
+
+async function crFetchOne(id){
+  const r=await fetch(`https://api.binance.com/api/v3/klines?symbol=${id}&interval=5m&limit=200`);
+  if(!r.ok)throw new Error(r.status);
+  const d=await r.json();
+  const closes=d.map(k=>parseFloat(k[4]));
+  const lows=d.map(k=>parseFloat(k[3]));
+  const highs=d.map(k=>parseFloat(k[2]));
+  const rs=rsiSeries(closes);
+  const rsi=rs[rs.length-1]??null;
+  const ma=sma(rs,MA_LEN);
+  const price=closes[closes.length-1];
+  const chg=((closes[closes.length-1]-closes[closes.length-2])/closes[closes.length-2])*100;
+  const div=detectDiv(lows,highs,rs);
+  return{rsi,ma,price,chg,div};
+}
+
+function crRow(s,i){
+  const d=crData[s.id],rsi=d?.rsi,dv=d?.div;
+  const ib=dv?.type==='bull',ir=dv?.type==='bear',str=dv?.st>=2;
+  const bg=ib&&str?'rgba(0,200,100,0.05)':ir&&str?'rgba(200,50,50,0.05)':ib?'rgba(0,90,40,0.03)':ir?'rgba(100,20,30,0.03)':'transparent';
+  const bl=ib&&str?'2px solid var(--green)':ir&&str?'2px solid var(--red)':ib?'2px solid #005533':ir?'2px solid #660022':'2px solid transparent';
+  const nc=ib?'var(--green)':ir?'var(--red)':'var(--text)';
+  const maHtml=d?.ma!=null?`<span style="color:#7a5500;font-size:10px">${d.ma.toFixed(1)}</span>`:'—';
+  const info=dv?.type?`<div style="font-size:9px;color:${ib?'#004422':'#440011'};margin-top:1px">Δ${dv.rd?.toFixed(1)} RSI · Δ${dv.pd?.toFixed(2)}%</div>`:'';
+  const stH=dv?.st?`<span style="color:${ib?'var(--green)':'var(--red)'}">${dots(dv.st)}</span>`:`<span style="color:var(--text3)">—</span>`;
+  const cc=d?.chg>0?'var(--green)':d?.chg<0?'var(--red)':'var(--text3)';
+  return`<tr style="background:${bg};border-left:${bl};border-bottom:1px solid #090d18">
+    <td style="color:var(--text3);font-size:9px">${i+1}</td>
+    <td style="font-weight:bold;color:${nc}">${s.id.replace('USDT','')}</td>
+    <td>${badge(dv)}${info}</td>
+    <td>${barHtml(rsi)}</td>
+    <td>${maHtml}</td>
+    <td class="r" style="color:var(--text2);font-size:10px">$${fp(d?.price)}</td>
+    <td class="r" style="color:${cc};font-size:10px">${d?.chg!=null?(d.chg>0?'+':'')+d.chg.toFixed(2)+'%':'—'}</td>
+    <td class="r">${stH}</td>
+  </tr>`;
+}
+
+function crGo(){
+  const q=document.getElementById('cr-search').value.toLowerCase();
+  const f=document.getElementById('cr-filter').value;
+  const srt=document.getElementById('cr-srt').value;
+  let rows=[...CR_SYMS];
+  if(q)rows=rows.filter(s=>s.id.toLowerCase().includes(q));
+  if(f==='bull')rows=rows.filter(s=>crData[s.id]?.div?.type==='bull');
+  if(f==='bear')rows=rows.filter(s=>crData[s.id]?.div?.type==='bear');
+  if(f==='any')rows=rows.filter(s=>crData[s.id]?.div?.type);
+  if(f==='low')rows=rows.filter(s=>crData[s.id]?.rsi!=null&&crData[s.id].rsi<30);
+  if(srt==='div')rows.sort((a,b)=>{const sa=crData[a.id]?.div?.type==='bull'?(crData[a.id].div.st+10):crData[a.id]?.div?.st||0;const sb=crData[b.id]?.div?.type==='bull'?(crData[b.id].div.st+10):crData[b.id]?.div?.st||0;return sb-sa;});
+  if(srt==='str')rows.sort((a,b)=>(crData[b.id]?.div?.st||0)-(crData[a.id]?.div?.st||0));
+  if(srt==='rsi')rows.sort((a,b)=>(crData[a.id]?.rsi??999)-(crData[b.id]?.rsi??999));
+  if(srt==='chg')rows.sort((a,b)=>(crData[a.id]?.chg??0)-(crData[b.id]?.chg??0));
+  document.getElementById('cr-tb').innerHTML=rows.map((s,i)=>crRow(s,i)).join('');
+  crStats();
+}
+
+function crStats(){
+  const ld=CR_SYMS.filter(s=>crData[s.id]?.st==='ok').length;
+  const bull=CR_SYMS.filter(s=>crData[s.id]?.div?.type==='bull'&&crData[s.id].div.st>=2);
+  const bear=CR_SYMS.filter(s=>crData[s.id]?.div?.type==='bear'&&crData[s.id].div.st>=2);
+  const wk=CR_SYMS.filter(s=>crData[s.id]?.div?.type&&crData[s.id].div.st<2);
+  const lo=CR_SYMS.filter(s=>crData[s.id]?.rsi!=null&&crData[s.id].rsi<30);
+  document.getElementById('cr-sl').textContent=`${ld}/${CR_SYMS.length}`;
+  const sb=document.getElementById('cr-sb');sb.textContent=bull.length;sb.style.color=bull.length?'var(--green)':'var(--text3)';
+  const sr=document.getElementById('cr-sr');sr.textContent=bear.length;sr.style.color=bear.length?'var(--red)':'var(--text3)';
+  document.getElementById('cr-sw').textContent=wk.length;
+  document.getElementById('cr-so').textContent=lo.length;
+  updateBanners(bull.map(s=>s.id.replace('USDT','')),bear.map(s=>s.id.replace('USDT','')),
+    document.getElementById('cr-bb'),document.getElementById('cr-br'),
+    document.getElementById('cr-bbt'),document.getElementById('cr-brt'));
+  // Update home
+  document.getElementById('hm-cbull').textContent=bull.length;
+  updateHomeSignals();
+}
+
+function crRenderLog(){
+  const l=document.getElementById('cr-log');
+  if(!crAlerts.length){l.innerHTML=`<div style="color:var(--text3);font-size:10px;line-height:2.2">Ni signalov.</div>`;return;}
+  l.innerHTML=crAlerts.map(a=>`<div class="acard ${a.type==='bull'?'bc':'rc'}">
+    <div style="color:${a.type==='bull'?'var(--green)':'var(--red)'};font-weight:bold">${a.type==='bull'?'▲':'▼'} ${a.id.replace('USDT','')} ${dots(a.st)}</div>
+    <div style="font-size:10px"><span style="color:var(--purple)">RSI ${a.rsi?.toFixed(1)}</span> / <span style="color:var(--amber)">MA ${a.ma?.toFixed(1)||'—'}</span></div>
+    <div style="font-size:9px;color:var(--text3)">$${fp(a.price)} · ${a.time}</div>
+  </div>`).join('');
+}
+
+function crToggleSnd(){crSnd=!crSnd;const b=document.getElementById('cr-snd');b.style.color=crSnd?'var(--green)':'var(--text3)';}
+
+async function crFetchAll(){
+  if(crLoading)return;crLoading=true;
+  document.getElementById('cr-rb').style.opacity='.4';
+  const pw=document.getElementById('cr-pw');pw.style.display='flex';
+  const batches=[];for(let i=0;i<CR_SYMS.length;i+=8)batches.push(CR_SYMS.slice(i,i+8));
+  let done=0,newA=[];
+  for(const batch of batches){
+    const res=await Promise.allSettled(batch.map(s=>crFetchOne(s.id).then(r=>({...r,...s}))));
+    done+=batch.length;
+    const pct=Math.round(done/CR_SYMS.length*100);
+    document.getElementById('cr-pf').style.width=pct+'%';
+    document.getElementById('cr-pt').textContent=pct+'%';
+    res.forEach((r,idx)=>{
+      const sym=batch[idx];
+      if(r.status==='fulfilled'){
+        const{id,rsi,ma,price,chg,div}=r.value;
+        crData[id]={rsi,ma,price,chg,div,st:'ok'};
+        if(div?.type&&div.st>=2){const pd=crPrevDiv[id];if(!pd||pd.type!==div.type)newA.push({id,rsi,ma,type:div.type,st:div.st,rd:div.rd,price,time:new Date().toLocaleTimeString()});}
+        crPrevDiv[id]=div?.type?div:null;
+      }else{crData[sym.id]={...crData[sym.id],st:'err'};}
+    });
+    crGo();
+    if(batches.indexOf(batch)<batches.length-1)await new Promise(r=>setTimeout(r,200));
+  }
+  if(newA.length){crAlerts=[...newA,...crAlerts].slice(0,50);crRenderLog();if(crSnd){if(newA.some(a=>a.type==='bull'))beep('bull');if(newA.some(a=>a.type==='bear'))setTimeout(()=>beep('bear'),400);}}
+  pw.style.display='none';document.getElementById('cr-rb').style.opacity='1';crLoading=false;crCd=60;
+  updateTicker();
+}
+setInterval(()=>{crCd=Math.max(0,crCd-1);document.getElementById('cr-cd').textContent=crCd+'s';},1000);
+setInterval(crFetchAll,60000);
+
+// ════════════════════════ SP500 SCANNER ════════════════════════
+const SP_STOCKS=[
+  {id:'AAPL',s:'Tech'},{id:'MSFT',s:'Tech'},{id:'NVDA',s:'Tech'},{id:'AMZN',s:'Consumer'},
+  {id:'GOOGL',s:'Tech'},{id:'META',s:'Tech'},{id:'TSLA',s:'Consumer'},{id:'BRK-B',s:'Finance'},
+  {id:'LLY',s:'Health'},{id:'JPM',s:'Finance'},{id:'V',s:'Finance'},{id:'UNH',s:'Health'},
+  {id:'XOM',s:'Energy'},{id:'MA',s:'Finance'},{id:'AVGO',s:'Tech'},{id:'PG',s:'Consumer'},
+  {id:'HD',s:'Consumer'},{id:'COST',s:'Consumer'},{id:'MRK',s:'Health'},{id:'ABBV',s:'Health'},
+  {id:'CVX',s:'Energy'},{id:'ORCL',s:'Tech'},{id:'CRM',s:'Tech'},{id:'BAC',s:'Finance'},
+  {id:'NFLX',s:'Tech'},{id:'KO',s:'Consumer'},{id:'AMD',s:'Tech'},{id:'PEP',s:'Consumer'},
+  {id:'TMO',s:'Health'},{id:'WMT',s:'Consumer'},{id:'MCD',s:'Consumer'},{id:'CSCO',s:'Tech'},
+  {id:'ACN',s:'Tech'},{id:'ABT',s:'Health'},{id:'LIN',s:'Indust'},{id:'DHR',s:'Health'},
+  {id:'TXN',s:'Tech'},{id:'WFC',s:'Finance'},{id:'PM',s:'Consumer'},{id:'INTU',s:'Tech'},
+  {id:'NEE',s:'Energy'},{id:'RTX',s:'Indust'},{id:'AMGN',s:'Health'},{id:'MS',s:'Finance'},
+  {id:'GS',s:'Finance'},{id:'QCOM',s:'Tech'},{id:'CAT',s:'Indust'},{id:'IBM',s:'Tech'},
+  {id:'ISRG',s:'Health'},{id:'GE',s:'Indust'},{id:'HON',s:'Indust'},{id:'SPGI',s:'Finance'},
+  {id:'BKNG',s:'Consumer'},{id:'AXP',s:'Finance'},{id:'AMAT',s:'Tech'},{id:'T',s:'Tech'},
+  {id:'VZ',s:'Tech'},{id:'BLK',s:'Finance'},{id:'DE',s:'Indust'},{id:'LRCX',s:'Tech'},
+  {id:'SYK',s:'Health'},{id:'MU',s:'Tech'},{id:'ADP',s:'Tech'},{id:'CVS',s:'Health'},
+  {id:'ETN',s:'Indust'},{id:'CI',s:'Health'},{id:'GILD',s:'Health'},{id:'SO',s:'Energy'},
+  {id:'PLD',s:'Finance'},{id:'REGN',s:'Health'},{id:'KLAC',s:'Tech'},{id:'BSX',s:'Health'},
+  {id:'PGR',s:'Finance'},{id:'PANW',s:'Tech'},{id:'VRTX',s:'Health'},{id:'ADI',s:'Tech'},
+  {id:'SNPS',s:'Tech'},{id:'SHW',s:'Indust'},{id:'USB',s:'Finance'},{id:'PNC',s:'Finance'},
+  {id:'INTC',s:'Tech'},{id:'CME',s:'Finance'},{id:'DUK',s:'Energy'},{id:'ZTS',s:'Health'},
+  {id:'CL',s:'Consumer'},{id:'TJX',s:'Consumer'},{id:'EOG',s:'Energy'},{id:'F',s:'Consumer'},
+  {id:'GM',s:'Consumer'},{id:'PYPL',s:'Finance'},{id:'ADBE',s:'Tech'},{id:'NOW',s:'Tech'},
+  {id:'UBER',s:'Tech'},{id:'SLB',s:'Energy'},{id:'APH',s:'Tech'},{id:'FI',s:'Finance'},
+  {id:'MCO',s:'Finance'},{id:'MMC',s:'Finance'},{id:'AON',s:'Finance'},{id:'EQIX',s:'Tech'},
+];
+const SP_SC={Tech:'#4a7aff',Health:'#00cc66',Finance:'#f0a500',Energy:'#ff8844',Consumer:'#aa88ff',Indust:'#88aabb'};
+const SP_PROXIES=['https://corsproxy.io/?','https://api.allorigins.win/raw?url=','https://thingproxy.freeboard.io/fetch/'];
+let spData={},spAlerts=[],spSnd=true,spLoading=false,spCd=300,spPrevDiv={},spProxyIdx=0;
+SP_STOCKS.forEach(s=>{spData[s.id]={rsi:null,ma:null,price:null,chg:null,div:null,st:'wait'};});
+
+async function spFetchOne(sym){
+  const yS=sym.replace('-','.');
+  const target=`https://query1.finance.yahoo.com/v8/finance/chart/${yS}?interval=5m&range=5d&includePrePost=false`;
+  let lastE;
+  for(let pi=0;pi<SP_PROXIES.length;pi++){
+    try{
+      const idx=(spProxyIdx+pi)%SP_PROXIES.length;
+      const url=SP_PROXIES[idx]+encodeURIComponent(target);
+      const r=await fetch(url,{signal:AbortSignal.timeout(12000)});
+      if(!r.ok)throw new Error(r.status);
+      const j=await r.json();
+      const res=j?.chart?.result?.[0];if(!res)throw new Error('no result');
+      const q=res.indicators?.quote?.[0];if(!q)throw new Error('no quote');
+      const valid=[];
+      (q.close||[]).forEach((v,i)=>{if(v!=null&&q.low[i]!=null&&q.high[i]!=null)valid.push({c:v,l:q.low[i],h:q.high[i]});});
+      if(valid.length<RSI_LEN+LB)throw new Error('short');
+      const vc=valid.map(x=>x.c),vl=valid.map(x=>x.l),vh=valid.map(x=>x.h);
+      const rs=rsiSeries(vc);
+      const rsi=rs[rs.length-1]??null;
+      const ma=sma(rs,MA_LEN);
+      const price=vc[vc.length-1];
+      const chg=((vc[vc.length-1]-vc[vc.length-2])/vc[vc.length-2])*100;
+      const div=detectDiv(vl,vh,rs);
+      spProxyIdx=idx;return{rsi,ma,price,chg,div};
+    }catch(e){lastE=e;}
+  }throw lastE;
+}
+
+function spRow(s,i){
+  const d=spData[s.id],rsi=d?.rsi,dv=d?.div;
+  const ib=dv?.type==='bull',ir=dv?.type==='bear',str=dv?.st>=2;
+  const bg=ib&&str?'rgba(0,200,100,0.05)':ir&&str?'rgba(200,50,50,0.05)':ib?'rgba(0,90,40,0.03)':ir?'rgba(100,20,30,0.03)':'transparent';
+  const bl=ib&&str?'2px solid var(--green)':ir&&str?'2px solid var(--red)':ib?'2px solid #005533':ir?'2px solid #660022':'2px solid transparent';
+  const nc=ib?'var(--green)':ir?'var(--red)':'var(--text)';
+  const maH=d?.ma!=null?`<span style="color:#7a5500;font-size:10px">${d.ma.toFixed(1)}</span>`:'—';
+  const info=dv?.type?`<div style="font-size:9px;color:${ib?'#004422':'#440011'};margin-top:1px">Δ${dv.rd?.toFixed(1)} RSI</div>`:'';
+  const stH=dv?.st?`<span style="color:${ib?'var(--green)':'var(--red)'}">${dots(dv.st)}</span>`:`<span style="color:var(--text3)">—</span>`;
+  const cc=d?.chg>0?'var(--green)':d?.chg<0?'var(--red)':'var(--text3)';
+  let stStatus='<span style="color:var(--text3);font-size:9px">…</span>';
+  if(d?.st==='err')stStatus='<span style="color:#3a1a1a;font-size:9px">ERR</span>';
+  return`<tr style="background:${bg};border-left:${bl};border-bottom:1px solid #090d18">
+    <td style="color:var(--text3);font-size:9px">${i+1}</td>
+    <td><div style="font-weight:bold;color:${nc}">${s.id} ${stStatus}</div></td>
+    <td><span style="font-size:9px;color:${SP_SC[s.s]||'#4a5a7a'}">${s.s}</span></td>
+    <td>${badge(dv)}${info}</td>
+    <td>${barHtml(rsi)}</td>
+    <td>${maH}</td>
+    <td class="r" style="color:var(--text2);font-size:10px">$${fp(d?.price)}</td>
+    <td class="r" style="color:${cc};font-size:10px">${d?.chg!=null?(d.chg>0?'+':'')+d.chg.toFixed(2)+'%':'—'}</td>
+    <td class="r">${stH}</td>
+  </tr>`;
+}
+
+function spGo(){
+  const q=document.getElementById('sp-search').value.toLowerCase();
+  const f=document.getElementById('sp-filter').value;
+  const sec=document.getElementById('sp-sec').value;
+  const srt=document.getElementById('sp-srt').value;
+  let rows=[...SP_STOCKS];
+  if(q)rows=rows.filter(s=>s.id.toLowerCase().includes(q));
+  if(sec!=='all')rows=rows.filter(s=>s.s===sec);
+  if(f==='bull')rows=rows.filter(s=>spData[s.id]?.div?.type==='bull');
+  if(f==='bear')rows=rows.filter(s=>spData[s.id]?.div?.type==='bear');
+  if(f==='any')rows=rows.filter(s=>spData[s.id]?.div?.type);
+  if(f==='low')rows=rows.filter(s=>spData[s.id]?.rsi!=null&&spData[s.id].rsi<35);
+  if(srt==='div')rows.sort((a,b)=>{const sa=spData[a.id]?.div?.type==='bull'?(spData[a.id].div.st+10):spData[a.id]?.div?.st||0;const sb=spData[b.id]?.div?.type==='bull'?(spData[b.id].div.st+10):spData[b.id]?.div?.st||0;return sb-sa;});
+  if(srt==='str')rows.sort((a,b)=>(spData[b.id]?.div?.st||0)-(spData[a.id]?.div?.st||0));
+  if(srt==='rsi')rows.sort((a,b)=>(spData[a.id]?.rsi??999)-(spData[b.id]?.rsi??999));
+  if(srt==='chg')rows.sort((a,b)=>(spData[a.id]?.chg??0)-(spData[b.id]?.chg??0));
+  document.getElementById('sp-tb').innerHTML=rows.map((s,i)=>spRow(s,i)).join('');
+  spStats();
+}
+
+function spStats(){
+  const ld=SP_STOCKS.filter(s=>spData[s.id]?.st==='ok').length;
+  const bull=SP_STOCKS.filter(s=>spData[s.id]?.div?.type==='bull'&&spData[s.id].div.st>=2);
+  const bear=SP_STOCKS.filter(s=>spData[s.id]?.div?.type==='bear'&&spData[s.id].div.st>=2);
+  const wk=SP_STOCKS.filter(s=>spData[s.id]?.div?.type&&spData[s.id].div.st<2);
+  const lo=SP_STOCKS.filter(s=>spData[s.id]?.rsi!=null&&spData[s.id].rsi<35);
+  document.getElementById('sp-sl').textContent=`${ld}/${SP_STOCKS.length}`;
+  const sb=document.getElementById('sp-sb');sb.textContent=bull.length;sb.style.color=bull.length?'var(--green)':'var(--text3)';
+  const sr=document.getElementById('sp-sr');sr.textContent=bear.length;sr.style.color=bear.length?'var(--red)':'var(--text3)';
+  document.getElementById('sp-sw').textContent=wk.length;
+  document.getElementById('sp-so').textContent=lo.length;
+  updateBanners(bull.map(s=>s.id),bear.map(s=>s.id),
+    document.getElementById('sp-bb'),document.getElementById('sp-br'),
+    document.getElementById('sp-bbt'),document.getElementById('sp-brt'));
+  document.getElementById('hm-sbull').textContent=bull.length;
+  updateHomeSignals();
+}
+
+function spRenderLog(){
+  const l=document.getElementById('sp-log');
+  if(!spAlerts.length){l.innerHTML=`<div style="color:var(--text3);font-size:10px;line-height:2.2">Ni signalov.</div>`;return;}
+  l.innerHTML=spAlerts.map(a=>`<div class="acard ${a.type==='bull'?'bc':'rc'}">
+    <div style="color:${a.type==='bull'?'var(--green)':'var(--red)'};font-weight:bold">${a.type==='bull'?'▲':'▼'} ${a.id} ${dots(a.st)}</div>
+    <div style="font-size:10px"><span style="color:var(--purple)">RSI ${a.rsi?.toFixed(1)}</span> / <span style="color:var(--amber)">MA ${a.ma?.toFixed(1)||'—'}</span></div>
+    <div style="font-size:9px;color:var(--text3)">$${fp(a.price)} · ${a.time}</div>
+  </div>`).join('');
+}
+
+function spToggleSnd(){spSnd=!spSnd;const b=document.getElementById('sp-snd');b.style.color=spSnd?'var(--green)':'var(--text3)';}
+
+async function spFetchAll(){
+  if(spLoading)return;spLoading=true;
+  document.getElementById('sp-rb').style.opacity='.4';
+  const pw=document.getElementById('sp-pw');pw.style.display='flex';
+  const batches=[];for(let i=0;i<SP_STOCKS.length;i+=4)batches.push(SP_STOCKS.slice(i,i+4));
+  let done=0,newA=[],errs=0;
+  for(const batch of batches){
+    const res=await Promise.allSettled(batch.map(s=>spFetchOne(s.id).then(r=>({...r,...s}))));
+    done+=batch.length;
+    const pct=Math.round(done/SP_STOCKS.length*100);
+    document.getElementById('sp-pf').style.width=pct+'%';
+    document.getElementById('sp-pt').textContent=pct+'%';
+    res.forEach((r,idx)=>{
+      const sym=batch[idx];
+      if(r.status==='fulfilled'){
+        const{id,rsi,ma,price,chg,div}=r.value;
+        spData[id]={rsi,ma,price,chg,div,st:'ok'};
+        if(div?.type&&div.st>=2){const pd=spPrevDiv[id];if(!pd||pd.type!==div.type)newA.push({id,rsi,ma,type:div.type,st:div.st,rd:div.rd,price,time:new Date().toLocaleTimeString()});}
+        spPrevDiv[id]=div?.type?div:null;
+      }else{errs++;spData[sym.id]={...spData[sym.id],st:'err'};}
+    });
+    spGo();
+    if(batches.indexOf(batch)<batches.length-1)await new Promise(r=>setTimeout(r,1000));
+  }
+  if(errs>15){const e=document.getElementById('sp-err');e.style.display='block';e.textContent=`⚠ ${errs} napak — Yahoo CORS blokada. Čakaj minuto.`;setTimeout(()=>e.style.display='none',10000);}
+  if(newA.length){spAlerts=[...newA,...spAlerts].slice(0,50);spRenderLog();if(spSnd){if(newA.some(a=>a.type==='bull'))beep('bull');if(newA.some(a=>a.type==='bear'))setTimeout(()=>beep('bear'),400);}}
+  pw.style.display='none';document.getElementById('sp-rb').style.opacity='1';spLoading=false;spCd=300;
+}
+setInterval(()=>{spCd=Math.max(0,spCd-1);const m=Math.floor(spCd/60),s=spCd%60;document.getElementById('sp-cd').textContent=`${m}m${s}s`;},1000);
+setInterval(spFetchAll,300000);
+
+// ════════════════════════ HOME signals feed ════════════════════════
+function updateHomeSignals(){
+  const allSig=[...crAlerts,...spAlerts].sort((a,b)=>b.key-a.key).slice(0,8);
+  const feed=document.getElementById('hm-feed-signals');
+  if(!allSig.length){feed.innerHTML='<div style="color:var(--text3)">Čakam na signale...</div>';return;}
+  feed.innerHTML=allSig.map(a=>`<div style="padding:5px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+    <span style="color:${a.type==='bull'?'var(--green)':'var(--red)'}">${a.type==='bull'?'▲':'▼'} ${a.id.replace('USDT','')} ${dots(a.st)}</span>
+    <span style="color:var(--text3);font-size:9px">${a.time||''}</span>
+  </div>`).join('');
+  const tot=(parseInt(document.getElementById('hm-cbull').textContent)||0)+(parseInt(document.getElementById('hm-sbull').textContent)||0);
+  document.getElementById('hm-total').textContent=tot||'—';
+}
+
+// ════════════════════════ TICKER ════════════════════════
+function updateTicker(){
+  const items=CR_SYMS.slice(0,20).map(s=>{
+    const d=crData[s.id];if(!d?.price)return null;
+    const c=d.chg>0?'var(--green)':d.chg<0?'var(--red)':'var(--text3)';
+    return`<span class="tick-item"><span style="color:var(--text2)">${s.id.replace('USDT','')}</span> <span style="color:${c}">$${fp(d.price)} ${d.chg>0?'+':''}${d.chg?.toFixed(2)||''}%</span></span>`;
+  }).filter(Boolean);
+  if(!items.length)return;
+  const html=items.join('')+items.join('');
+  const ti=document.getElementById('ticker-inner');
+  ti.innerHTML=html;
+}
+
+// ════════════════════════ STRATEGIES ════════════════════════
+const STRATS=[
+  {id:0,name:'RSI Bullish Divergence',cat:'RSI',tags:['bull','crypto','stocks'],tf:'5min-4h',risk:'Srednje',
+    desc:'Klasična bullish divergenca — eden najpogosteje citiranih setupov.',
+    entry:'Ko RSI naredi višji low med tem ko cena naredi nižji low. Entry na prvi zeleni svečki po signalu.',
+    stop:'Pod zadnjim lowom na ceni (1-2% buffer).',
+    target:'R:R min 1:2. Take profit na bližnjem resistance ali prejšnjem high.',
+    rules:['RSI mora biti pod 50 za večjo zanesljivost','MA(14) na RSI mora biti rastoča','Volume naj bo nižji pri 2. lowu cene','Čakaj potrditev — ne vstopaj prej'],
+    notes:'Najtočnejši na višjih timeframih (1h+). Na 5min je signal hitrejši a manj zanesljiv.'},
+  {id:1,name:'RSI Bearish Divergence',cat:'RSI',tags:['bear','crypto','stocks'],tf:'5min-4h',risk:'Srednje',
+    desc:'Cena naredi višji high, RSI naredi nižji high — potencialni vrh.',
+    entry:'Short entry ko RSI naredi nižji high in cena začne padati (broken support).',
+    stop:'Nad zadnjim highom na ceni.',
+    target:'R:R min 1:2. Take profit na prvem supportu.',
+    rules:['RSI naj bo nad 60','MA na RSI naj bo padajoča','Idealno pri odporu (resistance level)','Potrdi z bearish svečo (shooting star, engulfing)'],
+    notes:'Bolj zanesljiv v bear trgu ali na resistancih.'},
+  {id:2,name:'RSI Oversold Bounce',cat:'RSI',tags:['bull','crypto'],tf:'5min-15min',risk:'Visoko',
+    desc:'RSI pade pod 10 ali 20 — ekstremna preprodanost. Iščemo hiter odboj.',
+    entry:'RSI < 10 + bullish svečni vzorec (hammer, engulfing).',
+    stop:'Pod lowom vstopne svečke.',
+    target:'Hiter scalp 0.5-1.5%. Ni swing trade.',
+    rules:['SAMO v bull trendu na višjem TF','Visok volumen pri padu = dober signal','Ne vstopaj brez svečnega potrdila','Exit hitro — ne čakaj velikih gibanj'],
+    notes:'Visoko tveganje. Primerno za izkušene traderje.'},
+  {id:3,name:'MA Cross na RSI',cat:'RSI+MA',tags:['bull','bear','crypto','stocks'],tf:'1h-1day',risk:'Nizko',
+    desc:'Ko RSI seka svojo MA(14) navzgor — bullish signal. Navzdol — bearish.',
+    entry:'RSI > MA(14) za long. RSI < MA(14) za short.',
+    stop:'Ko RSI spet seka MA v nasprotno smer.',
+    target:'Trend following — drži pozicijo dokler RSI ne seka MA.',
+    rules:['Deluje bolje v trending trgih','V ranging trgih daje lažne signale','Kombiniraj z volume potrdilom','Višji TF = manj lažnih signalov'],
+    notes:'Odlično za dnevne in tedensko strategijo na delnicah SP500.'},
+  {id:4,name:'Opening Range Breakout',cat:'Price Action',tags:['bull','bear','stocks'],tf:'5min',risk:'Srednje',
+    desc:'Prvih 30 minut po odprtju borze definira range. Breakout gor/dol = signal.',
+    entry:'Breakout nad/pod 30-minutnim highom/lowom. Entry na close svečke.',
+    stop:'Sredina ranga ali nasprotna stran.',
+    target:'1x velikost ranga = minimum target.',
+    rules:['Samo v prvih 2 urah trgovanja','Visok volumen pri preboju je nujen','Ne trguj v prvih 5 minutah','Gap up/down dan = boljši setup'],
+    notes:'Klasična daytrading strategija. Deluje na SP500 delnicah.'},
+  {id:5,name:'Liquidity Sweep + RSI',cat:'Smart Money',tags:['bull','bear','crypto'],tf:'5min-15min',risk:'Srednje',
+    desc:'Cena pobere likvidnost (stop losse) pod/nad lowom, potem RSI pokaže divergenco.',
+    entry:'Po likvdinostnem sweepu — RSI divergenca ali oversold stanje.',
+    stop:'Nad sweep highom.',
+    target:'R:R 1:3+. Cena se vrne do prejšnjega ranga.',
+    rules:['Išči wick ki preseže prejšnji swing low/high','RSI mora potrditi z divergenco','Entry na sveček po sweepu','Volume spike pri sweepu = boljši signal'],
+    notes:'Smart money koncept. Zahteva izkušnje z branjem price action.'},
+];
+let activeStrat=0;
+function renderStrats(){
+  const list=document.getElementById('strat-list');
+  list.innerHTML=STRATS.map(s=>`<div class="strat-item${s.id===activeStrat?' active':''}" onclick="selectStrat(${s.id})">
+    <div class="si-name">${s.name}</div>
+    <div style="font-size:9px;color:var(--text3);margin-top:2px">${s.cat} · ${s.tf}</div>
+    <div class="si-tags">${s.tags.map(t=>`<span class="tag ${t}">${t.toUpperCase()}</span>`).join('')}</div>
+  </div>`).join('');
+  renderStratContent();
+}
+function selectStrat(id){activeStrat=id;renderStrats();}
+function renderStratContent(){
+  const s=STRATS[activeStrat];
+  const c=document.getElementById('strat-content');
+  c.innerHTML=`
+    <div class="sc-title">${s.name}</div>
+    <div class="sc-meta">
+      <span class="sc-badge">${s.cat}</span>
+      <span class="sc-badge">${s.tf}</span>
+      <span class="sc-badge" style="color:${s.risk==='Nizko'?'var(--green)':s.risk==='Visoko'?'var(--red)':'var(--amber)'}">${s.risk} tveganje</span>
+    </div>
+    <div class="sc-body">
+      <p>${s.desc}</p>
+      <h3>ENTRY</h3>
+      <div class="rule-box green">${s.entry}</div>
+      <h3>STOP LOSS</h3>
+      <div class="rule-box red">${s.stop}</div>
+      <h3>TARGET</h3>
+      <div class="rule-box">${s.target}</div>
+      <h3>PRAVILA</h3>
+      <ul>${s.rules.map(r=>`<li>${r}</li>`).join('')}</ul>
+      <h3>OPOMBE</h3>
+      <p style="color:var(--text3)">${s.notes}</p>
+    </div>`;
+}
+
+// ════════════════════════ AFFILIATE ════════════════════════
+const AFF_DATA={
+  'Borze':[
+    {name:'Binance',comm:'20% lifetime',desc:'Največja kripto borza. Spot, futures, options. Visok volumen.',link:'https://binance.com'},
+    {name:'Bybit',comm:'30% lifetime',desc:'Popularna derivatives borza. Dobra za futures trading.',link:'https://bybit.com'},
+    {name:'OKX',comm:'20% komisija',desc:'Globalna kripto borza z odličnimi pogoji za affiliate.',link:'https://okx.com'},
+    {name:'Kraken',comm:'20% na provizije',desc:'Zanesljiva EU borza. Idealna za začetnike.',link:'https://kraken.com'},
+  ],
+  'Tools':[
+    {name:'TradingView',comm:'30% recurring',desc:'Najboljše charting orodje. Recurring komisija vsako leto.',link:'https://tradingview.com'},
+    {name:'Coinigy',comm:'25% recurring',desc:'Multi-exchange trading terminal. Niche a lojalna baza.',link:'https://coinigy.com'},
+    {name:'Messari Pro',comm:'20% na letno',desc:'Kripto research platforma za institucionale in pro traderje.',link:'https://messari.io'},
+  ],
+  'Brokerji':[
+    {name:'Interactive Brokers',comm:'do $200/referal',desc:'Vodilni broker za delnice. Visoka kakovost, zahtevna publika.',link:'https://ibkr.com'},
+    {name:'eToro',comm:'$200 CPA',desc:'Social trading platforma. Dobra za začetnike. EU reguliran.',link:'https://etoro.com'},
+    {name:'XTB',comm:'do $600/račun',desc:'EU reguliran broker. Stocks, forex, crypto CFD.',link:'https://xtb.com'},
+  ],
+  'Izobraževanje':[
+    {name:'Udemy Tečaji',comm:'10-15% na prodajo',desc:'Postavi lasten tečaj ali promoviraj obstoječe.',link:'https://udemy.com'},
+    {name:'Skillshare',comm:'$10/referal',desc:'Creative learning platforma. Recurring membership model.',link:'https://skillshare.com'},
+  ],
+};
+function renderAff(){
+  const layout=document.getElementById('aff-layout');
+  const cats=Object.keys(AFF_DATA);
+  layout.style.gridTemplateColumns=`repeat(${cats.length},1fr)`;
+  document.getElementById('aff-total').textContent=Object.values(AFF_DATA).flat().length;
+  document.getElementById('aff-avg').textContent='20%+';
+  layout.innerHTML=cats.map(cat=>`
+    <div class="aff-cell">
+      <div class="aff-head">${cat.toUpperCase()} (${AFF_DATA[cat].length})</div>
+      <div class="aff-inner">${AFF_DATA[cat].map(a=>`
+        <div class="aff-card">
+          <div class="ac-name">${a.name}</div>
+          <div class="ac-comm">💰 ${a.comm}</div>
+          <div class="ac-desc">${a.desc}</div>
+          <a href="${a.link}" target="_blank" class="ac-link">→ AFFILIATE LINK</a>
+        </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+// ════════════════════════ FORUM ════════════════════════
+const FORUM_CATS=[
+  {id:0,name:'Splošno',icon:'●',count:12},
+  {id:1,name:'Crypto Analiza',icon:'◈',count:34},
+  {id:2,name:'S&P 500',icon:'◇',count:18},
+  {id:3,name:'Strategije',icon:'△',count:27},
+  {id:4,name:'Affiliate',icon:'◆',count:8},
+  {id:5,name:'Vprašanja',icon:'?',count:41},
+];
+let forumCat=0,openThread=null;
+const THREADS=[
+  {id:0,cat:0,title:'Dobrodošli v TradeCore skupnost!',author:'Admin',time:'2h',views:142,hot:true,
+    posts:[{author:'Admin',rank:'FOUNDER',body:'Dobrodošli! Ta forum je namenjen resnim traderjem. Delite analize, strategije in izkušnje.',time:'2h',likes:8},
+           {author:'TradeMaster_SI',rank:'PRO',body:'Super projekt! Ravno to sem iskal — slovensko trading skupnost z orodji.',time:'1h',likes:3}]},
+  {id:1,cat:1,title:'BTC divergenca na 5min — vstopam long?',author:'CryptoSloven',time:'45min',views:67,hot:true,
+    posts:[{author:'CryptoSloven',rank:'MEMBER',body:'Vidim bullish divergenco na BTC 5min — RSI naredil višji low medtem ko je cena naredila nižji low. RSI je pri 28. Vaša mnenja?',time:'45min',likes:5},
+           {author:'ProTrader_X',rank:'PRO',body:'Čisti setup. Jaz bi čakal na close nad prejšnjim lowom kot potrdilo. Stop pod današnjim lowom.',time:'30min',likes:7},
+           {author:'RiskMgmtGuru',rank:'MEMBER',body:'Pazi na volumen — mora biti nižji pri drugem lowu. Če je volumen višji, signal je šibkejši.',time:'15min',likes:4}]},
+  {id:2,cat:2,title:'NVDA earnings week — strategija?',author:'StockBull',time:'1h',views:89,hot:false,
+    posts:[{author:'StockBull',rank:'MEMBER',body:'NVDA ima earnings naslednji teden. RSI je na 65 in kaže potencialno bearish divergenco. Kdo shortuje?',time:'1h',likes:2},
+           {author:'OptionsKing',rank:'PRO',body:'Earnings so binary event. Raje kupim straddle dan prej. Divergenca pred earnings ni zanesljiva.',time:'40min',likes:6}]},
+  {id:3,cat:3,title:'Kako kombinirate RSI divergenco z volume?',author:'Analize_SI',time:'3h',views:201,hot:true,
+    posts:[{author:'Analize_SI',rank:'MEMBER',body:'Pri bullish divergenci vedno gledam, ali je volumen pri 2. lowu nižji. To mi da potrdilo da prodajni pritisk pojema.',time:'3h',likes:12},
+           {author:'VolumeTrader',rank:'PRO',body:'Točno! OBV (On Balance Volume) je še boljši indikator za to. Ko OBV raste medtem ko cena pada — bullish divergenca na volume!',time:'2h',likes:9}]},
+  {id:4,cat:4,title:'Binance affiliate — koliko zaslužite?',author:'PassiveIncome_SI',time:'5h',views:134,hot:false,
+    posts:[{author:'PassiveIncome_SI',rank:'MEMBER',body:'Kdo ima izkušnje z Binance affiliate? Kakšen je realni zaslužek na mesec?',time:'5h',likes:3},
+           {author:'AffiliateKing',rank:'PRO',body:'Z 200 aktivnimi referali in 20% komisijo dobim okrog 400-600€ mesečno. Ključ je Youtube vsebina.',time:'4h',likes:8}]},
+  {id:5,cat:5,title:'Kje se naučiti price action?',author:'Newbie_Trader',time:'6h',views:78,hot:false,
+    posts:[{author:'Newbie_Trader',rank:'MEMBER',body:'Sem začetnik. Kje začeti z učenjem price action? Kateri YouTube kanali, knjige?',time:'6h',likes:1},
+           {author:'ProTrader_X',rank:'PRO',body:'Al Brooks - "Trading Price Action Trends" je biblija. Na YT: ICT, Anton Kreil, Rayner Teo.',time:'5h',likes:7},
+           {author:'TradeMaster_SI',rank:'PRO',body:'Najprej nauči se brati S/R levele in svečne vzorce. Potem pojdi na price action strategije.',time:'4h',likes:5}]},
+];
+let forumPosts=[...THREADS];
+
+function renderForum(){
+  const cats=document.getElementById('forum-cats');
+  cats.innerHTML=FORUM_CATS.map(c=>`<div class="cat-item${c.id===forumCat?' active':''}" onclick="selectCat(${c.id})">
+    <div class="ci-name"><span style="color:var(--blue)">${c.icon}</span> ${c.name}</div>
+    <div class="ci-count">${c.count} objav</div>
+  </div>`).join('');
+  renderThreads();
+}
+function selectCat(id){
+  forumCat=id;
+  document.getElementById('forum-cat-title').textContent=FORUM_CATS[id].name.toUpperCase();
+  closeThread();
+  renderForum();
+}
+function renderThreads(){
+  const filtered=forumPosts.filter(t=>t.cat===forumCat);
+  document.getElementById('thread-threads').innerHTML=filtered.map(t=>`
+    <div class="thread-item" onclick="openThreadView(${t.id})">
+      <div>
+        <div class="ti-title">${t.hot?'<span class="ti-hot">🔥 </span>':''}${t.title}</div>
+        <div class="ti-meta">@${t.author} · ${t.time} · ${t.posts.length} odgovorov</div>
+      </div>
+      <div class="ti-stats">${t.views} ogledov</div>
+    </div>`).join('');
+}
+function openThreadView(id){
+  openThread=id;
+  const t=forumPosts.find(x=>x.id===id);
+  document.getElementById('tv-title').textContent=t.title;
+  document.getElementById('tv-posts').innerHTML=t.posts.map(p=>`
+    <div class="post-item">
+      <div class="post-author">
+        <span style="color:var(--blue)">@${p.author}</span>
+        <span class="post-rank">${p.rank}</span>
+        <span style="color:var(--text3)">${p.time}</span>
+      </div>
+      <div class="post-body">${p.body}</div>
+      <div class="post-footer">
+        <span>👍 ${p.likes}</span>
+        <span style="cursor:pointer;color:var(--blue)" onclick="likePost(this)">VŠEČEK</span>
+      </div>
+    </div>`).join('');
+  document.getElementById('thread-list').classList.add('hidden');
+  document.getElementById('thread-view').classList.add('open');
+}
+function closeThread(){
+  openThread=null;
+  document.getElementById('thread-list').classList.remove('hidden');
+  document.getElementById('thread-view').classList.remove('open');
+}
+function likePost(el){el.previousElementSibling.textContent='👍 '+(parseInt(el.previousElementSibling.textContent.replace('👍 ',''))+1);el.textContent='VŠEČKANO';el.style.color='var(--text3)';}
+function submitReply(){
+  const body=document.getElementById('tv-reply').value.trim();
+  const author=document.getElementById('tv-author').value.trim()||'Anonimno';
+  if(!body||openThread===null)return;
+  const t=forumPosts.find(x=>x.id===openThread);
+  t.posts.push({author,rank:'MEMBER',body,time:'pravkar',likes:0});
+  openThreadView(openThread);
+  document.getElementById('tv-reply').value='';
+  const posts=document.getElementById('tv-posts');
+  posts.scrollTop=posts.scrollHeight;
+}
+function openNewThread(){
+  const title=prompt('Naslov teme:');
+  if(!title)return;
+  const body=prompt('Vsebina:');
+  if(!body)return;
+  const author=prompt('Vzdevek:')||'Anonimno';
+  const newT={id:Date.now(),cat:forumCat,title,author,time:'pravkar',views:1,hot:false,
+    posts:[{author,rank:'MEMBER',body,time:'pravkar',likes:0}]};
+  forumPosts.unshift(newT);
+  FORUM_CATS[forumCat].count++;
+  renderForum();
+}
+
+// ════════════════════════ INIT ════════════════════════
+crGo();spGo();
+crFetchAll();
+setTimeout(spFetchAll,5000);
+</script>
+</body>
+</html>
