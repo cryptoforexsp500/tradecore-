@@ -296,6 +296,7 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
     <div class="tab" onclick="nav('aff')" id="t-aff">BEST BROKERS</div>
     <div class="tab" onclick="nav('dev')" id="t-dev" style="color:var(--amber)">DEVIATION SCAN</div>
     <div class="tab" onclick="nav('forum')" id="t-forum">FORUM</div>
+    <div class="tab" onclick="nav('ai')" id="t-ai" style="color:#a855f7;border-left:1px solid var(--border)">🤖 AI PRO</div>
   </div>
   <div class="topbar-right">
     <div id="start-time-badge" style="font-size:9px;color:var(--text3);letter-spacing:.08em;padding:2px 8px;border:1px solid var(--border);cursor:pointer" title="Click for alarm history" onclick="nav('home');setTimeout(()=>document.getElementById('section-alarmlog').scrollIntoView({behavior:'smooth'}),100)">⏻ --:--:--</div>
@@ -489,6 +490,7 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
           <th class="th-sort r" data-col="price" onclick="crThSort('price')">PRICE</th>
           <th class="th-sort r" data-col="chg" onclick="crThSort('chg')">5M%</th>
           <th class="th-sort r" data-col="str" onclick="crThSort('str')">STRENGTH</th>
+          <th style="color:var(--amber);white-space:nowrap" title="Hours price has been above or below 100 EMA">EMA100</th>
         </tr></thead>
         <tbody id="cr-tb"></tbody>
       </table></div>
@@ -542,6 +544,7 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
           <th class="th-sort r" data-col="price" onclick="spThSort('price')">PRICE</th>
           <th class="th-sort r" data-col="chg" onclick="spThSort('chg')">5M%</th>
           <th class="th-sort r" data-col="str" onclick="spThSort('str')">STRENGTH</th>
+          <th style="color:var(--amber);white-space:nowrap" title="Hours price has been above or below 100 EMA">EMA100</th>
         </tr></thead>
         <tbody id="sp-tb"></tbody>
       </table></div>
@@ -711,6 +714,122 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
 
 </div>
 
+<!-- AI PRO PAGE -->
+<div class="page" id="page-ai" style="overflow-y:auto;background:var(--bg)">
+  <div style="max-width:900px;margin:0 auto;padding:20px">
+
+    <!-- Header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border2)">
+      <div>
+        <div style="font-size:16px;font-weight:bold;color:#a855f7;letter-spacing:.2em">🤖 AI PRO ANALYSIS</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:3px">Advanced multi-factor signal analysis · Email & Telegram alerts</div>
+      </div>
+      <div id="ai-lock-badge" style="font-size:9px;padding:4px 12px;background:rgba(168,85,247,.15);border:1px solid #7c3aed;color:#a855f7;letter-spacing:.1em">🔒 PREMIUM</div>
+    </div>
+
+    <!-- Unlock section -->
+    <div id="ai-unlock-section" style="background:var(--bg2);border:1px solid #7c3aed;padding:20px;margin-bottom:20px;text-align:center">
+      <div style="font-size:20px;margin-bottom:8px">🔐</div>
+      <div style="font-size:12px;color:#a855f7;font-weight:bold;letter-spacing:.1em;margin-bottom:6px">UNLOCK AI PRO</div>
+      <div style="font-size:10px;color:var(--text3);margin-bottom:14px">Enter your activation code to access advanced AI analysis and premium notifications</div>
+      <div style="display:flex;gap:8px;justify-content:center;max-width:360px;margin:0 auto">
+        <input id="ai-code-input" type="text" placeholder="Enter activation code..." style="flex:1;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:7px 10px;font-family:inherit;font-size:11px;outline:none;letter-spacing:.05em"/>
+        <button onclick="aiUnlock()" style="padding:7px 16px;background:rgba(168,85,247,.2);border:1px solid #7c3aed;color:#a855f7;font-family:inherit;font-size:10px;cursor:pointer;font-weight:bold;letter-spacing:.08em">UNLOCK</button>
+      </div>
+      <div id="ai-code-err" style="font-size:9px;color:var(--red);margin-top:6px;display:none">Invalid code. Contact admin for access.</div>
+    </div>
+
+    <!-- MAIN AI CONTENT (locked by default) -->
+    <div id="ai-content" style="opacity:.25;pointer-events:none;filter:blur(1px)">
+
+      <!-- Telegram settings -->
+      <div style="background:var(--bg2);border:1px solid var(--border2);padding:14px;margin-bottom:16px">
+        <div style="font-size:9px;color:#a855f7;letter-spacing:.18em;margin-bottom:10px">📱 TELEGRAM NOTIFICATIONS</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+          <div>
+            <div style="font-size:9px;color:var(--text3);margin-bottom:4px;letter-spacing:.1em">BOT TOKEN</div>
+            <input id="tg-token" type="text" placeholder="123456:ABC-..." style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none"/>
+          </div>
+          <div>
+            <div style="font-size:9px;color:var(--text3);margin-bottom:4px;letter-spacing:.1em">CHAT ID</div>
+            <input id="tg-chatid" type="text" placeholder="-100123456789" style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none"/>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button onclick="saveTelegramSettings()" style="padding:5px 12px;background:rgba(0,232,122,.1);border:1px solid #0a5a2a;color:var(--green);font-family:inherit;font-size:9px;cursor:pointer;font-weight:bold">SAVE</button>
+          <button onclick="testTelegram()" style="padding:5px 12px;background:rgba(74,122,255,.1);border:1px solid var(--border2);color:var(--blue);font-family:inherit;font-size:9px;cursor:pointer">TEST MESSAGE</button>
+          <span id="tg-status" style="font-size:9px;color:var(--text3)"></span>
+          <label style="margin-left:auto;display:flex;align-items:center;gap:6px;font-size:9px;color:var(--text3);cursor:pointer">
+            <input id="tg-enabled" type="checkbox" style="cursor:pointer"/> Enable Telegram alerts
+          </label>
+        </div>
+        <div style="margin-top:8px;font-size:9px;color:var(--text3);line-height:1.6">
+          Get your bot token from <span style="color:var(--blue)">@BotFather</span> on Telegram. Chat ID: use <span style="color:var(--blue)">@userinfobot</span> or add bot to group.
+        </div>
+      </div>
+
+      <!-- Alert filter settings -->
+      <div style="background:var(--bg2);border:1px solid var(--border2);padding:14px;margin-bottom:16px">
+        <div style="font-size:9px;color:#a855f7;letter-spacing:.18em;margin-bottom:10px">⚙ AI ALERT FILTERS</div>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:10px">
+          <label style="display:flex;align-items:center;gap:5px;cursor:pointer"><input id="ai-f-crypto" type="checkbox" checked/> Crypto signals</label>
+          <label style="display:flex;align-items:center;gap:5px;cursor:pointer"><input id="ai-f-sp500" type="checkbox" checked/> S&P 500 signals</label>
+          <label style="display:flex;align-items:center;gap:5px;cursor:pointer"><input id="ai-f-forex" type="checkbox" checked/> Forex deviation</label>
+          <label style="display:flex;align-items:center;gap:5px;cursor:pointer"><input id="ai-f-bull" type="checkbox" checked/> Bullish only</label>
+          <label style="display:flex;align-items:center;gap:5px;cursor:pointer"><input id="ai-f-bear" type="checkbox" checked/> Bearish only</label>
+          <div style="margin-left:auto;display:flex;align-items:center;gap:6px;font-size:10px">
+            Min score: <select id="ai-min-score" style="background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:inherit;font-size:9px;padding:2px 4px">
+              <option value="50">50+</option><option value="65" selected>65+</option><option value="75">75+</option><option value="85">85+</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Manual AI analysis input -->
+      <div style="background:var(--bg2);border:1px solid #7c3aed;padding:14px;margin-bottom:16px">
+        <div style="font-size:9px;color:#a855f7;letter-spacing:.18em;margin-bottom:10px">✍ POST MANUAL AI ANALYSIS</div>
+        <div style="display:grid;grid-template-columns:100px 110px 1fr;gap:8px;margin-bottom:8px;align-items:end">
+          <div>
+            <div style="font-size:9px;color:var(--text3);margin-bottom:4px">TICKER</div>
+            <input id="ai-man-sym" type="text" placeholder="e.g. TSLA" style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none;text-transform:uppercase"/>
+          </div>
+          <div>
+            <div style="font-size:9px;color:var(--text3);margin-bottom:4px">DIRECTION</div>
+            <select id="ai-man-dir" style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none">
+              <option value="bull">▲ BULLISH</option>
+              <option value="bear">▼ BEARISH</option>
+              <option value="neutral">◆ NEUTRAL</option>
+            </select>
+          </div>
+          <div>
+            <div style="font-size:9px;color:var(--text3);margin-bottom:4px">MARKET</div>
+            <select id="ai-man-mkt" style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none">
+              <option value="CRYPTO">CRYPTO</option>
+              <option value="SP500">S&P 500</option>
+              <option value="FOREX">FOREX</option>
+              <option value="MANUAL">MANUAL</option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-bottom:8px">
+          <div style="font-size:9px;color:var(--text3);margin-bottom:4px">ANALYSIS TEXT</div>
+          <textarea id="ai-man-text" placeholder="Write your analysis here... e.g. TSLA broke below 100 EMA after 3 weeks above. RSI showing bearish divergence on daily. Watching $350 support." style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:8px;font-family:inherit;font-size:10px;outline:none;resize:vertical;min-height:70px;box-sizing:border-box"></textarea>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button onclick="aiPostManual()" style="padding:6px 16px;background:rgba(168,85,247,.2);border:1px solid #7c3aed;color:#a855f7;font-family:inherit;font-size:10px;cursor:pointer;font-weight:bold;letter-spacing:.08em">POST ANALYSIS</button>
+          <span id="ai-man-status" style="font-size:9px;color:var(--text3)"></span>
+        </div>
+      </div>
+
+      <!-- AI Analyses feed -->
+      <div style="font-size:9px;color:#a855f7;letter-spacing:.18em;margin-bottom:10px">🧠 AI SIGNAL ANALYSES</div>
+      <div id="ai-analyses-feed">
+        <div style="color:var(--text3);font-size:10px;text-align:center;padding:20px">Waiting for signals to analyze...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- EMAIL SETTINGS MODAL -->
 <div id="email-modal">
   <div class="modal-box">
@@ -836,7 +955,7 @@ const MY_POSTS=[
 // ══════════════════════════════════════
 // NAVIGATION
 // ══════════════════════════════════════
-const TABS=['home','crypto','sp500','strat','aff','dev','forum'];
+const TABS=['home','crypto','sp500','strat','aff','dev','forum','ai'];
 function nav(p){
   TABS.forEach(t=>{
     document.getElementById('page-'+t).classList.toggle('active',t===p);
@@ -958,13 +1077,27 @@ const CR_SYMS=[
 let crData={},crAlerts=[],crSnd=true,crLoading=false,crCd=60,crPrev={};
 CR_SYMS.forEach(s=>{crData[s.id]={rsi:null,ma:null,price:null,chg:null,div:null,st:'wait'};});
 
+function calcHoursAboveBelow(closes, intervalMin) {
+  if(!closes || closes.length < 101) return null;
+  const ma100 = closes.slice(-100).reduce((a,b)=>a+b,0)/100;
+  const last = closes[closes.length-1];
+  const above = last > ma100;
+  let count = 0;
+  for(let i=closes.length-1; i>=0; i--) {
+    if((closes[i] > ma100) === above) count++;
+    else break;
+  }
+  return { hours: Math.round((count * intervalMin / 60) * 10) / 10, above, ma100 };
+}
+
 async function crFetchOne(id){
   const r=await fetch(`https://api.binance.com/api/v3/klines?symbol=${id}&interval=5m&limit=200`);
   if(!r.ok)throw new Error(r.status);
   const d=await r.json();
   const closes=d.map(k=>parseFloat(k[4])),lows=d.map(k=>parseFloat(k[3])),highs=d.map(k=>parseFloat(k[2]));
   const rs=rsiSeries(closes);
-  return{rsi:rs[rs.length-1]??null,ma:sma(rs,MA_LEN),price:closes[closes.length-1],chg:((closes[closes.length-1]-closes[closes.length-2])/closes[closes.length-2])*100,div:detectDiv(lows,highs,rs)};
+  const ema100=calcHoursAboveBelow(closes,5);
+  return{rsi:rs[rs.length-1]??null,ma:sma(rs,MA_LEN),price:closes[closes.length-1],chg:((closes[closes.length-1]-closes[closes.length-2])/closes[closes.length-2])*100,div:detectDiv(lows,highs,rs),ema100};
 }
 function crRow(s,i){
   const d=crData[s.id],rsi=d?.rsi,dv=d?.div;
@@ -975,6 +1108,8 @@ function crRow(s,i){
   const nc=ks?'var(--green)':ib?'#00aa55':ir?'var(--red)':'var(--text)';
   const stH=dv?.st?`<span style="color:${ib?'var(--green)':'var(--red)'}">${dots(dv.st)}</span>`:`<span style="color:var(--text3)">—</span>`;
   const cc=d?.chg>0?'var(--green)':d?.chg<0?'var(--red)':'var(--text3)';
+  const em=d?.ema100;
+  const emHtml=em?`<span style="color:${em.above?'#ff4444':'var(--green)'};font-size:9px;font-weight:bold" title="${em.hours}h ${em.above?'above':'below'} 100 EMA">${em.above?'↑':'↓'}${em.hours}h</span>`:`<span style="color:var(--text3);font-size:9px">—</span>`;
   return`<tr style="background:${bg};border-left:${bl};border-bottom:1px solid #090d18">
     <td style="color:var(--text3);font-size:9px">${ks?'★':i+1}</td>
     <td style="font-weight:bold;color:${nc}">${s.id.replace('USDT','')}</td>
@@ -983,7 +1118,8 @@ function crRow(s,i){
     <td style="color:#7a5500;font-size:10px">${d?.ma!=null?d.ma.toFixed(1):'—'}</td>
     <td class="r" style="color:var(--text2);font-size:10px">$${fp(d?.price)}</td>
     <td class="r" style="color:${cc};font-size:10px">${d?.chg!=null?(d.chg>0?'+':'')+d.chg.toFixed(2)+'%':'—'}</td>
-    <td class="r">${stH}</td></tr>`;
+    <td class="r">${stH}</td>
+    <td class="r">${emHtml}</td></tr>`;
 }
 function crGo(){
   const q=document.getElementById('cr-search').value.toLowerCase();
@@ -1057,8 +1193,8 @@ async function crFetchAll(){
     res.forEach((r,idx)=>{
       const sym=batch[idx];
       if(r.status==='fulfilled'){
-        const{id,rsi,ma,price,chg,div}=r.value;
-        crData[id]={rsi,ma,price,chg,div,st:'ok'};
+        const{id,rsi,ma,price,chg,div,ema100}=r.value;
+        crData[id]={rsi,ma,price,chg,div,ema100,st:'ok'};
         // KEY SIGNAL: RSI<10 ALI bullish divergence
         const crKS={rsiLow:rsi!==null&&rsi<=10, bullDiv:div?.type==='bull'};
         if(crKS.rsiLow||crKS.bullDiv){
@@ -1127,7 +1263,8 @@ async function spFetchOne(sym){
       if(valid.length<RSI_LEN+LB)throw new Error('short');
       const vc=valid.map(x=>x.c),vl=valid.map(x=>x.l),vh=valid.map(x=>x.h);
       const rs=rsiSeries(vc);spProxy=idx;
-      return{rsi:rs[rs.length-1]??null,ma:sma(rs,MA_LEN),price:vc[vc.length-1],chg:((vc[vc.length-1]-vc[vc.length-2])/vc[vc.length-2])*100,div:detectDiv(vl,vh,rs)};
+      const ema100=calcHoursAboveBelow(vc,5);
+      return{rsi:rs[rs.length-1]??null,ma:sma(rs,MA_LEN),price:vc[vc.length-1],chg:((vc[vc.length-1]-vc[vc.length-2])/vc[vc.length-2])*100,div:detectDiv(vl,vh,rs),ema100};
     }catch(e){lastE=e;}
   }throw lastE;
 }
@@ -1140,6 +1277,8 @@ function spRow(s,i){
   const nc=ks?'var(--green)':ib?'#00aa55':ir?'var(--red)':'var(--text)';
   const stH=dv?.st?`<span style="color:${ib?'var(--green)':'var(--red)'}">${dots(dv.st)}</span>`:`<span style="color:var(--text3)">—</span>`;
   const cc=d?.chg>0?'var(--green)':d?.chg<0?'var(--red)':'var(--text3)';
+  const em=d?.ema100;
+  const emHtml=em?`<span style="color:${em.above?'#ff4444':'var(--green)'};font-size:9px;font-weight:bold" title="${em.hours}h ${em.above?'above':'below'} 100 EMA">${em.above?'↑':'↓'}${em.hours}h</span>`:`<span style="color:var(--text3);font-size:9px">—</span>`;
   return`<tr style="background:${bg};border-left:${bl};border-bottom:1px solid #090d18">
     <td style="color:var(--text3);font-size:9px">${ks?'★':i+1}</td>
     <td><div style="font-weight:bold;color:${nc}">${s.id}</div></td>
@@ -1149,7 +1288,8 @@ function spRow(s,i){
     <td style="color:#7a5500;font-size:10px">${d?.ma!=null?d.ma.toFixed(1):'—'}</td>
     <td class="r" style="color:var(--text2);font-size:10px">$${fp(d?.price)}</td>
     <td class="r" style="color:${cc};font-size:10px">${d?.chg!=null?(d.chg>0?'+':'')+d.chg.toFixed(2)+'%':'—'}</td>
-    <td class="r">${stH}</td></tr>`;
+    <td class="r">${stH}</td>
+    <td class="r">${emHtml}</td></tr>`;
 }
 function spGo(){
   const q=document.getElementById('sp-search').value.toLowerCase();
@@ -1221,8 +1361,8 @@ async function spFetchAll(){
     res.forEach((r,idx)=>{
       const sym=batch[idx];
       if(r.status==='fulfilled'){
-        const{id,rsi,ma,price,chg,div}=r.value;
-        spData[id]={rsi,ma,price,chg,div,st:'ok'};
+        const{id,rsi,ma,price,chg,div,ema100}=r.value;
+        spData[id]={rsi,ma,price,chg,div,ema100,st:'ok'};
         const spKS={rsiLow:rsi!==null&&rsi<=10, bullDiv:div?.type==='bull'};
         if(spKS.rsiLow||spKS.bullDiv){
           const pd=spPrev[id];
@@ -1327,9 +1467,9 @@ function refreshHome(){
   const allBull=all.filter(s=>s.signal==='bull');
   const allBear=all.filter(s=>s.signal==='bear');
 
-  // Track first-seen time for each signal
+  // Track first-seen time for each signal (only clear stale if we have real data)
   all.forEach(s=>{ setSignalTime(s.id+'|'+s.market); });
-  clearStaleSignalTimes(all.map(s=>s.id+'|'+s.market));
+  if(all.length > 0) clearStaleSignalTimes(all.map(s=>s.id+'|'+s.market));
 
   // Only update if signal set actually changed
   const newKeys=new Set(all.map(s=>s.id+'|'+s.market));
@@ -1480,6 +1620,7 @@ function refreshHome(){
             '<div class="ap-m"><span class="ml">PRICE</span><span class="mv">$'+fp(s.price)+'</span></div>'+
             '<div class="ap-m"><span class="ml">5M%</span><span class="mv ap-chg-val" style="color:'+(s.chg>0?'var(--green)':s.chg<0?'var(--red)':'var(--text3)')+'">'+
               (s.chg>0?'+':'')+(s.chg?.toFixed(2)||'')+'%</span></div>'+
+            (s.ema100?'<div class="ap-m" title="Hours price has been '+(s.ema100.above?'above':'below')+' 100-period EMA"><span class="ml">EMA100</span><span class="mv" style="color:'+(s.ema100.above?'var(--red)':'var(--green)')+';font-weight:bold">'+(s.ema100.above?'↑':'↓')+s.ema100.hours+'h</span></div>':'')+
           '</div>'+
         '</div>'+
         '<div class="ap-foot" style="padding:10px 14px">'+
@@ -1731,7 +1872,7 @@ function renderAff(){
 // ══════════════════════════════════════
 // FORUM
 // ══════════════════════════════════════
-const FC=[{id:0,n:'Splošno',c:12},{id:1,n:'Crypto Analiza',c:34},{id:2,n:'S&P 500',c:18},{id:3,n:'Strategije',c:27},{id:4,n:'Affiliate',c:8},{id:5,n:'Vprašanja',c:41}];
+const FC=[{id:0,n:'General',c:12},{id:1,n:'Crypto Analysis',c:34},{id:2,n:'S&P 500',c:18},{id:3,n:'Strategies',c:27},{id:4,n:'Best Brokers',c:8},{id:5,n:'Questions',c:41}];
 let fCat=0,openT=null;
 const FT=[
   {id:0,cat:0,t:'Dobrodošli v TradeCore!',a:'Admin',tm:'2h',v:142,hot:true,posts:[{a:'Admin',r:'FOUNDER',b:'Dobrodošli! Forum je za resne traderje. Delite analize in strategije.',tm:'2h',l:8},{a:'TradeMaster_SI',r:'PRO',b:'Odličen projekt! To sem iskal.',tm:'1h',l:3}]},
@@ -1741,7 +1882,7 @@ const FT=[
 ];
 let fp2=[...FT];
 function renderForum(){
-  document.getElementById('forum-cats').innerHTML=FC.map(c=>`<div class="cat-item${c.id===fCat?' active':''}" onclick="selCat(${c.id})"><div class="ci-name">${c.n}</div><div class="ci-count">${c.c} objav</div></div>`).join('');
+  document.getElementById('forum-cats').innerHTML=FC.map(c=>`<div class="cat-item${c.id===fCat?' active':''}" onclick="selCat(${c.id})"><div class="ci-name">${c.n}</div><div class="ci-count">${c.c} posts</div></div>`).join('');
   renderThreads();
 }
 function selCat(id){fCat=id;document.getElementById('forum-cat-title').textContent=FC[id].n.toUpperCase();closeThread();renderForum();}
@@ -1752,7 +1893,221 @@ function submitReply(){const b=document.getElementById('tv-reply').value.trim(),
 function openNewThread(){const t=prompt('Naslov:');if(!t)return;const b=prompt('Vsebina:');if(!b)return;const a=prompt('Vzdevek:')||'Anonimno';fp2.unshift({id:Date.now(),cat:fCat,t,a,tm:'pravkar',v:1,hot:false,posts:[{a,r:'MEMBER',b,tm:'pravkar',l:0}]});FC[fCat].c++;renderForum();}
 
 // Forum sidebar
-document.getElementById('forum-sidebar').innerHTML=FT.slice(0,4).map(t=>`<div class="forum-item" onclick="nav('forum')"><div class="fi-title">${t.hot?'🔥 ':''}${t.t}</div><div class="fi-meta">@${t.a} · ${t.posts.length} odg.</div></div>`).join('');
+document.getElementById('forum-sidebar').innerHTML=FT.slice(0,4).map(t=>`<div class="forum-item" onclick="nav('forum')"><div class="fi-title">${t.hot?'🔥 ':''}${t.t}</div><div class="fi-meta">@${t.a} · ${t.posts.length} replies</div></div>`).join('');
+
+// ════════════════════════════════════════
+// AI PRO — UNLOCK, TELEGRAM, AI ANALYSIS
+// ════════════════════════════════════════
+const AI_CODES = ['TRADECORE2024','AIPROMATIC','TC-PRO-2025'];
+const AI_UNLOCK_KEY = 'tc_ai_unlocked';
+let aiUnlocked = localStorage.getItem(AI_UNLOCK_KEY)==='1';
+
+function aiApplyUnlock() {
+  const content = document.getElementById('ai-content');
+  const badge = document.getElementById('ai-lock-badge');
+  const unlockSection = document.getElementById('ai-unlock-section');
+  if(aiUnlocked) {
+    content.style.opacity='1'; content.style.pointerEvents='auto'; content.style.filter='none';
+    badge.textContent='✓ PREMIUM ACTIVE'; badge.style.background='rgba(0,232,122,.15)'; badge.style.borderColor='var(--green)'; badge.style.color='var(--green)';
+    unlockSection.style.display='none';
+    loadTelegramSettings();
+  }
+}
+aiApplyUnlock();
+
+function aiUnlock() {
+  const code = document.getElementById('ai-code-input').value.trim().toUpperCase();
+  if(AI_CODES.includes(code)) {
+    aiUnlocked=true; localStorage.setItem(AI_UNLOCK_KEY,'1');
+    aiApplyUnlock();
+  } else {
+    document.getElementById('ai-code-err').style.display='block';
+    setTimeout(()=>document.getElementById('ai-code-err').style.display='none',3000);
+  }
+}
+
+// Telegram
+const TG_KEY = 'tc_telegram';
+function loadTelegramSettings() {
+  const cfg = JSON.parse(localStorage.getItem(TG_KEY)||'{}');
+  if(cfg.token) document.getElementById('tg-token').value=cfg.token;
+  if(cfg.chatid) document.getElementById('tg-chatid').value=cfg.chatid;
+  if(cfg.enabled) document.getElementById('tg-enabled').checked=cfg.enabled;
+}
+function saveTelegramSettings() {
+  const cfg={token:document.getElementById('tg-token').value.trim(),chatid:document.getElementById('tg-chatid').value.trim(),enabled:document.getElementById('tg-enabled').checked};
+  localStorage.setItem(TG_KEY,JSON.stringify(cfg));
+  document.getElementById('tg-status').textContent='✓ Saved';
+  setTimeout(()=>document.getElementById('tg-status').textContent='',2000);
+}
+async function sendTelegram(msg) {
+  const cfg = JSON.parse(localStorage.getItem(TG_KEY)||'{}');
+  if(!cfg.enabled||!cfg.token||!cfg.chatid) return;
+  try {
+    await fetch(`https://api.telegram.org/bot${cfg.token}/sendMessage`,{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({chat_id:cfg.chatid, text:msg, parse_mode:'HTML'})
+    });
+  } catch(e){}
+}
+async function testTelegram() {
+  document.getElementById('tg-status').textContent='Sending...';
+  await sendTelegram(`<b>🤖 TradeCore AI Pro</b>\n\nTest message from your terminal.\nTimestamp: ${new Date().toLocaleTimeString()}`);
+  document.getElementById('tg-status').textContent='✓ Sent! Check Telegram.';
+  setTimeout(()=>document.getElementById('tg-status').textContent='',4000);
+}
+
+// AI Signal Score & Analysis
+function aiAnalyzeSignal(s) {
+  const scores = [];
+  const notes = [];
+
+  // RSI score (lower = stronger oversold for bull)
+  if(s.signal==='bull'||!s.signal) {
+    if(s.rsi < 10) { scores.push(30); notes.push('RSI extremely oversold (<10) — rare & strong signal'); }
+    else if(s.rsi < 20) { scores.push(20); notes.push('RSI oversold (<20)'); }
+    else if(s.rsi < 30) { scores.push(10); notes.push('RSI below 30'); }
+  } else {
+    if(s.rsi > 80) { scores.push(25); notes.push('RSI extremely overbought (>80)'); }
+    else if(s.rsi > 70) { scores.push(15); notes.push('RSI overbought (>70)'); }
+  }
+
+  // Divergence strength
+  if(s.div?.st >= 3) { scores.push(25); notes.push(`Strong divergence (strength: ${s.div.st}/5)`); }
+  else if(s.div?.st >= 2) { scores.push(15); notes.push(`Moderate divergence (strength: ${s.div.st}/5)`); }
+  else if(s.div?.st >= 1) { scores.push(8); notes.push('Weak divergence detected'); }
+
+  // ΔRSI (divergence magnitude)
+  if(s.div?.rd > 15) { scores.push(15); notes.push(`Large RSI divergence gap (ΔRSI: ${s.div.rd?.toFixed(1)})`); }
+  else if(s.div?.rd > 8) { scores.push(8); notes.push(`RSI divergence gap ΔRSI: ${s.div.rd?.toFixed(1)}`); }
+
+  // EMA100 duration — if price has been below EMA100 for a while (bull), that's good
+  if(s.ema100) {
+    const h = s.ema100.hours;
+    if(s.signal==='bull' && !s.ema100.above && h > 10) { scores.push(15); notes.push(`Price below 100 EMA for ${h}h — extended oversold, reversal likely`); }
+    else if(s.signal==='bull' && !s.ema100.above && h > 3) { scores.push(8); notes.push(`Price below 100 EMA for ${h}h`); }
+    else if(s.signal==='bull' && s.ema100.above) { scores.push(3); notes.push(`Price above 100 EMA (${h}h) — less ideal for long`); }
+    else if(s.signal==='bear' && s.ema100.above && h > 10) { scores.push(15); notes.push(`Price above 100 EMA for ${h}h — extended overbought`); }
+  }
+
+  // Price momentum (5m% change)
+  if(s.chg !== null && s.chg !== undefined) {
+    if(s.signal==='bull' && s.chg < -1) { scores.push(10); notes.push(`Strong negative momentum (${s.chg?.toFixed(2)}%) — capitulation possible`); }
+    else if(s.signal==='bear' && s.chg > 1) { scores.push(10); notes.push(`Strong positive momentum (${s.chg?.toFixed(2)}%) — exhaustion possible`); }
+    else { scores.push(3); notes.push(`Price change: ${(s.chg>0?'+':'')+s.chg?.toFixed(2)}%`); }
+  }
+
+  // Forex deviation from 100 MA (bonus scoring)
+  if(s.devPct !== undefined && s.devPct !== null) {
+    const dev = Math.abs(s.devPct);
+    if(dev >= 3) { scores.push(30); notes.push(`Extreme deviation from 100 MA: ${s.devPct>0?'+':''}${s.devPct?.toFixed(3)}% — mean reversion highly likely`); }
+    else if(dev >= 2) { scores.push(22); notes.push(`Large deviation from 100 MA: ${s.devPct>0?'+':''}${s.devPct?.toFixed(3)}%`); }
+    else if(dev >= 1.5) { scores.push(15); notes.push(`Notable deviation from 100 MA: ${s.devPct>0?'+':''}${s.devPct?.toFixed(3)}%`); }
+    else { scores.push(8); notes.push(`Deviation from 100 MA: ${s.devPct>0?'+':''}${s.devPct?.toFixed(3)}%`); }
+  }
+
+  const total = Math.min(100, scores.reduce((a,b)=>a+b,0));
+  const grade = total >= 80 ? {g:'A',c:'#00e87a'} : total >= 65 ? {g:'B',c:'#4a9aff'} : total >= 50 ? {g:'C',c:'var(--amber)'} : {g:'D',c:'var(--text3)'};
+  const rec = total >= 75 ? (s.signal==='bear'?'⚠ SHORT opportunity — confirm with price action':'✅ HIGH confidence setup — watch for entry confirmation') :
+              total >= 55 ? '🔍 Moderate signal — wait for additional confirmation' :
+              '⏳ Weak setup — monitor but avoid immediate entry';
+
+  return { score: total, grade, notes, rec };
+}
+
+let aiAnalysesFeed = [];
+function aiAddAnalysis(s, market) {
+  if(!aiUnlocked) return;
+  const minScore = parseInt(document.getElementById('ai-min-score')?.value||'65');
+  const analysis = aiAnalyzeSignal(s);
+  if(analysis.score < minScore) return;
+
+  const now = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+  const sym = s.sym || s.id?.replace('USDT','') || s.l || '?';
+  aiAnalysesFeed.unshift({sym, market, signal:s.signal||'bull', analysis, time:now});
+  if(aiAnalysesFeed.length>50) aiAnalysesFeed=aiAnalysesFeed.slice(0,50);
+  renderAiAnalyses();
+
+  // Send Telegram notification
+  const tgMsg = `🤖 <b>AI PRO ALERT</b> — Score ${analysis.score}/100 (${analysis.grade.g})\n` +
+    `<b>${sym}</b> [${market}] — ${s.signal==='bear'?'BEAR ▼':'BULL ▲'}\n` +
+    `RSI: ${s.rsi?.toFixed(1)} | Price: $${s.price?.toFixed?.(s.price>100?2:4)||'—'}\n` +
+    `📊 ${analysis.rec}\n` +
+    `⏰ ${now}`;
+  sendTelegram(tgMsg);
+}
+
+function renderAiAnalyses() {
+  const el = document.getElementById('ai-analyses-feed');
+  if(!el) return;
+  if(!aiAnalysesFeed.length) {
+    el.innerHTML='<div style="color:var(--text3);font-size:10px;text-align:center;padding:20px">No signals analyzed yet. Waiting for data...</div>';
+    return;
+  }
+  el.innerHTML = aiAnalysesFeed.map(item => {
+    const a = item.analysis;
+    const sigDir = item.signal==='bear'?'▼ BEAR':item.signal==='neutral'?'◆ NEUTRAL':'▲ BULL';
+    const sigCol = item.signal==='bear'?'var(--red)':item.signal==='neutral'?'var(--amber)':'var(--green)';
+    if(item.manual) {
+      return `<div style="background:var(--bg2);border:1px solid #7c3aed;border-left:3px solid #a855f7;padding:14px;margin-bottom:10px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span style="font-size:16px;font-weight:bold;color:#a855f7;letter-spacing:.05em">${item.sym}</span>
+          <span style="font-size:8px;padding:2px 6px;border:1px solid var(--border2);color:var(--text3)">${item.market}</span>
+          <span style="font-size:8px;padding:2px 6px;border:1px solid ${sigCol};color:${sigCol}">${sigDir}</span>
+          <span style="font-size:8px;padding:2px 6px;background:rgba(168,85,247,.1);border:1px solid #7c3aed;color:#a855f7">✍ MANUAL</span>
+          <span style="margin-left:auto;font-size:9px;color:var(--text3)">🕐 ${item.time}</span>
+        </div>
+        <div style="font-size:10px;color:var(--text);line-height:1.7;white-space:pre-wrap">${a.notes[0]}</div>
+        <a href="${MEXC_AFF}" target="_blank" rel="noopener" style="display:inline-block;margin-top:10px;padding:4px 14px;background:rgba(168,85,247,.12);border:1px solid #7c3aed;color:#a855f7;font-size:9px;text-decoration:none;font-weight:bold">▶ OPEN TRADE ON MEXC</a>
+      </div>`;
+    }
+    const barW = Math.round(a.score);
+    const barCol = a.score>=75?'#00e87a':a.score>=55?'#4a9aff':'var(--amber)';
+    return `<div style="background:var(--bg2);border:1px solid var(--border2);border-left:3px solid ${a.grade.c};padding:14px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <span style="font-size:16px;font-weight:bold;color:${a.grade.c};letter-spacing:.05em">${item.sym}</span>
+        <span style="font-size:8px;padding:2px 6px;border:1px solid var(--border2);color:var(--text3)">${item.market}</span>
+        <span style="font-size:8px;padding:2px 6px;border:1px solid ${sigCol};color:${sigCol}">${sigDir}</span>
+        <span style="margin-left:auto;font-size:9px;color:var(--text3)">🕐 ${item.time}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <div style="font-size:28px;font-weight:bold;color:${a.grade.c};min-width:40px">${a.grade.g}</div>
+        <div style="flex:1">
+          <div style="font-size:9px;color:var(--text3);margin-bottom:3px">AI SCORE: ${a.score}/100</div>
+          <div style="height:6px;background:var(--bg3);border-radius:3px;overflow:hidden">
+            <div style="height:100%;width:${barW}%;background:${barCol};transition:width .5s;border-radius:3px"></div>
+          </div>
+        </div>
+      </div>
+      <div style="font-size:10px;color:${a.grade.c};margin-bottom:8px;font-weight:bold">${a.rec}</div>
+      <div style="font-size:9px;color:var(--text3);line-height:1.7">${a.notes.map(n=>'• '+n).join('<br>')}</div>
+      <a href="${MEXC_AFF}" target="_blank" rel="noopener" style="display:inline-block;margin-top:10px;padding:4px 14px;background:rgba(168,85,247,.12);border:1px solid #7c3aed;color:#a855f7;font-size:9px;text-decoration:none;font-weight:bold">▶ OPEN TRADE ON MEXC</a>
+    </div>`;
+  }).join('');
+}
+
+function aiPostManual() {
+  const sym = (document.getElementById('ai-man-sym').value||'').trim().toUpperCase();
+  const dir = document.getElementById('ai-man-dir').value;
+  const mkt = document.getElementById('ai-man-mkt').value;
+  const txt = (document.getElementById('ai-man-text').value||'').trim();
+  const statusEl = document.getElementById('ai-man-status');
+  if(!sym) { statusEl.textContent='⚠ Enter a ticker symbol'; statusEl.style.color='var(--red)'; return; }
+  if(!txt) { statusEl.textContent='⚠ Write your analysis text'; statusEl.style.color='var(--red)'; return; }
+  const now = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+  const manualAnalysis = {
+    score: null, grade: {g:'M', c:'#a855f7'},
+    notes: [txt],
+    rec: txt.length > 80 ? txt.substring(0,80)+'…' : txt
+  };
+  aiAnalysesFeed.unshift({sym, market:mkt, signal:dir, analysis:manualAnalysis, time:now, manual:true});
+  if(aiAnalysesFeed.length>50) aiAnalysesFeed=aiAnalysesFeed.slice(0,50);
+  renderAiAnalyses();
+  document.getElementById('ai-man-sym').value='';
+  document.getElementById('ai-man-text').value='';
+  statusEl.textContent='✓ Analysis posted'; statusEl.style.color='var(--green)';
+  setTimeout(()=>statusEl.textContent='',3000);
+}
 
 // ══════════════════════════════════════
 // INIT
@@ -2142,6 +2497,7 @@ async function dvFetchAll() {
     newA.forEach(a => {
       const lbl = (a.dir==='above' ? '↑ SHORT' : '↓ LONG') + ' · Dev ' + (a.devPct>0?'+':'') + a.devPct?.toFixed(3) + '%';
       addGlobalAlarm('FOREX DEV', a.l, lbl, a.dir==='above' ? '#ff6633' : '#4a9aff');
+      aiAddAnalysis({sym: a.l, signal: a.dir==='above' ? 'bear' : 'bull', rsi: null, price: a.price, div: {rd: null, st: 1}, ema100: a.ema100||null, devPct: a.devPct}, 'FOREX');
     });
     sendSignalEmail(newA.map(a=>({...a,sym:a.l,rsiLow:false,bullDiv:false,
       rsi:null,div:{rd:null,st:1},
@@ -2285,6 +2641,7 @@ function crDispatchSignals(newA) {
     const sym = a.id.replace('USDT','');
     const lbl = a.rsiLow && a.bullDiv ? 'RSI<10 + BULL DIV' : a.rsiLow ? 'RSI<10' : 'BULL DIV';
     addGlobalAlarm('CRYPTO', sym, lbl + ' · RSI ' + (a.rsi?.toFixed(1)||'—'), 'var(--green)');
+    aiAddAnalysis({...a, sym, signal: a.bearDiv ? 'bear' : 'bull'}, 'CRYPTO');
   });
   if (newA.length) sendSignalEmail(newA.map(a => ({...a, sym: a.id.replace('USDT','')}))).catch(()=>{});
 }
@@ -2294,6 +2651,7 @@ function spDispatchSignals(newA) {
   newA.forEach(a => {
     const lbl = a.rsiLow && a.bullDiv ? 'RSI<10 + BULL DIV' : a.rsiLow ? 'RSI<10' : 'BULL DIV';
     addGlobalAlarm('SP500', a.id, lbl + ' · RSI ' + (a.rsi?.toFixed(1)||'—'), 'var(--amber)');
+    aiAddAnalysis({...a, sym: a.id, signal: a.bearDiv ? 'bear' : 'bull'}, 'SP500');
   });
   if (newA.length) sendSignalEmail(newA.map(a => ({...a, sym: a.id}))).catch(()=>{});
 }
