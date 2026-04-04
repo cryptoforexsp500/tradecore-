@@ -289,17 +289,17 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
 <div id="topbar">
   <div class="logo" onclick="nav('home')">TRADE<span>CORE</span></div>
   <div class="nav-tabs">
-    <div class="tab active" onclick="nav('home')" id="t-home">ANALIZE</div>
+    <div class="tab active" onclick="nav('home')" id="t-home">ANALYSIS</div>
     <div class="tab" onclick="nav('crypto')" id="t-crypto">CRYPTO SCAN</div>
     <div class="tab" onclick="nav('sp500')" id="t-sp500">S&amp;P 500 SCAN</div>
-    <div class="tab" onclick="nav('strat')" id="t-strat">STRATEGIJE</div>
+    <div class="tab" onclick="nav('strat')" id="t-strat">STRATEGIES</div>
     <div class="tab" onclick="nav('aff')" id="t-aff">BEST BROKERS</div>
     <div class="tab" onclick="nav('dev')" id="t-dev" style="color:var(--amber)">DEVIATION SCAN</div>
     <div class="tab" onclick="nav('forum')" id="t-forum">FORUM</div>
   </div>
   <div class="topbar-right">
-    <div id="start-time-badge" style="font-size:9px;color:var(--text3);letter-spacing:.08em;padding:2px 8px;border:1px solid var(--border);cursor:pointer" title="Klikni za alarm zgodovino" onclick="nav('home');setTimeout(()=>document.getElementById('section-alarmlog').scrollIntoView({behavior:'smooth'}),100)">⏻ --:--:--</div>
-    <div id="mkt-badge" style="color:var(--text3)">○ ZAPRT</div>
+    <div id="start-time-badge" style="font-size:9px;color:var(--text3);letter-spacing:.08em;padding:2px 8px;border:1px solid var(--border);cursor:pointer" title="Click for alarm history" onclick="nav('home');setTimeout(()=>document.getElementById('section-alarmlog').scrollIntoView({behavior:'smooth'}),100)">⏻ --:--:--</div>
+    <div id="mkt-badge" style="color:var(--text3)">○ CLOSED</div>
     <div id="clock">--:--:--</div>
   </div>
 </div>
@@ -319,7 +319,7 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
       <span id="prog-mini-txt" class="scanning-txt">0%</span>
     </div>
     <div class="sb-item" style="margin-left:auto">
-      <span id="signal-count-badge" style="color:var(--text3);font-size:9px">0 aktivnih signalov</span>
+      <span id="signal-count-badge" style="color:var(--text3);font-size:9px">0 aktivnih signals</span>
     </div>
     <div class="sb-item">
       <button class="btn" id="snd-btn" onclick="toggleSnd()" style="color:var(--green);font-size:9px">♪ ZVOK ON</button>
@@ -336,17 +336,17 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
         <span>SIGNALI</span>
         <div style="display:flex;align-items:center;gap:5px">
           <select id="home-sort" onchange="refreshHome()" style="font-size:8px;padding:1px 4px;background:var(--bg3);border:1px solid var(--border2);color:var(--text3)">
-            <option value="newest">Najnovejši</option>
-            <option value="rsi_asc">RSI ↑ (najnižji)</option>
-            <option value="rsi_desc">RSI ↓ (najvišji)</option>
-            <option value="bull_first">▲ Bull najprej</option>
-            <option value="bear_first">▼ Bear najprej</option>
-            <option value="strength">Moč ↓</option>
-            <option value="chg_asc">Sprememba ↑ (padajoča)</option>
-            <option value="chg_desc">Sprememba ↓ (rastoča)</option>
-            <option value="price_asc">Cena ↑ (najnižja)</option>
-            <option value="price_desc">Cena ↓ (najvišja)</option>
-            <option value="sym_az">Simbol A→Z</option>
+            <option value="newest">Newest</option>
+            <option value="rsi_asc">RSI ↑ (lowest)</option>
+            <option value="rsi_desc">RSI ↓ (highest)</option>
+            <option value="bull_first">▲ Bull first</option>
+            <option value="bear_first">▼ Bear first</option>
+            <option value="strength">Strength ↓</option>
+            <option value="chg_asc">Change ↑ (descending)</option>
+            <option value="chg_desc">Change ↓ (ascending)</option>
+            <option value="price_asc">Price ↑ (lowest)</option>
+            <option value="price_desc">Price ↓ (highest)</option>
+            <option value="sym_az">Symbol A→Z</option>
           </select>
           <span id="lc-count" style="color:var(--green);font-weight:bold">0</span>
         </div>
@@ -354,7 +354,7 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
       <div id="signal-list" style="flex:1;overflow-y:auto">
         <div class="no-signals">
           <div class="ns-icon">◈</div>
-          <div class="ns-txt">Iščem signale...<br>RSI &lt; 10<br>+ Bullish divergenca<br><br>Crypto: 100 parov<br>S&P 500: 100 delnic</div>
+          <div class="ns-txt">Searching for signals...<br>RSI &lt; 10<br>+ Bullish divergence<br><br>Crypto: 100 pairs<br>S&P 500: 100 stocks</div>
         </div>
       </div>
     </div>
@@ -365,14 +365,14 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
       <!-- Live RSI<10 + bull div analysis -->
       <div class="feed-section" id="section-live">
         <div class="fs-hdr" style="display:flex;align-items:center;justify-content:space-between">
-          <span>⚡ AKTIVNI SIGNALI</span>
+          <span>⚡ ACTIVE SIGNALS</span>
           <span id="home-sort-label" style="font-size:9px;color:var(--text3);letter-spacing:.05em;font-weight:normal"></span>
         </div>
         <div id="live-analysis-feed">
           <div style="color:var(--text3);font-size:10px;line-height:2;text-align:center;padding:20px 0">
             <div style="font-size:20px;opacity:.2;margin-bottom:8px">◈</div>
-            Čakam na signale...<br>
-            Pogoj: RSI &lt; 10 <span style="color:var(--text3)">+</span> Bullish divergenca
+            Waiting for signals...<br>
+            Condition: RSI &lt; 10 <span style="color:var(--text3)">+</span> Bullish divergence
           </div>
         </div>
       </div>
@@ -380,28 +380,28 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
       <!-- Deviation alerts section -->
       <div class="feed-section" id="section-dev-alerts">
         <div class="fs-hdr" style="display:flex;align-items:center;justify-content:space-between">
-          <span>📡 DEVIATION ALARMI (Forex &gt;1% od 100 EMA)</span>
+          <span>📡 DEVIATION ALERTS (Forex &gt;1% from 100 EMA)</span>
           <span id="dev-alert-count" style="font-size:9px;color:var(--amber)"></span>
         </div>
         <div id="home-dev-alerts">
-          <div style="color:var(--text3);font-size:10px;text-align:center;padding:12px 0;opacity:.5">Čakam na deviation alarme... (zagona po 9s)</div>
+          <div style="color:var(--text3);font-size:10px;text-align:center;padding:12px 0;opacity:.5">Waiting for deviation alerts... (loads after 9s)</div>
         </div>
       </div>
 
       <!-- Alarm history log -->
       <div class="feed-section" id="section-alarmlog">
         <div class="fs-hdr" style="display:flex;align-items:center;justify-content:space-between">
-          <span>🕐 ALARM ZGODOVIN A (zadnjih 100)</span>
-          <button onclick="globalAlarmLog=[];renderAlarmLog()" style="background:none;border:none;color:var(--text3);font-size:9px;cursor:pointer;letter-spacing:.1em">POČISTI</button>
+          <span>🕐 ALARM HISTORY (last 100)</span>
+          <button onclick="globalAlarmLog=[];renderAlarmLog()" style="background:none;border:none;color:var(--text3);font-size:9px;cursor:pointer;letter-spacing:.1em">CLEAR</button>
         </div>
         <div id="home-alarm-log">
-          <div style="color:var(--text3);font-size:10px;text-align:center;padding:12px 0;opacity:.5">Ni alarmov v tej seji.</div>
+          <div style="color:var(--text3);font-size:10px;text-align:center;padding:12px 0;opacity:.5">No alarms in this session.</div>
         </div>
       </div>
 
       <!-- My posts -->
       <div class="feed-section">
-        <div class="fs-hdr">📝 MOJE ANALIZE IN POSTI</div>
+        <div class="fs-hdr">📝 MY ANALYSES & POSTS</div>
         <div id="my-posts-feed"></div>
       </div>
 
@@ -410,16 +410,16 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
     <!-- RIGHT: sidebar -->
     <div class="col-right">
       <div class="sidebar-block">
-        <div class="sb-hdr">TOP STRATEGIJE</div>
+        <div class="sb-hdr">TOP STRATEGIES</div>
         <div id="strat-sidebar"></div>
-        <span onclick="nav('strat')" style="color:var(--blue);cursor:pointer;font-size:9px">→ VSE STRATEGIJE</span>
+        <span onclick="nav('strat')" style="color:var(--blue);cursor:pointer;font-size:9px">→ ALL STRATEGIES</span>
       </div>
       <div class="sidebar-block">
         <div class="sb-hdr">🏆 BEST BROKERS</div>
         <div style="padding:8px 0;text-align:center">
           <div style="font-size:13px;font-weight:bold;color:var(--amber);letter-spacing:.1em">MEXC</div>
           <div style="font-size:9px;color:var(--text3);margin:3px 0">Crypto · Spot · Futures · Forex</div>
-          <a href="https://promote.mexc.com/r/MA1RGTsxcY" target="_blank" rel="noopener" style="display:block;margin-top:6px;padding:5px 10px;background:rgba(240,165,0,.12);border:1px solid var(--amber);color:var(--amber);font-size:9px;text-decoration:none;text-align:center;font-weight:bold;letter-spacing:.1em">→ ODPRI RAČUN</a>
+          <a href="https://promote.mexc.com/r/MA1RGTsxcY" target="_blank" rel="noopener" style="display:block;margin-top:6px;padding:5px 10px;background:rgba(240,165,0,.12);border:1px solid var(--amber);color:var(--amber);font-size:9px;text-decoration:none;text-align:center;font-weight:bold;letter-spacing:.1em">→ OPEN ACCOUNT</a>
         </div>
         <div style="margin-top:6px"><span onclick="nav('aff')" style="color:var(--amber);cursor:pointer;font-size:9px">→ BEST BROKERS</span></div>
       </div>
@@ -436,7 +436,7 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
 <!-- POST OVERLAY -->
 <div id="post-overlay">
   <div class="po-topbar">
-    <button class="btn" onclick="closePost()">← NAZAJ</button>
+    <button class="btn" onclick="closePost()">← BACK</button>
     <span id="po-crumb" style="color:var(--text3);font-size:10px"></span>
   </div>
   <div class="po-content">
@@ -448,9 +448,9 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
       <div style="font-size:9px;color:var(--blue);letter-spacing:.18em;margin-bottom:12px">KOMENTARJI</div>
       <div id="po-comments"></div>
       <div style="margin-top:12px">
-        <textarea id="po-comment-txt" rows="2" placeholder="Dodaj komentar..."></textarea>
+        <textarea id="po-comment-txt" rows="2" placeholder="Add comment..."></textarea>
         <div style="margin-top:6px;display:flex;gap:6px">
-          <input type="text" id="po-comment-auth" placeholder="Vzdevek..." style="width:120px"/>
+          <input type="text" id="po-comment-auth" placeholder="Nickname..." style="width:120px"/>
           <button class="btn btn-primary" onclick="submitComment()">POŠLJI →</button>
         </div>
       </div>
@@ -462,14 +462,14 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
 <div class="page" id="page-crypto">
   <div class="scan-page">
     <div class="section-hdr">
-      <span class="section-title">◈ CRYPTO RSI DIV</span>
+      <span class="section-title">◈ CRYPTO RSI DIVERGENCE</span>
       <span style="color:var(--text3);font-size:9px">BINANCE · 5MIN · RSI14+MA14</span>
       <div style="background:var(--bg3);padding:2px 7px;border:1px solid var(--border2);font-size:10px;display:flex;gap:8px"><span style="color:var(--purple)">RSI 14</span><span style="color:var(--amber)">MA 14</span></div>
       <div class="prog-wrap" id="cr-pw"><div class="prog-track"><div class="prog-fill" id="cr-pf" style="width:0%;background:var(--green)"></div></div><span id="cr-pt" style="color:var(--text3);font-size:9px">0%</span></div>
       <div style="margin-left:auto;display:flex;gap:5px;align-items:center">
         <input type="text" id="cr-search" placeholder="BTC..." oninput="crGo()" style="width:65px"/>
-        <select id="cr-filter" onchange="crGo()"><option value="all">Vsi</option><option value="bull">▲ Bullish</option><option value="bear">▼ Bearish</option><option value="any">↕ Div</option><option value="rsi10">★ RSI&lt;10 ali Bull div</option></select>
-        <select id="cr-srt" onchange="crGo()"><option value="div">Divergenca</option><option value="rsi">RSI ↑ (najnižji)</option><option value="rsi_desc">RSI ↓ (najvišji)</option><option value="str">Moč ↓</option><option value="chg">Sprememba % ↓</option><option value="chg_desc">Sprememba % ↑</option><option value="price_asc">Cena ↑</option><option value="price_desc">Cena ↓</option><option value="ma_asc">MA ↑</option><option value="ma_desc">MA ↓</option><option value="sym">Simbol A→Z</option></select>
+        <select id="cr-filter" onchange="crGo()"><option value="all">All</option><option value="bull">▲ Bullish</option><option value="bear">▼ Bearish</option><option value="any">↕ Div</option><option value="rsi10">★ RSI&lt;10 or Bull div</option></select>
+        <select id="cr-srt" onchange="crGo()"><option value="div">Divergenca</option><option value="rsi">RSI ↑ (lowest)</option><option value="rsi_desc">RSI ↓ (highest)</option><option value="str">Strength ↓</option><option value="chg">Sprememba % ↓</option><option value="chg_desc">Sprememba % ↑</option><option value="price_asc">Cena ↑</option><option value="price_desc">Cena ↓</option><option value="ma_asc">MA ↑</option><option value="ma_desc">MA ↓</option><option value="sym">Symbol A→Z</option></select>
         <button class="btn" id="cr-snd" onclick="crTglSnd()" style="color:var(--green)">♪</button>
         <button class="btn btn-primary" id="cr-rb" onclick="crFetchAll()">↻ <span id="cr-cd">60s</span></button>
       </div>
@@ -482,23 +482,23 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
       <div class="scan-table-wrap"><table class="scan-table">
         <thead id="cr-thead"><tr>
           <th>#</th>
-          <th class="th-sort" data-col="sym" onclick="crThSort('sym')">PAR</th>
-          <th class="th-sort" data-col="div" onclick="crThSort('div')">DIVERGENCA</th>
+          <th class="th-sort" data-col="sym" onclick="crThSort('sym')">PAIR</th>
+          <th class="th-sort" data-col="div" onclick="crThSort('div')">DIVERGENCE</th>
           <th class="th-sort" data-col="rsi" onclick="crThSort('rsi')"><span style="color:var(--purple)">RSI</span></th>
           <th class="th-sort" data-col="ma" onclick="crThSort('ma')"><span style="color:var(--amber)">MA</span></th>
-          <th class="th-sort r" data-col="price" onclick="crThSort('price')">CENA</th>
+          <th class="th-sort r" data-col="price" onclick="crThSort('price')">PRICE</th>
           <th class="th-sort r" data-col="chg" onclick="crThSort('chg')">5M%</th>
-          <th class="th-sort r" data-col="str" onclick="crThSort('str')">MOČ</th>
+          <th class="th-sort r" data-col="str" onclick="crThSort('str')">STRENGTH</th>
         </tr></thead>
         <tbody id="cr-tb"></tbody>
       </table></div>
       <div class="scan-sidebar">
         <div class="sb-title">SIGNAL LOG <button onclick="crAlerts=[];crRenderLog()" style="background:none;border:none;color:var(--text3);font-size:9px;cursor:pointer">X</button></div>
-        <div id="cr-log"><div style="color:var(--text3);font-size:10px;line-height:2.2">Čakam...</div></div>
+        <div id="cr-log"><div style="color:var(--text3);font-size:10px;line-height:2.2">Waiting...</div></div>
         <div style="margin-top:10px;border-top:1px solid var(--border);padding-top:8px">
-          <div style="color:var(--text3);font-size:9px;margin-bottom:5px">STATISTIKA</div>
-          <div class="sb-stat"><span>Naloženih</span><span id="cr-sl" style="color:var(--blue)">0/100</span></div>
-          <div class="sb-stat"><span>★ RSI&lt;10 ali Bull div</span><span id="cr-s10" style="color:var(--green)">0</span></div>
+          <div style="color:var(--text3);font-size:9px;margin-bottom:5px">STATISTICS</div>
+          <div class="sb-stat"><span>Loaded</span><span id="cr-sl" style="color:var(--blue)">0/100</span></div>
+          <div class="sb-stat"><span>★ RSI&lt;10 or Bull div</span><span id="cr-s10" style="color:var(--green)">0</span></div>
           <div class="sb-stat"><span>▲ Bullish div</span><span id="cr-sb">0</span></div>
           <div class="sb-stat"><span>▼ Bearish div</span><span id="cr-sr">0</span></div>
           <div class="sb-stat"><span>RSI &lt;30</span><span id="cr-so">0</span></div>
@@ -512,15 +512,15 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
 <div class="page" id="page-sp500">
   <div class="scan-page">
     <div class="section-hdr">
-      <span class="section-title">◈ S&amp;P 500 RSI DIV</span>
+      <span class="section-title">◈ S&amp;P 500 RSI DIVERGENCE</span>
       <span style="color:var(--text3);font-size:9px">YAHOO · 5MIN · RSI14+MA14</span>
       <div style="background:var(--bg3);padding:2px 7px;border:1px solid var(--border2);font-size:10px;display:flex;gap:8px"><span style="color:var(--purple)">RSI 14</span><span style="color:var(--amber)">MA 14</span></div>
       <div class="prog-wrap" id="sp-pw"><div class="prog-track"><div class="prog-fill" id="sp-pf" style="width:0%;background:var(--amber)"></div></div><span id="sp-pt" style="color:var(--text3);font-size:9px">0%</span></div>
       <div style="margin-left:auto;display:flex;gap:5px;align-items:center;flex-wrap:wrap">
         <input type="text" id="sp-search" placeholder="AAPL..." oninput="spGo()" style="width:65px"/>
-        <select id="sp-filter" onchange="spGo()"><option value="all">Vsi</option><option value="bull">▲ Bullish</option><option value="bear">▼ Bearish</option><option value="any">↕ Div</option><option value="rsi10">★ RSI&lt;10 ali Bull div</option></select>
-        <select id="sp-sec" onchange="spGo()"><option value="all">Vsi sektorji</option><option value="Tech">Tech</option><option value="Health">Health</option><option value="Finance">Finance</option><option value="Energy">Energy</option><option value="Consumer">Consumer</option><option value="Indust">Indust</option></select>
-        <select id="sp-srt" onchange="spGo()"><option value="div">Divergenca</option><option value="rsi">RSI ↑ (najnižji)</option><option value="rsi_desc">RSI ↓ (najvišji)</option><option value="str">Moč ↓</option><option value="chg">Sprememba % ↓</option><option value="chg_desc">Sprememba % ↑</option><option value="price_asc">Cena ↑</option><option value="price_desc">Cena ↓</option><option value="ma_asc">MA ↑</option><option value="ma_desc">MA ↓</option><option value="sym">Simbol A→Z</option></select>
+        <select id="sp-filter" onchange="spGo()"><option value="all">All</option><option value="bull">▲ Bullish</option><option value="bear">▼ Bearish</option><option value="any">↕ Div</option><option value="rsi10">★ RSI&lt;10 or Bull div</option></select>
+        <select id="sp-sec" onchange="spGo()"><option value="all">All sectors</option><option value="Tech">Tech</option><option value="Health">Health</option><option value="Finance">Finance</option><option value="Energy">Energy</option><option value="Consumer">Consumer</option><option value="Indust">Indust</option></select>
+        <select id="sp-srt" onchange="spGo()"><option value="div">Divergenca</option><option value="rsi">RSI ↑ (lowest)</option><option value="rsi_desc">RSI ↓ (highest)</option><option value="str">Strength ↓</option><option value="chg">Sprememba % ↓</option><option value="chg_desc">Sprememba % ↑</option><option value="price_asc">Cena ↑</option><option value="price_desc">Cena ↓</option><option value="ma_asc">MA ↑</option><option value="ma_desc">MA ↓</option><option value="sym">Symbol A→Z</option></select>
         <button class="btn" id="sp-snd" onclick="spTglSnd()" style="color:var(--green)">♪</button>
         <button class="btn" style="color:var(--amber);border-color:var(--amber)" id="sp-rb" onclick="spFetchAll()">↻ <span id="sp-cd">5m0s</span></button>
       </div>
@@ -534,24 +534,24 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
       <div class="scan-table-wrap"><table class="scan-table">
         <thead id="sp-thead"><tr>
           <th>#</th>
-          <th class="th-sort" data-col="sym" onclick="spThSort('sym')">DELNICA</th>
-          <th>SEKTOR</th>
-          <th class="th-sort" data-col="div" onclick="spThSort('div')">DIVERGENCA</th>
+          <th class="th-sort" data-col="sym" onclick="spThSort('sym')">STOCK</th>
+          <th>SECTOR</th>
+          <th class="th-sort" data-col="div" onclick="spThSort('div')">DIVERGENCE</th>
           <th class="th-sort" data-col="rsi" onclick="spThSort('rsi')"><span style="color:var(--purple)">RSI</span></th>
           <th class="th-sort" data-col="ma" onclick="spThSort('ma')"><span style="color:var(--amber)">MA</span></th>
-          <th class="th-sort r" data-col="price" onclick="spThSort('price')">CENA</th>
+          <th class="th-sort r" data-col="price" onclick="spThSort('price')">PRICE</th>
           <th class="th-sort r" data-col="chg" onclick="spThSort('chg')">5M%</th>
-          <th class="th-sort r" data-col="str" onclick="spThSort('str')">MOČ</th>
+          <th class="th-sort r" data-col="str" onclick="spThSort('str')">STRENGTH</th>
         </tr></thead>
         <tbody id="sp-tb"></tbody>
       </table></div>
       <div class="scan-sidebar">
         <div class="sb-title">SIGNAL LOG <button onclick="spAlerts=[];spRenderLog()" style="background:none;border:none;color:var(--text3);font-size:9px;cursor:pointer">X</button></div>
-        <div id="sp-log"><div style="color:var(--text3);font-size:10px;line-height:2.2">Čakam...</div></div>
+        <div id="sp-log"><div style="color:var(--text3);font-size:10px;line-height:2.2">Waiting...</div></div>
         <div style="margin-top:10px;border-top:1px solid var(--border);padding-top:8px">
-          <div style="color:var(--text3);font-size:9px;margin-bottom:5px">STATISTIKA</div>
-          <div class="sb-stat"><span>Naloženih</span><span id="sp-sl" style="color:var(--amber)">0/100</span></div>
-          <div class="sb-stat"><span>★ RSI&lt;10 ali Bull div</span><span id="sp-s10" style="color:var(--green)">0</span></div>
+          <div style="color:var(--text3);font-size:9px;margin-bottom:5px">STATISTICS</div>
+          <div class="sb-stat"><span>Loaded</span><span id="sp-sl" style="color:var(--amber)">0/100</span></div>
+          <div class="sb-stat"><span>★ RSI&lt;10 or Bull div</span><span id="sp-s10" style="color:var(--green)">0</span></div>
           <div class="sb-stat"><span>▲ Bullish div</span><span id="sp-sb">0</span></div>
           <div class="sb-stat"><span>▼ Bearish div</span><span id="sp-sr">0</span></div>
           <div class="sb-stat"><span>RSI &lt;35</span><span id="sp-so">0</span></div>
@@ -606,18 +606,18 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
           <option value="2.0">Prag: &gt;2.0%</option>
         </select>
         <select id="dv-filter" onchange="dvGo()">
-          <option value="all">Vsi pari</option>
-          <option value="above">↑ Nad MA (potential short)</option>
-          <option value="below">↓ Pod MA (potential long)</option>
-          <option value="extreme">⚡ Ekstremno (&gt;1.5%)</option>
+          <option value="all">All pairs</option>
+          <option value="above">↑ Above MA (potential short)</option>
+          <option value="below">↓ Below MA (potential long)</option>
+          <option value="extreme">⚡ Extreme (&gt;1.5%)</option>
         </select>
         <select id="dv-srt" onchange="dvGo()">
-          <option value="dev">Deviacija % ↓</option>
-          <option value="name">Ime A→Z</option>
+          <option value="dev">Deviation % ↓</option>
+          <option value="name">Name A→Z</option>
           <option value="spot_asc">Cena ↑</option>
           <option value="spot_desc">Cena ↓</option>
-          <option value="above_first">↑ Short (nad MA) najprej</option>
-          <option value="below_first">↓ Long (pod MA) najprej</option>
+          <option value="above_first">↑ Short (above MA) first</option>
+          <option value="below_first">↓ Long (below MA) first</option>
         </select>
         <button class="btn" id="dv-rb" onclick="dvFetchAll()" style="color:var(--amber);border-color:var(--amber)">↻ <span id="dv-cd">5m0s</span></button>
       </div>
@@ -638,11 +638,11 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
         <table class="scan-table">
           <thead id="dv-thead"><tr>
             <th>#</th>
-            <th class="th-sort" data-col="name" onclick="dvThSort('name')">PAR</th>
-            <th class="th-sort" data-col="dev" style="min-width:180px" onclick="dvThSort('dev')">DEVIACIJA OD 100-PERIOD MA</th>
+            <th class="th-sort" data-col="name" onclick="dvThSort('name')">PAIR</th>
+            <th class="th-sort" data-col="dev" style="min-width:180px" onclick="dvThSort('dev')">DEVIATION FROM 100-PERIOD MA</th>
             <th class="th-sort r" data-col="spot_asc" onclick="dvThSort('spot')">SPOT</th>
             <th class="r">100-MA</th>
-            <th class="r">RAZLIKA</th>
+            <th class="r">DIFF</th>
             <th class="th-sort r" data-col="dev_pct" onclick="dvThSort('dev')">DEV %</th>
             <th class="r">SIGNAL</th>
           </tr></thead>
@@ -653,25 +653,25 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
       <!-- SIDEBAR -->
       <div class="scan-sidebar">
         <div class="sb-title">SIGNAL LOG <button onclick="dvAlerts=[];dvRenderLog()" style="background:none;border:none;color:var(--text3);font-size:9px;cursor:pointer">X</button></div>
-        <div id="dv-log"><div style="color:var(--text3);font-size:10px;line-height:2.2">Čakam...<br>Prag: &gt;1% od MA</div></div>
+        <div id="dv-log"><div style="color:var(--text3);font-size:10px;line-height:2.2">Waiting...<br>Prag: &gt;1% od MA</div></div>
 
         <div style="margin-top:10px;border-top:1px solid var(--border);padding-top:8px">
-          <div style="color:var(--text3);font-size:9px;letter-spacing:.1em;margin-bottom:5px">STATISTIKA</div>
-          <div class="sb-stat"><span>Naloženih</span><span id="dv-sl" style="color:var(--amber)">0/28</span></div>
-          <div class="sb-stat"><span>↑ Nad MA &gt;1%</span><span id="dv-sabove" style="color:var(--text3)">0</span></div>
-          <div class="sb-stat"><span>↓ Pod MA &gt;1%</span><span id="dv-sbelow" style="color:var(--text3)">0</span></div>
-          <div class="sb-stat"><span>⚡ Ekstremno &gt;1.5%</span><span id="dv-sext" style="color:var(--text3)">0</span></div>
-          <div class="sb-stat"><span>Max deviacija</span><span id="dv-smax" style="color:var(--amber)">—</span></div>
+          <div style="color:var(--text3);font-size:9px;letter-spacing:.1em;margin-bottom:5px">STATISTICS</div>
+          <div class="sb-stat"><span>Loaded</span><span id="dv-sl" style="color:var(--amber)">0/28</span></div>
+          <div class="sb-stat"><span>↑ Above MA &gt;1%</span><span id="dv-sabove" style="color:var(--text3)">0</span></div>
+          <div class="sb-stat"><span>↓ Below MA &gt;1%</span><span id="dv-sbelow" style="color:var(--text3)">0</span></div>
+          <div class="sb-stat"><span>⚡ Extreme &gt;1.5%</span><span id="dv-sext" style="color:var(--text3)">0</span></div>
+          <div class="sb-stat"><span>Max deviation</span><span id="dv-smax" style="color:var(--amber)">—</span></div>
         </div>
 
         <div style="margin-top:10px;border-top:1px solid var(--border);padding-top:8px;font-size:9px;color:var(--text3);line-height:2">
-          <div style="color:var(--amber);font-size:9px;letter-spacing:.1em;margin-bottom:4px">DONNELLY PRAVILA</div>
-          <div><span style="color:var(--green)">↓ Pod MA &gt;1%</span> = potential long</div>
-          <div><span style="color:var(--red)">↑ Nad MA &gt;1%</span> = potential short</div>
+          <div style="color:var(--amber);font-size:9px;letter-spacing:.1em;margin-bottom:4px">DONNELLY RULES</div>
+          <div><span style="color:var(--green)">↓ Below MA &gt;1%</span> = potential long</div>
+          <div><span style="color:var(--red)">↑ Above MA &gt;1%</span> = potential short</div>
           <div style="margin-top:4px">Stop: vstop + 0.7%</div>
-          <div>Nikoli sam — dodaj druge razloge</div>
-          <div>Overbought = še bolj overbought!</div>
-          <div style="margin-top:4px;color:var(--text3)">Refresh: 5 min<br>Vir: Yahoo Finance</div>
+          <div>Never alone — add other reasons</div>
+          <div>Overbought = even more overbought!</div>
+          <div style="margin-top:4px;color:var(--text3)">Refresh: 5 min<br>Source: Yahoo Finance</div>
         </div>
       </div>
     </div>
@@ -693,14 +693,14 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
       </div>
       <div class="thread-view" id="thread-view">
         <div style="background:var(--bg2);border-bottom:1px solid var(--border);padding:8px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0">
-          <button class="btn" onclick="closeThread()">← NAZAJ</button>
+          <button class="btn" onclick="closeThread()">← BACK</button>
           <span id="tv-title" style="color:var(--text);font-size:11px;font-weight:bold"></span>
         </div>
         <div id="tv-posts" style="flex:1;overflow-y:auto"></div>
         <div class="reply-box">
           <textarea id="tv-reply" rows="2" placeholder="Napiši odgovor..."></textarea>
           <div style="margin-top:6px;display:flex;gap:6px">
-            <input type="text" id="tv-author" placeholder="Vzdevek..." style="width:120px"/>
+            <input type="text" id="tv-author" placeholder="Nickname..." style="width:120px"/>
             <button class="btn btn-primary" onclick="submitReply()">POŠLJI →</button>
           </div>
         </div>
@@ -715,12 +715,12 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
 <div id="email-modal">
   <div class="modal-box">
     <div class="modal-hdr">
-      <span class="modal-title">✉ EMAIL OBVESTILA</span>
+      <span class="modal-title">✉ EMAIL NOTIFICATIONS</span>
       <button onclick="closeEmailModal()" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px">✕</button>
     </div>
     <div class="modal-body">
       <div class="form-row">
-        <label class="form-label">TVOJ EMAIL</label>
+        <label class="form-label">YOUR EMAIL</label>
         <input class="form-input" type="email" id="em-to" placeholder="tvoj@email.com"/>
       </div>
       <div class="form-row">
@@ -771,18 +771,18 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
 // ══════════════════════════════════════
 const MY_POSTS=[
   {id:1,tag:'bull',tagLabel:'BULLISH ANALIZA',
-   title:'BTC — Bullish divergenca pri RSI 8.4: Zakaj sem vstopil long',
+   title:'BTC — Bullish divergence pri RSI 8.4: Zakaj sem vstopil long',
    preview:'Bitcoin je danes dosegel RSI 8.4 na 5-minutnem grafu — med najnižjimi vrednostmi v zadnjih 6 mesecih. Hkrati je RSI naredil višji low medtem ko je cena padla globlje. Klasičen setup.',
    author:'TradeCore',date:'Danes · 10:30',views:234,likes:18,
    body:`<h2>SIGNAL</h2>
-<div class="signal-box">⚡ BTC/USDT · RSI 8.4 (pod 10!) · Bullish divergenca · MA(14) = 19.2 · ΔRSI +7.3</div>
+<div class="signal-box">⚡ BTC/USDT · RSI 8.4 (pod 10!) · Bullish divergence · MA(14) = 19.2 · ΔRSI +7.3</div>
 <h2>SITUACIJA</h2>
 <p>Bitcoin je ob 10:15 dosegel RSI vrednost 8.4 na 5-minutnem grafu. To je ekstremna preprodanost — RSI redko pade pod 10. Hkrati sem opazil da je RSI naredil višji low (8.4) v primerjavi s prejšnjim lowom (5.2) medtem ko je cena padla z $42,800 na $42,100.</p>
 <h2>ZAKAJ JE TO DOBER SETUP</h2>
 <p>Dve pogoji sta izpolnjeni hkrati:</p>
 <ul>
 <li>RSI je ekstremno nizek (pod 10) — prodajni pritisk je na maksimumu</li>
-<li>Bullish divergenca potrjuje da je pritisk pojema</li>
+<li>Bullish divergence potrjuje da je pritisk pojema</li>
 </ul>
 <h2>MÔJ ENTRY</h2>
 <div class="hbox green">ENTRY: $42,320 · ko se je 5min svečka zaprla nad prejšnjim lowom</div>
@@ -798,16 +798,16 @@ const MY_POSTS=[
    preview:'Razlagam zakaj sem zožil pogoje za vstop. Prej sem trgoval vsako divergenco — zdaj samo kadar je RSI pod 10. Rezultati so se drastično izboljšali.',
    author:'TradeCore',date:'Včeraj · 14:20',views:567,likes:42,
    body:`<h2>PROBLEM S KLASIČNO DIVERGENCO</h2>
-<p>Bullish divergenca se pojavi pogosto — preveč pogosto. Veliko lažnih signalov, zlasti na nizkih timeframih. Rešitev: zožim pogoje.</p>
+<p>Bullish divergence se pojavi pogosto — preveč pogosto. Veliko lažnih signals, zlasti na nizkih timeframih. Rešitev: zožim pogoje.</p>
 <h2>MOJA PRAVILA</h2>
 <div class="hbox green">POGOJ 1: RSI mora biti pod 10 (ne 20, ne 30 — samo pod 10)</div>
-<div class="hbox green">POGOJ 2: Bullish divergenca mora biti potrjena z vsaj ΔRSI +3</div>
+<div class="hbox green">POGOJ 2: Bullish divergence mora biti potrjena z vsaj ΔRSI +3</div>
 <div class="hbox">POGOJ 3: Čakam close svečke nad prejšnjim lowom</div>
 <h2>ZAKAJ RSI POD 10?</h2>
 <ul>
 <li>RSI pod 10 se pojavi redko — signal je bolj ekskluziven</li>
 <li>Pomeni da je cena padla ekstremno hitro — odboj je bolj verjeten</li>
-<li>Manj lažnih signalov v primerjavi z RSI pod 30</li>
+<li>Manj lažnih signals v primerjavi z RSI pod 30</li>
 </ul>
 <h2>REZULTATI</h2>
 <p>Od ko sem uvedel ta filter: manj trejdov, a bistveno višji win rate. Kvaliteta > kvantiteta.</p>`,
@@ -860,7 +860,7 @@ function tick(){
   const m=parseInt(et.find(p=>p.type==='minute')?.value||0);
   const open=!['Sat','Sun'].includes(day)&&h*60+m>=570&&h*60+m<960;
   const el=document.getElementById('mkt-badge');
-  el.textContent=open?'● ODPRT':'○ ZAPRT';el.style.color=open?'var(--green)':'var(--text3)';
+  el.textContent=open?'● OPEN':'○ CLOSED';el.style.color=open?'var(--green)':'var(--text3)';
 }
 setInterval(tick,1000);tick();
 
@@ -1031,7 +1031,7 @@ function crStats(){
 }
 function crRenderLog(){
   const l=document.getElementById('cr-log');
-  if(!crAlerts.length){l.innerHTML=`<div style="color:var(--text3);font-size:10px;line-height:2.2">Ni signalov.<br>Čakam RSI&lt;10 ali bull div...</div>`;return;}
+  if(!crAlerts.length){l.innerHTML=`<div style="color:var(--text3);font-size:10px;line-height:2.2">No signals.<br>Waiting for RSI&lt;10 or bull div...</div>`;return;}
   l.innerHTML=crAlerts.map(a=>`<div class="acard bc">
     <div style="color:var(--green);font-weight:bold">${a.id.replace('USDT','')} ${a.bullDiv?dots(a.st):''}</div>
     <div style="margin-top:3px;display:flex;gap:4px">${a.rsiLow?'<span style="font-size:8px;background:rgba(255,68,85,.15);color:#ff4444;border:1px solid #5a0a1a;padding:0 4px">RSI&lt;10</span>':''}${a.bullDiv?'<span style="font-size:8px;background:rgba(0,232,122,.12);color:var(--green);border:1px solid #0a5a2a;padding:0 4px">▲ BULL DIV</span>':''}</div>
@@ -1065,7 +1065,7 @@ async function crFetchAll(){
           const pd=crPrev[id];
           const wasKS=pd&&(pd.rsiLow||pd.bullDiv);
           if(!wasKS)
-            if(!signalTimes[id+'|CRYPTO']) signalTimes[id+'|CRYPTO']=new Date().toLocaleTimeString('sl-SI',{hour:'2-digit',minute:'2-digit'});
+            setSignalTime(id+'|CRYPTO');
             newA.push({id,rsi,ma,type:'bull',st:div?.st||0,rd:div?.rd||0,price,time:new Date().toLocaleTimeString(),market:'CRYPTO',rsiLow:crKS.rsiLow,bullDiv:crKS.bullDiv});
         }
         crPrev[id]=(rsi!==null&&rsi<=10)||(div?.type==='bull')?{rsiLow:rsi!==null&&rsi<=10,bullDiv:div?.type==='bull'}:null;
@@ -1198,7 +1198,7 @@ function spStats(){
 }
 function spRenderLog(){
   const l=document.getElementById('sp-log');
-  if(!spAlerts.length){l.innerHTML=`<div style="color:var(--text3);font-size:10px;line-height:2.2">Ni signalov.<br>Čakam RSI&lt;10 ali bull div...</div>`;return;}
+  if(!spAlerts.length){l.innerHTML=`<div style="color:var(--text3);font-size:10px;line-height:2.2">No signals.<br>Waiting for RSI&lt;10 or bull div...</div>`;return;}
   l.innerHTML=spAlerts.map(a=>`<div class="acard bc">
     <div style="color:var(--green);font-weight:bold">${a.id} ${a.bullDiv?dots(a.st):''}</div>
     <div style="margin-top:3px;display:flex;gap:4px">${a.rsiLow?'<span style="font-size:8px;background:rgba(255,68,85,.15);color:#ff4444;border:1px solid #5a0a1a;padding:0 4px">RSI&lt;10</span>':''}${a.bullDiv?'<span style="font-size:8px;background:rgba(0,232,122,.12);color:var(--green);border:1px solid #0a5a2a;padding:0 4px">▲ BULL DIV</span>':''}</div>
@@ -1228,7 +1228,7 @@ async function spFetchAll(){
           const pd=spPrev[id];
           const wasKS=pd&&(pd.rsiLow||pd.bullDiv);
           if(!wasKS)
-            if(!signalTimes[id+'|SP500']) signalTimes[id+'|SP500']=new Date().toLocaleTimeString('sl-SI',{hour:'2-digit',minute:'2-digit'});
+            setSignalTime(id+'|SP500');
             newA.push({id,rsi,ma,type:'bull',st:div?.st||0,rd:div?.rd||0,price,time:new Date().toLocaleTimeString(),market:'SP500',rsiLow:spKS.rsiLow,bullDiv:spKS.bullDiv});
         }
         spPrev[id]=((rsi!==null&&rsi<=10)||(div?.type==='bull'))?{rsiLow:rsi!==null&&rsi<=10,bullDiv:div?.type==='bull'}:null;
@@ -1286,7 +1286,21 @@ function openAffLink(url, e) {
 }
 
 // Alarm time tracking: store first-seen time per signal
-const signalTimes = {};
+const SIGNAL_TIMES_KEY = 'tc_signalTimes_v2';
+const signalTimes = JSON.parse(localStorage.getItem(SIGNAL_TIMES_KEY) || '{}');
+function setSignalTime(key) {
+  if(!signalTimes[key]) {
+    const now = new Date();
+    signalTimes[key] = now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+    try { localStorage.setItem(SIGNAL_TIMES_KEY, JSON.stringify(signalTimes)); } catch(e){}
+  }
+}
+function clearStaleSignalTimes(activeKeys) {
+  const active = new Set(activeKeys);
+  let changed = false;
+  Object.keys(signalTimes).forEach(k => { if(!active.has(k)){delete signalTimes[k];changed=true;} });
+  if(changed) try { localStorage.setItem(SIGNAL_TIMES_KEY, JSON.stringify(signalTimes)); } catch(e){}
+}
 // Track which signals already triggered sound (prevent re-trigger on re-render)
 const beepedSignals = new Set();
 
@@ -1314,7 +1328,8 @@ function refreshHome(){
   const allBear=all.filter(s=>s.signal==='bear');
 
   // Track first-seen time for each signal
-  all.forEach(s=>{ const k=s.id+'|'+s.market; if(!signalTimes[k]) signalTimes[k]=new Date().toLocaleTimeString('sl-SI',{hour:'2-digit',minute:'2-digit'}); });
+  all.forEach(s=>{ setSignalTime(s.id+'|'+s.market); });
+  clearStaleSignalTimes(all.map(s=>s.id+'|'+s.market));
 
   // Only update if signal set actually changed
   const newKeys=new Set(all.map(s=>s.id+'|'+s.market));
@@ -1322,11 +1337,11 @@ function refreshHome(){
   shownSignals.clear();newKeys.forEach(k=>shownSignals.add(k));
 
   document.getElementById('lc-count').textContent=all.length;
-  const sortLabels={'newest':'Najnovejši','rsi_asc':'RSI ↑','rsi_desc':'RSI ↓','bull_first':'▲ Bull najprej','bear_first':'▼ Bear najprej','strength':'Moč ↓','chg_asc':'Sprememba ↑','chg_desc':'Sprememba ↓','price_asc':'Cena ↑','price_desc':'Cena ↓','sym_az':'Simbol A→Z'};
+  const sortLabels={'newest':'Newest','rsi_asc':'RSI ↑','rsi_desc':'RSI ↓','bull_first':'▲ Bull first','bear_first':'▼ Bear first','strength':'Strength ↓','chg_asc':'Change ↑','chg_desc':'Change ↓','price_asc':'Price ↑','price_desc':'Price ↓','sym_az':'Symbol A→Z'};
   const slEl=document.getElementById('home-sort-label');
-  if(slEl)slEl.textContent='Razvrščeno: '+( sortLabels[homeSort]||'');
+  if(slEl)slEl.textContent='Sorted: '+( sortLabels[homeSort]||'');
   const bullCount=allBull.length,bearCnt=allBear.length;
-  document.getElementById('signal-count-badge').textContent=(bullCount?bullCount+' ▲ bull ':'')+( bearCnt?bearCnt+' ▼ bear ':'')+'signalov';
+  document.getElementById('signal-count-badge').textContent=(bullCount?bullCount+' ▲ bull ':'')+( bearCnt?bearCnt+' ▼ bear ':'')+'signals';
 
   // ── LEFT PANEL: smart DOM update, no full re-render ──
   const listEl=document.getElementById('signal-list');
@@ -1341,7 +1356,7 @@ function refreshHome(){
   });
   if(all.length===0){
     if(!listEl.querySelector('.no-signals'))
-      listEl.innerHTML='<div class="no-signals"><div class="ns-icon">◈</div><div class="ns-txt">Ni signalov.<br>RSI &lt; 10<br>ali Bullish divergenca</div></div>';
+      listEl.innerHTML='<div class="no-signals"><div class="ns-icon">◈</div><div class="ns-txt">No signals.<br>RSI &lt; 10<br>or Bullish divergence</div></div>';
   }else{
     listEl.querySelector('.no-signals')?.remove();
     // Re-order existing cards to match current sort
@@ -1399,7 +1414,7 @@ function refreshHome(){
           'text-decoration:none;letter-spacing:.08em;font-weight:bold;'+
           'transition:background .15s'+
           '">'+
-          (isBearCard?'▼ SHORT ':'→ ODPRI ')+(s.market==='CRYPTO'?'(Binance)':s.market==='SP500'?'(eToro)':'(XTB)')+
+          (isBearCard?'▼ OPEN SHORT':'▶ OPEN TRADE')+
         '</a>';
       listEl.appendChild(card);
       // Beep only ONCE per signal, only for bull signals (not bear)
@@ -1416,7 +1431,7 @@ function refreshHome(){
   // ── CENTER: smart DOM update ──
   const feedEl=document.getElementById('live-analysis-feed');
   if(all.length===0){
-    feedEl.innerHTML='<div style="color:var(--text3);font-size:10px;line-height:2;text-align:center;padding:20px 0"><div style="font-size:20px;opacity:.2;margin-bottom:8px">◈</div>Ni signalov.<br>Čakam RSI &lt; 10 ali bullish divergenco...</div>';
+    feedEl.innerHTML='<div style="color:var(--text3);font-size:10px;line-height:2;text-align:center;padding:20px 0"><div style="font-size:20px;opacity:.2;margin-bottom:8px">◈</div>No signals.<br>Waiting for RSI &lt; 10 or bullish divergence...</div>';
   }else{
     // Remove cards no longer active
     [...feedEl.querySelectorAll('.analysis-post')].forEach(el=>{
@@ -1435,10 +1450,10 @@ function refreshHome(){
       // New card — one-time animation
       const rsiLow=isRsiLow(s),bullDiv=isBullDiv(s),bearDiv=isBearDiv(s);
       const isBear=s.signal==='bear';
-      const title=rsiLow&&bullDiv?'RSI '+(s.rsi?.toFixed(1)||'')+' + Bullish divergenca':rsiLow?'RSI padel pod 10 ('+(s.rsi?.toFixed(1)||'')+')':bearDiv?'▼ Bearish divergenca — '+s.sym+' (RSI '+(s.rsi?.toFixed(1)||'')+')':'Bullish divergenca zaznana na '+s.sym;
+      const title=rsiLow&&bullDiv?'RSI '+(s.rsi?.toFixed(1)||'')+' + Bullish divergence':rsiLow?'RSI dropped below 10 ('+(s.rsi?.toFixed(1)||'')+')':bearDiv?'▼ Bearish divergence — '+s.sym+' (RSI '+(s.rsi?.toFixed(1)||'')+')':'Bullish divergence detected on '+s.sym;
       const preview=(rsiLow?'RSI '+(s.rsi?.toFixed(2)||'')+' — ekstremna preprodanost. ':'')+
-                    (bullDiv?'Bullish divergenca · ΔRSI +'+(s.div?.rd?.toFixed(1)||'—')+' · Moč: '+dots(s.div?.st||1):'')+
-                    (bearDiv&&!bullDiv?'Bearish divergenca · cena naredi višji high, RSI nižji high · ΔRSI -'+(s.div?.rd?.toFixed(1)||'—')+' · Moč: '+dots(s.div?.st||1):'');
+                    (bullDiv?'Bullish divergence · ΔRSI +'+(s.div?.rd?.toFixed(1)||'—')+' · Strength: '+dots(s.div?.st||1):'')+
+                    (bearDiv&&!bullDiv?'Bearish divergence · price makes higher high, RSI lower high · ΔRSI -'+(s.div?.rd?.toFixed(1)||'—')+' · Strength: '+dots(s.div?.st||1):'');
       const rsiLowBadge=rsiLow?'<span style="font-size:8px;background:rgba(255,68,85,.15);color:#ff4444;border:1px solid #5a0a1a;padding:1px 5px;font-weight:bold;margin-left:4px">RSI&lt;10</span>':'';
       const bullDivBadge=bullDiv?'<span style="font-size:8px;background:rgba(0,232,122,.12);color:var(--green);border:1px solid #0a5a2a;padding:1px 5px;font-weight:bold;margin-left:4px">▲ BULL DIV</span>':'';
       const bearDivBadge2=bearDiv&&!bullDiv?'<span style="font-size:8px;background:rgba(255,68,85,.12);color:var(--red);border:1px solid #5a0a1a;padding:1px 5px;font-weight:bold;margin-left:4px">▼ BEAR DIV</span>':'';
@@ -1462,7 +1477,7 @@ function refreshHome(){
             '<div class="ap-m"><span class="ml">RSI</span><span class="mv ap-rsi-val" style="color:'+(rsiLow?'var(--red)':'var(--purple)')+'">'+s.rsi?.toFixed(2)+'</span></div>'+
             '<div class="ap-m"><span class="ml">MA(14)</span><span class="mv ap-ma-val" style="color:var(--amber)">'+s.ma?.toFixed(2)+'</span></div>'+
             ((bullDiv||bearDiv)?'<div class="ap-m"><span class="ml">ΔRSI</span><span class="mv" style="color:'+(isBear?'var(--red)':'var(--green)')+'">'+(isBear?'-':'+')+( s.div?.rd?.toFixed(1)||'—')+'</span></div>':'')+
-            '<div class="ap-m"><span class="ml">CENA</span><span class="mv">$'+fp(s.price)+'</span></div>'+
+            '<div class="ap-m"><span class="ml">PRICE</span><span class="mv">$'+fp(s.price)+'</span></div>'+
             '<div class="ap-m"><span class="ml">5M%</span><span class="mv ap-chg-val" style="color:'+(s.chg>0?'var(--green)':s.chg<0?'var(--red)':'var(--text3)')+'">'+
               (s.chg>0?'+':'')+(s.chg?.toFixed(2)||'')+'%</span></div>'+
           '</div>'+
@@ -1470,7 +1485,7 @@ function refreshHome(){
         '<div class="ap-foot" style="padding:10px 14px">'+
           '<span style="font-size:9px;color:var(--text3)">🕐 '+signalTimeCenter+'</span>'+
           '<a href="'+affUrlCenter+'" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="display:inline-block;padding:4px 12px;margin-left:8px;background:rgba(0,232,122,0.12);border:1px solid #0a5a2a;color:var(--green);font-size:9px;text-decoration:none;font-weight:bold">'+
-            (isBear?'&#9660; SHORT ':'&#9654; ODPRI ')+(s.market==='CRYPTO'?'BINANCE':s.market==='SP500'?'ETORO':'XTB')+
+            (isBear?'&#9660; OPEN SHORT':'&#9654; OPEN TRADE')+
           '</a>'+
           (bullDiv?'<span style="color:var(--green);margin-left:8px">'+dots(s.div?.st||1)+'</span>':'')+
         '</div>';
@@ -1589,7 +1604,7 @@ const STRATS=[
    stop:'Pod lowom na katerem je bil volume spike (dovolj prostora).',
    target:'Vrh "waterfall" gibanja — kjer se je gibanje začelo.',
    rules:['Nikoli ne chytaj falling knife — ČAKAJ da volumen pade','2-3 svečke (60-90 min) padajočega volumna = zadostno mirovanje','Relativni volumen je pomemben — ne absolutni','Kombiniraj z Slingshot za "massive signal"','FX volumen: uporabi futures markets kot proxy'],
-   notes:'Donnelly primer: USDJPY Oktober 2014 — Ebola + weak retail sales → masivni volume spike pri lowu → 200+ pip rally. "Volumen spike je eden najmočnejših signalov."'},
+   notes:'Donnelly primer: USDJPY Oktober 2014 — Ebola + weak retail sales → masivni volume spike pri lowu → 200+ pip rally. "Volumen spike je eden najmočnejših signals."'},
 
   {id:6,name:'Broken Triangles',cat:'Donnelly: 7 Deadly',tags:['reversal','bull','bear'],tf:'1h-daily',risk:'Srednje',
    src:'Brent Donnelly – The Art of Currency Trading, Ch. 7',
@@ -1699,7 +1714,7 @@ function renderAff(){
       <div style="background:var(--bg3);border:1px solid var(--border2);padding:16px;margin-bottom:16px">
         <div style="font-size:9px;color:var(--text3);letter-spacing:.15em;margin-bottom:10px">PREDNOSTI</div>
         <div style="display:flex;flex-direction:column;gap:6px;font-size:10px">
-          <div>✓ <span style="color:var(--green)">Spot trading</span> — 1700+ parov, nizke provizije</div>
+          <div>✓ <span style="color:var(--green)">Spot trading</span> — 1700+ pairs, low fees</div>
           <div>✓ <span style="color:var(--amber)">Futures</span> — do 200x leverage na kripto</div>
           <div>✓ <span style="color:var(--blue)">Forex CFD</span> — vsi glavni pari, zlato, srebro</div>
           <div>✓ <span style="color:var(--purple)">Copy trading</span> — sledi uspešnim traderjem</div>
@@ -1707,7 +1722,7 @@ function renderAff(){
         </div>
       </div>
       <a href="${MEXC_AFF}" target="_blank" rel="noopener" style="display:block;padding:14px;background:linear-gradient(90deg,rgba(240,165,0,.2),rgba(240,165,0,.1));border:1px solid var(--amber);color:var(--amber);font-size:12px;text-decoration:none;text-align:center;font-weight:bold;letter-spacing:.2em">
-        🏆 ODPRI RAČUN NA MEXC →
+        🏆 OPEN ACCOUNT ON MEXC →
       </a>
       <div style="font-size:9px;color:var(--text3);text-align:center;margin-top:8px">Affiliate link — podpri TradeCore terminal</div>
     </div>`;
@@ -1721,7 +1736,7 @@ let fCat=0,openT=null;
 const FT=[
   {id:0,cat:0,t:'Dobrodošli v TradeCore!',a:'Admin',tm:'2h',v:142,hot:true,posts:[{a:'Admin',r:'FOUNDER',b:'Dobrodošli! Forum je za resne traderje. Delite analize in strategije.',tm:'2h',l:8},{a:'TradeMaster_SI',r:'PRO',b:'Odličen projekt! To sem iskal.',tm:'1h',l:3}]},
   {id:1,cat:1,t:'BTC RSI pod 10 — vstopam long?',a:'CryptoSI',tm:'45min',v:67,hot:true,posts:[{a:'CryptoSI',r:'MEMBER',b:'BTC je padel na RSI 8.4 in kaže bullish divergenco. Vaša mnenja?',tm:'45min',l:5},{a:'ProTrader',r:'PRO',b:'Klasičen setup. Čakaj close nad prejšnjim lowom.',tm:'30min',l:7}]},
-  {id:2,cat:3,t:'Zakaj samo RSI pod 10?',a:'Analize_SI',tm:'3h',v:201,hot:true,posts:[{a:'Analize_SI',r:'MEMBER',b:'Vidim da terminal samo signalizira RSI<10+bull div. Zakaj ne 20 ali 30?',tm:'3h',l:12},{a:'TradeCore',r:'FOUNDER',b:'Ker RSI pod 10 se zgodi redko — signal je bolj ekskluziven in zanesljiv. Manj lažnih signalov.',tm:'2h',l:9}]},
+  {id:2,cat:3,t:'Zakaj samo RSI pod 10?',a:'Analize_SI',tm:'3h',v:201,hot:true,posts:[{a:'Analize_SI',r:'MEMBER',b:'Vidim da terminal samo signalizira RSI<10+bull div. Zakaj ne 20 ali 30?',tm:'3h',l:12},{a:'TradeCore',r:'FOUNDER',b:'Ker RSI pod 10 se zgodi redko — signal je bolj ekskluziven in zanesljiv. Manj lažnih signals.',tm:'2h',l:9}]},
   {id:3,cat:4,t:'TradingView affiliate — izkušnje?',a:'PassiveIncome',tm:'5h',v:134,hot:false,posts:[{a:'PassiveIncome',r:'MEMBER',b:'Kdo dela TradingView affiliate? Kakšen mesečni zaslužek?',tm:'5h',l:3},{a:'AffKing',r:'PRO',b:'Recurring komisija je odlična. Jaz dobim ~200€/mesec z 150 referali.',tm:'4h',l:8}]},
 ];
 let fp2=[...FT];
@@ -1834,7 +1849,7 @@ function renderAlarmLog() {
   const el = document.getElementById('home-alarm-log');
   if(!el) return;
   if(!globalAlarmLog.length) {
-    el.innerHTML='<div style="color:var(--text3);font-size:10px;text-align:center;padding:12px 0;opacity:.5">Ni alarmov v tej seji.</div>';
+    el.innerHTML='<div style="color:var(--text3);font-size:10px;text-align:center;padding:12px 0;opacity:.5">No alarms in this session.</div>';
     return;
   }
   el.innerHTML = globalAlarmLog.map(a=>`
@@ -1856,7 +1871,7 @@ function refreshDevOnHome() {
   const thresh = 1.0;
   const active = DV_PAIRS.filter(p => dvData[p.id]?.st==='ok' && Math.abs(dvData[p.id].devPct||0) >= thresh);
   if(!active.length) {
-    el.innerHTML='<div style="color:var(--text3);font-size:10px;text-align:center;padding:10px 0;opacity:.5">Ni deviation alarmov ≥1%.</div>';
+    el.innerHTML='<div style="color:var(--text3);font-size:10px;text-align:center;padding:10px 0;opacity:.5">No deviation alerts ≥1%.</div>';
     if(countEl) countEl.textContent='';
     return;
   }
@@ -1878,7 +1893,7 @@ function refreshDevOnHome() {
   }).join('');
 }
 
-setScanStatus('wait','Inicializiram scanner...');
+setScanStatus('wait','Initializing scanner...');
 document.getElementById('prog-bar-wrap').style.display='flex';
 refreshHome();
 crGo(); spGo();
@@ -2066,7 +2081,7 @@ function dvStats() {
 
 function dvRenderLog() {
   const l = document.getElementById('dv-log');
-  if(!dvAlerts.length){ l.innerHTML='<div style="color:var(--text3);font-size:10px;line-height:2.2">Ni signalov.<br>Čakam >1% deviacije...</div>'; return; }
+  if(!dvAlerts.length){ l.innerHTML='<div style="color:var(--text3);font-size:10px;line-height:2.2">No signals.<br>Waiting for >1% deviation...</div>'; return; }
   l.innerHTML = dvAlerts.map(a=>`<div class="acard ${a.dir==='below'?'bc':'rc'}">
     <div style="color:${a.dir==='below'?'var(--green)':'var(--red)'};font-weight:bold">${a.dir==='below'?'↓ LONG':'↑ SHORT'} ${a.l}</div>
     <div style="font-size:10px;color:var(--amber);margin-top:2px">Dev: ${a.devPct>0?'+':''}${a.devPct?.toFixed(3)}%</div>
@@ -2102,7 +2117,7 @@ async function dvFetchAll() {
         if(abs >= thresh){
           const pd = dvPrevDev[id];
           if(!pd || Math.abs(pd)<thresh)
-            if(!signalTimes[id+'|FOREX']) signalTimes[id+'|FOREX']=new Date().toLocaleTimeString('sl-SI',{hour:'2-digit',minute:'2-digit'});
+            setSignalTime(id+'|FOREX');
             newA.push({id,l,spot,ma,devPct,dir,time:new Date().toLocaleTimeString()});
         }
         dvPrevDev[id] = Math.abs(devPct)>=thresh ? devPct : null;
@@ -2117,7 +2132,7 @@ async function dvFetchAll() {
 
   if(errs>10){
     const e=document.getElementById('dv-err');e.style.display='block';
-    e.textContent=`⚠ ${errs} napak — Yahoo CORS blokada. Čakaj minuto.`;
+    e.textContent=`⚠ ${errs} errors — Yahoo CORS blocked. Wait a minute.`;
     setTimeout(()=>e.style.display='none',10000);
   }
   if(newA.length){
@@ -2217,7 +2232,7 @@ async function sendSignalEmail(signals) {
     to_email: emailCfg.to,
     signal: signals.length === 1
       ? (signals[0].sym || signals[0].id) + ' — ' + (signals[0].rsiLow && signals[0].bullDiv ? 'RSI<10 + BULL DIV' : signals[0].rsiLow ? 'RSI<10 ALARM' : 'BULL DIV')
-      : signals.length + ' novih signalov — TradeCore',
+      : signals.length + ' novih signals — TradeCore',
     details: 'TradeCore Signal Alert\n' + new Date().toLocaleString('sl-SI') + '\n\n' + lines + '\n\nOdpri terminal: https://matichocevar1.github.io/tradecore-'
   };
   try {
