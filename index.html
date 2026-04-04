@@ -293,11 +293,12 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
     <div class="tab" onclick="nav('crypto')" id="t-crypto">CRYPTO SCAN</div>
     <div class="tab" onclick="nav('sp500')" id="t-sp500">S&amp;P 500 SCAN</div>
     <div class="tab" onclick="nav('strat')" id="t-strat">STRATEGIJE</div>
-    <div class="tab" onclick="nav('aff')" id="t-aff">AFFILIATE</div>
+    <div class="tab" onclick="nav('aff')" id="t-aff">BEST BROKERS</div>
     <div class="tab" onclick="nav('dev')" id="t-dev" style="color:var(--amber)">DEVIATION SCAN</div>
     <div class="tab" onclick="nav('forum')" id="t-forum">FORUM</div>
   </div>
   <div class="topbar-right">
+    <div id="start-time-badge" style="font-size:9px;color:var(--text3);letter-spacing:.08em;padding:2px 8px;border:1px solid var(--border);cursor:pointer" title="Klikni za alarm zgodovino" onclick="nav('home');setTimeout(()=>document.getElementById('section-alarmlog').scrollIntoView({behavior:'smooth'}),100)">⏻ --:--:--</div>
     <div id="mkt-badge" style="color:var(--text3)">○ ZAPRT</div>
     <div id="clock">--:--:--</div>
   </div>
@@ -376,6 +377,28 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
         </div>
       </div>
 
+      <!-- Deviation alerts section -->
+      <div class="feed-section" id="section-dev-alerts">
+        <div class="fs-hdr" style="display:flex;align-items:center;justify-content:space-between">
+          <span>📡 DEVIATION ALARMI (Forex &gt;1% od 100 EMA)</span>
+          <span id="dev-alert-count" style="font-size:9px;color:var(--amber)"></span>
+        </div>
+        <div id="home-dev-alerts">
+          <div style="color:var(--text3);font-size:10px;text-align:center;padding:12px 0;opacity:.5">Čakam na deviation alarme... (zagona po 9s)</div>
+        </div>
+      </div>
+
+      <!-- Alarm history log -->
+      <div class="feed-section" id="section-alarmlog">
+        <div class="fs-hdr" style="display:flex;align-items:center;justify-content:space-between">
+          <span>🕐 ALARM ZGODOVIN A (zadnjih 100)</span>
+          <button onclick="globalAlarmLog=[];renderAlarmLog()" style="background:none;border:none;color:var(--text3);font-size:9px;cursor:pointer;letter-spacing:.1em">POČISTI</button>
+        </div>
+        <div id="home-alarm-log">
+          <div style="color:var(--text3);font-size:10px;text-align:center;padding:12px 0;opacity:.5">Ni alarmov v tej seji.</div>
+        </div>
+      </div>
+
       <!-- My posts -->
       <div class="feed-section">
         <div class="fs-hdr">📝 MOJE ANALIZE IN POSTI</div>
@@ -392,12 +415,13 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
         <span onclick="nav('strat')" style="color:var(--blue);cursor:pointer;font-size:9px">→ VSE STRATEGIJE</span>
       </div>
       <div class="sidebar-block">
-        <div class="sb-hdr">💰 AFFILIATE</div>
-        <div class="aff-row"><span>Binance</span><span style="color:var(--green);font-size:9px">20% lifetime</span></div>
-        <div class="aff-row"><span>TradingView</span><span style="color:var(--green);font-size:9px">30% recurring</span></div>
-        <div class="aff-row"><span>Bybit</span><span style="color:var(--green);font-size:9px">30% lifetime</span></div>
-        <div class="aff-row" style="border:none"><span>IBKR</span><span style="color:var(--green);font-size:9px">$200/ref</span></div>
-        <div style="margin-top:8px"><span onclick="nav('aff')" style="color:var(--amber);cursor:pointer;font-size:9px">→ VSI PROGRAMI</span></div>
+        <div class="sb-hdr">🏆 BEST BROKERS</div>
+        <div style="padding:8px 0;text-align:center">
+          <div style="font-size:13px;font-weight:bold;color:var(--amber);letter-spacing:.1em">MEXC</div>
+          <div style="font-size:9px;color:var(--text3);margin:3px 0">Crypto · Spot · Futures · Forex</div>
+          <a href="https://promote.mexc.com/r/MA1RGTsxcY" target="_blank" rel="noopener" style="display:block;margin-top:6px;padding:5px 10px;background:rgba(240,165,0,.12);border:1px solid var(--amber);color:var(--amber);font-size:9px;text-decoration:none;text-align:center;font-weight:bold;letter-spacing:.1em">→ ODPRI RAČUN</a>
+        </div>
+        <div style="margin-top:6px"><span onclick="nav('aff')" style="color:var(--amber);cursor:pointer;font-size:9px">→ BEST BROKERS</span></div>
       </div>
       <div class="sidebar-block" style="flex:1;overflow-y:auto">
         <div class="sb-hdr">FORUM</div>
@@ -1242,30 +1266,11 @@ const shownSignals=new Set();
 // AFFILIATE LINKS PER PAIR / MARKET
 // ════════════════════════════════════════
 // NASTAVI SVOJE AFFILIATE LINKE TUKAJ:
+const MEXC_AFF = 'https://promote.mexc.com/r/MA1RGTsxcY';
 const AFF_LINKS = {
-  // CRYPTO → Binance (zamenjaj z TVOJIM affiliate linkom)
-  CRYPTO: {
-    default: 'https://accounts.binance.com/register?ref=YOURREF',
-    BTCUSDT: 'https://accounts.binance.com/register?ref=YOURREF',
-    ETHUSDT: 'https://accounts.binance.com/register?ref=YOURREF',
-    BNBUSDT: 'https://accounts.binance.com/register?ref=YOURREF',
-    SOLUSDT: 'https://accounts.binance.com/register?ref=YOURREF',
-    XRPUSDT: 'https://accounts.binance.com/register?ref=YOURREF',
-  },
-  // SP500 delnice → eToro (zamenjaj z TVOJIM affiliate linkom)
-  SP500: {
-    default: 'https://www.etoro.com/people/?ref=YOURREF',
-    Tech:    'https://www.etoro.com/people/?ref=YOURREF',
-    Finance: 'https://www.etoro.com/people/?ref=YOURREF',
-    Health:  'https://www.etoro.com/people/?ref=YOURREF',
-    Energy:  'https://www.etoro.com/people/?ref=YOURREF',
-    Consumer:'https://www.etoro.com/people/?ref=YOURREF',
-    Indust:  'https://www.etoro.com/people/?ref=YOURREF',
-  },
-  // FOREX deviation → XTB (zamenjaj z TVOJIM affiliate linkom)
-  FOREX: {
-    default: 'https://www.xtb.com/?ref=YOURREF',
-  },
+  CRYPTO: { default: MEXC_AFF },
+  SP500:  { default: MEXC_AFF },
+  FOREX:  { default: MEXC_AFF },
 };
 
 function getAffLink(market, idOrSector) {
@@ -1670,18 +1675,42 @@ document.getElementById('strat-sidebar').innerHTML=STRATS.slice(0,5).map(s=>`<di
 // ══════════════════════════════════════
 // AFFILIATE
 // ══════════════════════════════════════
-const AFF={
-  'Borze':[{n:'Binance',c:'20% lifetime',d:'Največja kripto borza. Spot, futures.',l:'https://binance.com'},{n:'Bybit',c:'30% lifetime',d:'Popularna derivatives borza.',l:'https://bybit.com'},{n:'OKX',c:'20%',d:'Globalna kripto borza.',l:'https://okx.com'},{n:'Kraken',c:'20%',d:'EU zanesljiva borza.',l:'https://kraken.com'}],
-  'Tools':[{n:'TradingView',c:'30% recurring!',d:'Najboljše charting orodje.',l:'https://tradingview.com'},{n:'Coinigy',c:'25% recurring',d:'Multi-exchange terminal.',l:'https://coinigy.com'},{n:'Messari Pro',c:'20% letno',d:'Kripto research platforma.',l:'https://messari.io'}],
-  'Brokerji':[{n:'Interactive Brokers',c:'do $200/ref',d:'Vodilni broker za delnice.',l:'https://ibkr.com'},{n:'eToro',c:'$200 CPA',d:'Social trading. EU reguliran.',l:'https://etoro.com'},{n:'XTB',c:'do $600/račun',d:'EU broker. Stocks, forex, CFD.',l:'https://xtb.com'}],
-  'Izobraževanje':[{n:'Moj Tečaj',c:'TVOJ PRODUKT',d:'Ustvari lasten tečaj in ga prodajaj.',l:'#'},{n:'Skillshare',c:'$10/ref',d:'Membership learning platforma.',l:'https://skillshare.com'},{n:'Udemy',c:'10-15%',d:'Promoviraj trading tečaje.',l:'https://udemy.com'}],
-};
 function renderAff(){
-  document.getElementById('aff-cols').innerHTML=Object.keys(AFF).map(cat=>`
-    <div class="aff-cell">
-      <div class="aff-head">${cat.toUpperCase()}</div>
-      <div class="aff-inner">${AFF[cat].map(a=>`<div class="aff-card"><div class="an">${a.n}</div><div class="ac">💰 ${a.c}</div><div class="ad">${a.d}</div><a href="${a.l}" target="_blank">→ LINK</a></div>`).join('')}</div>
-    </div>`).join('');
+  document.getElementById('aff-cols').innerHTML=`
+    <div style="max-width:600px;margin:0 auto;padding:20px">
+      <div style="text-align:center;margin-bottom:24px">
+        <div style="font-size:28px;font-weight:bold;color:var(--amber);letter-spacing:.2em">MEXC</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:6px">Priporočeni broker — Crypto · Spot · Futures · Forex CFD</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px">
+        <div style="background:var(--bg3);border:1px solid var(--border2);padding:14px;text-align:center">
+          <div style="font-size:18px;font-weight:bold;color:var(--green)">1700+</div>
+          <div style="font-size:9px;color:var(--text3);margin-top:3px;letter-spacing:.1em">TRADING PAROV</div>
+        </div>
+        <div style="background:var(--bg3);border:1px solid var(--border2);padding:14px;text-align:center">
+          <div style="font-size:18px;font-weight:bold;color:var(--amber)">0%</div>
+          <div style="font-size:9px;color:var(--text3);margin-top:3px;letter-spacing:.1em">MAKER FEE</div>
+        </div>
+        <div style="background:var(--bg3);border:1px solid var(--border2);padding:14px;text-align:center">
+          <div style="font-size:18px;font-weight:bold;color:var(--blue)">200x</div>
+          <div style="font-size:9px;color:var(--text3);margin-top:3px;letter-spacing:.1em">MAX LEVERAGE</div>
+        </div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid var(--border2);padding:16px;margin-bottom:16px">
+        <div style="font-size:9px;color:var(--text3);letter-spacing:.15em;margin-bottom:10px">PREDNOSTI</div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:10px">
+          <div>✓ <span style="color:var(--green)">Spot trading</span> — 1700+ parov, nizke provizije</div>
+          <div>✓ <span style="color:var(--amber)">Futures</span> — do 200x leverage na kripto</div>
+          <div>✓ <span style="color:var(--blue)">Forex CFD</span> — vsi glavni pari, zlato, srebro</div>
+          <div>✓ <span style="color:var(--purple)">Copy trading</span> — sledi uspešnim traderjem</div>
+          <div>✓ <span style="color:var(--text)">Mobilna app</span> — iOS & Android</div>
+        </div>
+      </div>
+      <a href="${MEXC_AFF}" target="_blank" rel="noopener" style="display:block;padding:14px;background:linear-gradient(90deg,rgba(240,165,0,.2),rgba(240,165,0,.1));border:1px solid var(--amber);color:var(--amber);font-size:12px;text-decoration:none;text-align:center;font-weight:bold;letter-spacing:.2em">
+        🏆 ODPRI RAČUN NA MEXC →
+      </a>
+      <div style="font-size:9px;color:var(--text3);text-align:center;margin-top:8px">Affiliate link — podpri TradeCore terminal</div>
+    </div>`;
 }
 
 // ══════════════════════════════════════
@@ -1779,6 +1808,74 @@ function dvThSort(col) {
   }
   updateThHeaders('dv-thead', el.value, DV_TH_MAP);
   dvGo();
+}
+
+// ════════════════════════════════════════
+// TERMINAL START TIME
+// ════════════════════════════════════════
+const TERMINAL_START = new Date();
+const TERMINAL_START_STR = TERMINAL_START.toLocaleTimeString('sl-SI',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+document.getElementById('start-time-badge').textContent = '⏻ ' + TERMINAL_START_STR;
+
+// ════════════════════════════════════════
+// GLOBAL ALARM LOG (zadnjih 100)
+// ════════════════════════════════════════
+let globalAlarmLog = [];
+
+function addGlobalAlarm(type, sym, detail, color) {
+  const now = new Date();
+  const time = now.toLocaleTimeString('sl-SI',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  globalAlarmLog.unshift({type, sym, detail, color, time, ts: now.getTime()});
+  if(globalAlarmLog.length > 100) globalAlarmLog = globalAlarmLog.slice(0,100);
+  renderAlarmLog();
+}
+
+function renderAlarmLog() {
+  const el = document.getElementById('home-alarm-log');
+  if(!el) return;
+  if(!globalAlarmLog.length) {
+    el.innerHTML='<div style="color:var(--text3);font-size:10px;text-align:center;padding:12px 0;opacity:.5">Ni alarmov v tej seji.</div>';
+    return;
+  }
+  el.innerHTML = globalAlarmLog.map(a=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:5px 8px;border-bottom:1px solid #090d18;font-size:10px">
+      <span style="color:var(--text3);font-size:9px;white-space:nowrap">${a.time}</span>
+      <span style="font-size:8px;padding:1px 5px;border:1px solid ${a.color};color:${a.color};white-space:nowrap">${a.type}</span>
+      <span style="font-weight:bold;color:${a.color}">${a.sym}</span>
+      <span style="color:var(--text3);font-size:9px;flex:1">${a.detail}</span>
+    </div>`).join('');
+}
+
+// ════════════════════════════════════════
+// DEVIATION ALERTS ON HOME PAGE
+// ════════════════════════════════════════
+function refreshDevOnHome() {
+  const el = document.getElementById('home-dev-alerts');
+  const countEl = document.getElementById('dev-alert-count');
+  if(!el) return;
+  const thresh = 1.0;
+  const active = DV_PAIRS.filter(p => dvData[p.id]?.st==='ok' && Math.abs(dvData[p.id].devPct||0) >= thresh);
+  if(!active.length) {
+    el.innerHTML='<div style="color:var(--text3);font-size:10px;text-align:center;padding:10px 0;opacity:.5">Ni deviation alarmov ≥1%.</div>';
+    if(countEl) countEl.textContent='';
+    return;
+  }
+  active.sort((a,b)=>Math.abs(dvData[b.id].devPct||0)-Math.abs(dvData[a.id].devPct||0));
+  if(countEl) countEl.textContent = active.length + ' alarmov';
+  el.innerHTML = active.map(p => {
+    const d = dvData[p.id];
+    const isAbove = d.dir==='above';
+    const isExtreme = Math.abs(d.devPct) >= 1.5;
+    const col = isAbove ? (isExtreme?'#ff2222':'#ff6633') : (isExtreme?'#00e87a':'#4a9aff');
+    const lbl = isAbove ? '↑ SHORT' : '↓ LONG';
+    return `<div style="display:flex;align-items:center;gap:10px;padding:6px 10px;border-bottom:1px solid #090d18;border-left:3px solid ${col}">
+      <span style="font-size:9px;padding:1px 5px;border:1px solid ${col};color:${col};font-weight:bold">${lbl}</span>
+      <span style="font-weight:bold;color:${col};min-width:70px">${p.l}</span>
+      <span style="color:var(--amber);font-size:10px">${d.devPct>0?'+':''}${d.devPct.toFixed(3)}%</span>
+      <span style="color:var(--text3);font-size:9px">Spot: ${d.spot?.toFixed(d.spot>100?3:5)||'—'} | MA: ${d.ma?.toFixed(d.spot>100?3:5)||'—'}</span>
+      <a href="${MEXC_AFF}" target="_blank" rel="noopener" style="margin-left:auto;font-size:8px;padding:2px 7px;background:rgba(240,165,0,.1);border:1px solid var(--amber);color:var(--amber);text-decoration:none;white-space:nowrap">▶ MEXC</a>
+    </div>`;
+  }).join('');
 }
 
 setScanStatus('wait','Inicializiram scanner...');
@@ -2024,14 +2121,20 @@ async function dvFetchAll() {
     setTimeout(()=>e.style.display='none',10000);
   }
   if(newA.length){
-    dvAlerts=[...newA,...dvAlerts].slice(0,50);
+    dvAlerts=[...newA,...dvAlerts].slice(0,100);
     dvRenderLog();
-    // beep handled by refreshHome
+    refreshDevOnHome();
+    newA.forEach(a => {
+      const lbl = (a.dir==='above' ? '↑ SHORT' : '↓ LONG') + ' · Dev ' + (a.devPct>0?'+':'') + a.devPct?.toFixed(3) + '%';
+      addGlobalAlarm('FOREX DEV', a.l, lbl, a.dir==='above' ? '#ff6633' : '#4a9aff');
+    });
     sendSignalEmail(newA.map(a=>({...a,sym:a.l,rsiLow:false,bullDiv:false,
       rsi:null,div:{rd:null,st:1},
       market:'FOREX-DEV',
       extraInfo:`Dev: ${a.devPct>0?'+':''}${a.devPct?.toFixed(3)}%`}))).catch(()=>{});
   }
+  // Always refresh home dev section after each fetch
+  refreshDevOnHome();
 
   pw.style.display='none';
   document.getElementById('dv-rb').style.opacity='1';
@@ -2163,13 +2266,20 @@ const _crOrigDispatch = crAlerts;
 function crDispatchSignals(newA) {
   crAlerts = [...newA, ...crAlerts].slice(0, 50);
   crRenderLog();
-  // beep is handled by refreshHome when card appears on home page
+  newA.forEach(a => {
+    const sym = a.id.replace('USDT','');
+    const lbl = a.rsiLow && a.bullDiv ? 'RSI<10 + BULL DIV' : a.rsiLow ? 'RSI<10' : 'BULL DIV';
+    addGlobalAlarm('CRYPTO', sym, lbl + ' · RSI ' + (a.rsi?.toFixed(1)||'—'), 'var(--green)');
+  });
   if (newA.length) sendSignalEmail(newA.map(a => ({...a, sym: a.id.replace('USDT','')}))).catch(()=>{});
 }
 function spDispatchSignals(newA) {
   spAlerts = [...newA, ...spAlerts].slice(0, 50);
   spRenderLog();
-  // beep is handled by refreshHome when card appears on home page
+  newA.forEach(a => {
+    const lbl = a.rsiLow && a.bullDiv ? 'RSI<10 + BULL DIV' : a.rsiLow ? 'RSI<10' : 'BULL DIV';
+    addGlobalAlarm('SP500', a.id, lbl + ' · RSI ' + (a.rsi?.toFixed(1)||'—'), 'var(--amber)');
+  });
   if (newA.length) sendSignalEmail(newA.map(a => ({...a, sym: a.id}))).catch(()=>{});
 }
 
