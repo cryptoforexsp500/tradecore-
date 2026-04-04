@@ -199,6 +199,11 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
 .scan-table-wrap{overflow-y:auto;min-height:0;height:100%}
 .scan-table{width:100%;border-collapse:collapse}
 .scan-table thead th{position:sticky;top:0;background:#050810;z-index:2;color:var(--text3);font-size:9px;letter-spacing:.12em;font-weight:normal;padding:5px 7px;border-bottom:1px solid var(--border);text-align:left;white-space:nowrap}
+.th-sort{cursor:pointer;user-select:none;transition:color .15s}
+.th-sort:hover{color:var(--blue)!important}
+.th-sort::after{content:' ·';opacity:.2;font-size:10px}
+.th-sort.th-asc{color:var(--blue)!important}.th-sort.th-asc::after{content:' ↑';opacity:1;color:var(--blue)}
+.th-sort.th-desc{color:var(--blue)!important}.th-sort.th-desc::after{content:' ↓';opacity:1;color:var(--blue)}
 .scan-table th.r,.scan-table td.r{text-align:right}
 .scan-table tbody tr{border-bottom:1px solid #090d18}
 .scan-table tbody td{padding:4px 7px;vertical-align:middle}
@@ -336,6 +341,11 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
             <option value="bull_first">▲ Bull najprej</option>
             <option value="bear_first">▼ Bear najprej</option>
             <option value="strength">Moč ↓</option>
+            <option value="chg_asc">Sprememba ↑ (padajoča)</option>
+            <option value="chg_desc">Sprememba ↓ (rastoča)</option>
+            <option value="price_asc">Cena ↑ (najnižja)</option>
+            <option value="price_desc">Cena ↓ (najvišja)</option>
+            <option value="sym_az">Simbol A→Z</option>
           </select>
           <span id="lc-count" style="color:var(--green);font-weight:bold">0</span>
         </div>
@@ -435,7 +445,7 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
       <div style="margin-left:auto;display:flex;gap:5px;align-items:center">
         <input type="text" id="cr-search" placeholder="BTC..." oninput="crGo()" style="width:65px"/>
         <select id="cr-filter" onchange="crGo()"><option value="all">Vsi</option><option value="bull">▲ Bullish</option><option value="bear">▼ Bearish</option><option value="any">↕ Div</option><option value="rsi10">★ RSI&lt;10 ali Bull div</option></select>
-        <select id="cr-srt" onchange="crGo()"><option value="div">Divergenca</option><option value="rsi">RSI ↑</option><option value="str">Moč</option><option value="chg">% ↓</option></select>
+        <select id="cr-srt" onchange="crGo()"><option value="div">Divergenca</option><option value="rsi">RSI ↑ (najnižji)</option><option value="rsi_desc">RSI ↓ (najvišji)</option><option value="str">Moč ↓</option><option value="chg">Sprememba % ↓</option><option value="chg_desc">Sprememba % ↑</option><option value="price_asc">Cena ↑</option><option value="price_desc">Cena ↓</option><option value="ma_asc">MA ↑</option><option value="ma_desc">MA ↓</option><option value="sym">Simbol A→Z</option></select>
         <button class="btn" id="cr-snd" onclick="crTglSnd()" style="color:var(--green)">♪</button>
         <button class="btn btn-primary" id="cr-rb" onclick="crFetchAll()">↻ <span id="cr-cd">60s</span></button>
       </div>
@@ -446,7 +456,16 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
     </div>
     <div class="scan-body">
       <div class="scan-table-wrap"><table class="scan-table">
-        <thead><tr><th>#</th><th>PAR</th><th>DIVERGENCA</th><th><span style="color:var(--purple)">RSI</span></th><th><span style="color:var(--amber)">MA</span></th><th class="r">CENA</th><th class="r">5M%</th><th class="r">MOČ</th></tr></thead>
+        <thead id="cr-thead"><tr>
+          <th>#</th>
+          <th class="th-sort" data-col="sym" onclick="crThSort('sym')">PAR</th>
+          <th class="th-sort" data-col="div" onclick="crThSort('div')">DIVERGENCA</th>
+          <th class="th-sort" data-col="rsi" onclick="crThSort('rsi')"><span style="color:var(--purple)">RSI</span></th>
+          <th class="th-sort" data-col="ma" onclick="crThSort('ma')"><span style="color:var(--amber)">MA</span></th>
+          <th class="th-sort r" data-col="price" onclick="crThSort('price')">CENA</th>
+          <th class="th-sort r" data-col="chg" onclick="crThSort('chg')">5M%</th>
+          <th class="th-sort r" data-col="str" onclick="crThSort('str')">MOČ</th>
+        </tr></thead>
         <tbody id="cr-tb"></tbody>
       </table></div>
       <div class="scan-sidebar">
@@ -477,7 +496,7 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
         <input type="text" id="sp-search" placeholder="AAPL..." oninput="spGo()" style="width:65px"/>
         <select id="sp-filter" onchange="spGo()"><option value="all">Vsi</option><option value="bull">▲ Bullish</option><option value="bear">▼ Bearish</option><option value="any">↕ Div</option><option value="rsi10">★ RSI&lt;10 ali Bull div</option></select>
         <select id="sp-sec" onchange="spGo()"><option value="all">Vsi sektorji</option><option value="Tech">Tech</option><option value="Health">Health</option><option value="Finance">Finance</option><option value="Energy">Energy</option><option value="Consumer">Consumer</option><option value="Indust">Indust</option></select>
-        <select id="sp-srt" onchange="spGo()"><option value="div">Divergenca</option><option value="rsi">RSI ↑</option><option value="str">Moč</option><option value="chg">% ↓</option></select>
+        <select id="sp-srt" onchange="spGo()"><option value="div">Divergenca</option><option value="rsi">RSI ↑ (najnižji)</option><option value="rsi_desc">RSI ↓ (najvišji)</option><option value="str">Moč ↓</option><option value="chg">Sprememba % ↓</option><option value="chg_desc">Sprememba % ↑</option><option value="price_asc">Cena ↑</option><option value="price_desc">Cena ↓</option><option value="ma_asc">MA ↑</option><option value="ma_desc">MA ↓</option><option value="sym">Simbol A→Z</option></select>
         <button class="btn" id="sp-snd" onclick="spTglSnd()" style="color:var(--green)">♪</button>
         <button class="btn" style="color:var(--amber);border-color:var(--amber)" id="sp-rb" onclick="spFetchAll()">↻ <span id="sp-cd">5m0s</span></button>
       </div>
@@ -489,7 +508,17 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
     </div>
     <div class="scan-body">
       <div class="scan-table-wrap"><table class="scan-table">
-        <thead><tr><th>#</th><th>DELNICA</th><th>SEKTOR</th><th>DIVERGENCA</th><th><span style="color:var(--purple)">RSI</span></th><th><span style="color:var(--amber)">MA</span></th><th class="r">CENA</th><th class="r">5M%</th><th class="r">MOČ</th></tr></thead>
+        <thead id="sp-thead"><tr>
+          <th>#</th>
+          <th class="th-sort" data-col="sym" onclick="spThSort('sym')">DELNICA</th>
+          <th>SEKTOR</th>
+          <th class="th-sort" data-col="div" onclick="spThSort('div')">DIVERGENCA</th>
+          <th class="th-sort" data-col="rsi" onclick="spThSort('rsi')"><span style="color:var(--purple)">RSI</span></th>
+          <th class="th-sort" data-col="ma" onclick="spThSort('ma')"><span style="color:var(--amber)">MA</span></th>
+          <th class="th-sort r" data-col="price" onclick="spThSort('price')">CENA</th>
+          <th class="th-sort r" data-col="chg" onclick="spThSort('chg')">5M%</th>
+          <th class="th-sort r" data-col="str" onclick="spThSort('str')">MOČ</th>
+        </tr></thead>
         <tbody id="sp-tb"></tbody>
       </table></div>
       <div class="scan-sidebar">
@@ -560,7 +589,11 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
         </select>
         <select id="dv-srt" onchange="dvGo()">
           <option value="dev">Deviacija % ↓</option>
-          <option value="name">Ime</option>
+          <option value="name">Ime A→Z</option>
+          <option value="spot_asc">Cena ↑</option>
+          <option value="spot_desc">Cena ↓</option>
+          <option value="above_first">↑ Short (nad MA) najprej</option>
+          <option value="below_first">↓ Long (pod MA) najprej</option>
         </select>
         <button class="btn" id="dv-rb" onclick="dvFetchAll()" style="color:var(--amber);border-color:var(--amber)">↻ <span id="dv-cd">5m0s</span></button>
       </div>
@@ -579,14 +612,14 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
       <!-- MAIN TABLE -->
       <div class="scan-table-wrap">
         <table class="scan-table">
-          <thead><tr>
+          <thead id="dv-thead"><tr>
             <th>#</th>
-            <th>PAR</th>
-            <th style="min-width:180px">DEVIACIJA OD 100-PERIOD MA</th>
-            <th class="r">SPOT</th>
+            <th class="th-sort" data-col="name" onclick="dvThSort('name')">PAR</th>
+            <th class="th-sort" data-col="dev" style="min-width:180px" onclick="dvThSort('dev')">DEVIACIJA OD 100-PERIOD MA</th>
+            <th class="th-sort r" data-col="spot_asc" onclick="dvThSort('spot')">SPOT</th>
             <th class="r">100-MA</th>
             <th class="r">RAZLIKA</th>
-            <th class="r">DEV %</th>
+            <th class="th-sort r" data-col="dev_pct" onclick="dvThSort('dev')">DEV %</th>
             <th class="r">SIGNAL</th>
           </tr></thead>
           <tbody id="dv-tb"></tbody>
@@ -940,8 +973,15 @@ function crGo(){
   if(f==='rsi10')rows=rows.filter(s=>isKeySignal(crData[s.id]));
   if(srt==='div')rows.sort((a,b)=>{const sa=crData[a.id]?.div?.type==='bull'?(crData[a.id].div.st+10):crData[a.id]?.div?.st||0;const sb=crData[b.id]?.div?.type==='bull'?(crData[b.id].div.st+10):crData[b.id]?.div?.st||0;return sb-sa;});
   if(srt==='rsi')rows.sort((a,b)=>(crData[a.id]?.rsi??999)-(crData[b.id]?.rsi??999));
+  if(srt==='rsi_desc')rows.sort((a,b)=>(crData[b.id]?.rsi??0)-(crData[a.id]?.rsi??0));
   if(srt==='str')rows.sort((a,b)=>(crData[b.id]?.div?.st||0)-(crData[a.id]?.div?.st||0));
   if(srt==='chg')rows.sort((a,b)=>(crData[a.id]?.chg??0)-(crData[b.id]?.chg??0));
+  if(srt==='chg_desc')rows.sort((a,b)=>(crData[b.id]?.chg??0)-(crData[a.id]?.chg??0));
+  if(srt==='price_asc')rows.sort((a,b)=>(crData[a.id]?.price||0)-(crData[b.id]?.price||0));
+  if(srt==='price_desc')rows.sort((a,b)=>(crData[b.id]?.price||0)-(crData[a.id]?.price||0));
+  if(srt==='ma_asc')rows.sort((a,b)=>(crData[a.id]?.ma||0)-(crData[b.id]?.ma||0));
+  if(srt==='ma_desc')rows.sort((a,b)=>(crData[b.id]?.ma||0)-(crData[a.id]?.ma||0));
+  if(srt==='sym')rows.sort((a,b)=>a.id.localeCompare(b.id));
   // Key signals always on top
   rows.sort((a,b)=>isKeySignal(crData[b.id])?1:isKeySignal(crData[a.id])?-1:0);
   document.getElementById('cr-tb').innerHTML=rows.map((s,i)=>crRow(s,i)).join('');
@@ -1101,8 +1141,15 @@ function spGo(){
   if(f==='rsi10')rows=rows.filter(s=>isKeySignal(spData[s.id]));
   if(srt==='div')rows.sort((a,b)=>{const sa=spData[a.id]?.div?.type==='bull'?(spData[a.id].div.st+10):spData[a.id]?.div?.st||0;const sb=spData[b.id]?.div?.type==='bull'?(spData[b.id].div.st+10):spData[b.id]?.div?.st||0;return sb-sa;});
   if(srt==='rsi')rows.sort((a,b)=>(spData[a.id]?.rsi??999)-(spData[b.id]?.rsi??999));
+  if(srt==='rsi_desc')rows.sort((a,b)=>(spData[b.id]?.rsi??0)-(spData[a.id]?.rsi??0));
   if(srt==='str')rows.sort((a,b)=>(spData[b.id]?.div?.st||0)-(spData[a.id]?.div?.st||0));
   if(srt==='chg')rows.sort((a,b)=>(spData[a.id]?.chg??0)-(spData[b.id]?.chg??0));
+  if(srt==='chg_desc')rows.sort((a,b)=>(spData[b.id]?.chg??0)-(spData[a.id]?.chg??0));
+  if(srt==='price_asc')rows.sort((a,b)=>(spData[a.id]?.price||0)-(spData[b.id]?.price||0));
+  if(srt==='price_desc')rows.sort((a,b)=>(spData[b.id]?.price||0)-(spData[a.id]?.price||0));
+  if(srt==='ma_asc')rows.sort((a,b)=>(spData[a.id]?.ma||0)-(spData[b.id]?.ma||0));
+  if(srt==='ma_desc')rows.sort((a,b)=>(spData[b.id]?.ma||0)-(spData[a.id]?.ma||0));
+  if(srt==='sym')rows.sort((a,b)=>a.id.localeCompare(b.id));
   rows.sort((a,b)=>isKeySignal(spData[b.id])?1:isKeySignal(spData[a.id])?-1:0);
   document.getElementById('sp-tb').innerHTML=rows.map((s,i)=>spRow(s,i)).join('');
   spStats();
@@ -1253,6 +1300,11 @@ function refreshHome(){
   else if(homeSort==='bull_first')all.sort((a,b)=>(a.signal==='bull'?0:1)-(b.signal==='bull'?0:1)||(a.rsi||99)-(b.rsi||99));
   else if(homeSort==='bear_first')all.sort((a,b)=>(a.signal==='bear'?0:1)-(b.signal==='bear'?0:1)||(b.rsi||0)-(a.rsi||0));
   else if(homeSort==='strength')  all.sort((a,b)=>(b.div?.st||0)-(a.div?.st||0));
+  else if(homeSort==='chg_asc')   all.sort((a,b)=>(a.chg??0)-(b.chg??0));
+  else if(homeSort==='chg_desc')  all.sort((a,b)=>(b.chg??0)-(a.chg??0));
+  else if(homeSort==='price_asc') all.sort((a,b)=>(a.price||0)-(b.price||0));
+  else if(homeSort==='price_desc')all.sort((a,b)=>(b.price||0)-(a.price||0));
+  else if(homeSort==='sym_az')    all.sort((a,b)=>a.sym.localeCompare(b.sym));
   const allBull=all.filter(s=>s.signal==='bull');
   const allBear=all.filter(s=>s.signal==='bear');
 
@@ -1265,7 +1317,7 @@ function refreshHome(){
   shownSignals.clear();newKeys.forEach(k=>shownSignals.add(k));
 
   document.getElementById('lc-count').textContent=all.length;
-  const sortLabels={'newest':'Najnovejši','rsi_asc':'RSI ↑','rsi_desc':'RSI ↓','bull_first':'▲ Bull najprej','bear_first':'▼ Bear najprej','strength':'Moč ↓'};
+  const sortLabels={'newest':'Najnovejši','rsi_asc':'RSI ↑','rsi_desc':'RSI ↓','bull_first':'▲ Bull najprej','bear_first':'▼ Bear najprej','strength':'Moč ↓','chg_asc':'Sprememba ↑','chg_desc':'Sprememba ↓','price_asc':'Cena ↑','price_desc':'Cena ↓','sym_az':'Simbol A→Z'};
   const slEl=document.getElementById('home-sort-label');
   if(slEl)slEl.textContent='Razvrščeno: '+( sortLabels[homeSort]||'');
   const bullCount=allBull.length,bearCnt=allBear.length;
@@ -1661,12 +1713,81 @@ document.getElementById('forum-sidebar').innerHTML=FT.slice(0,4).map(t=>`<div cl
 // ══════════════════════════════════════
 // INIT
 // ══════════════════════════════════════
+// ════════════════════════════════════════
+// COLUMN HEADER SORT (click to sort)
+// ════════════════════════════════════════
+const CR_TH_MAP={
+  'sym':['sym','sym'],'div':['div','div'],
+  'rsi':['rsi','rsi_desc'],'ma':['ma_asc','ma_desc'],
+  'price':['price_asc','price_desc'],'chg':['chg_desc','chg'],
+  'str':['str','str']
+};
+let crThState={col:null,dir:0};
+let spThState={col:null,dir:0};
+
+function updateThHeaders(theadId, sortVal, map) {
+  const thead = document.getElementById(theadId);
+  if(!thead) return;
+  thead.querySelectorAll('.th-sort').forEach(th => {
+    th.classList.remove('th-asc','th-desc');
+    const col = th.dataset.col;
+    const pair = map[col];
+    if(!pair) return;
+    if(sortVal===pair[0]) th.classList.add('th-asc');
+    else if(sortVal===pair[1] && pair[0]!==pair[1]) th.classList.add('th-desc');
+  });
+}
+
+function crThSort(col) {
+  const el = document.getElementById('cr-srt');
+  const pair = CR_TH_MAP[col]||['div','div'];
+  if(crThState.col===col && crThState.dir===1) {
+    crThState.dir=-1; el.value=pair[1];
+  } else {
+    crThState.col=col; crThState.dir=1; el.value=pair[0];
+  }
+  updateThHeaders('cr-thead', el.value, CR_TH_MAP);
+  crGo();
+}
+
+function spThSort(col) {
+  const el = document.getElementById('sp-srt');
+  const pair = CR_TH_MAP[col]||['div','div'];
+  if(spThState.col===col && spThState.dir===1) {
+    spThState.dir=-1; el.value=pair[1];
+  } else {
+    spThState.col=col; spThState.dir=1; el.value=pair[0];
+  }
+  updateThHeaders('sp-thead', el.value, CR_TH_MAP);
+  spGo();
+}
+
+const DV_TH_MAP={
+  'name':['name','name'],'dev':['dev','dev'],
+  'spot':['spot_asc','spot_desc'],'dev_pct':['dev','dev'],
+  'above_first':['above_first','above_first'],'below_first':['below_first','below_first']
+};
+let dvThState={col:null,dir:0};
+
+function dvThSort(col) {
+  const el = document.getElementById('dv-srt');
+  const pair = DV_TH_MAP[col]||['dev','dev'];
+  if(dvThState.col===col && dvThState.dir===1) {
+    dvThState.dir=-1; el.value=pair[1];
+  } else {
+    dvThState.col=col; dvThState.dir=1; el.value=pair[0];
+  }
+  updateThHeaders('dv-thead', el.value, DV_TH_MAP);
+  dvGo();
+}
+
 setScanStatus('wait','Inicializiram scanner...');
 document.getElementById('prog-bar-wrap').style.display='flex';
 refreshHome();
 crGo(); spGo();
 crFetchAll();
 setTimeout(spFetchAll, 4000);
+setTimeout(dvFetchAll, 9000);
 // ════════════════════════════════════════
 // DEVIATION SCANNER (Donnelly 100-period MA)
 // ════════════════════════════════════════
@@ -1808,6 +1929,10 @@ function dvGo() {
   if(f==='extreme') rows = rows.filter(p=>Math.abs(dvData[p.id]?.devPct||0)>=1.5);
   if(srt==='dev') rows.sort((a,b)=>Math.abs(dvData[b.id]?.devPct||0)-Math.abs(dvData[a.id]?.devPct||0));
   if(srt==='name') rows.sort((a,b)=>a.l.localeCompare(b.l));
+  if(srt==='spot_asc') rows.sort((a,b)=>(dvData[a.id]?.spot||0)-(dvData[b.id]?.spot||0));
+  if(srt==='spot_desc') rows.sort((a,b)=>(dvData[b.id]?.spot||0)-(dvData[a.id]?.spot||0));
+  if(srt==='above_first') rows.sort((a,b)=>(dvData[a.id]?.dir==='above'?0:1)-(dvData[b.id]?.dir==='above'?0:1)||Math.abs(dvData[b.id]?.devPct||0)-Math.abs(dvData[a.id]?.devPct||0));
+  if(srt==='below_first') rows.sort((a,b)=>(dvData[a.id]?.dir==='below'?0:1)-(dvData[b.id]?.dir==='below'?0:1)||Math.abs(dvData[b.id]?.devPct||0)-Math.abs(dvData[a.id]?.devPct||0));
   // Signal rows always on top
   rows.sort((a,b)=>{
     const sa=Math.abs(dvData[a.id]?.devPct||0)>=thresh?1:0;
