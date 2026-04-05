@@ -1014,6 +1014,9 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
 </div>
 
 <script>
+// Global state — declared first to prevent temporal dead zone errors
+var aiAnalysesFeed = [];
+
 // ══════════════════════════════════════
 // MY POSTS — uredi tukaj!
 // ══════════════════════════════════════
@@ -2605,8 +2608,6 @@ function aiAnalyzeSignal(s) {
 
   return { score: total, grade, rec, indicators: inds, notes: Object.values(inds).map(i=>i.note).filter(Boolean) };
 }
-
-let aiAnalysesFeed = [];
 
 function aiAddAnalysis(s, market) {
   if(!aiUnlocked) return;
