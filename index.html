@@ -61,7 +61,7 @@ button,select,input{font-family:inherit;outline:none;cursor:pointer}
 #mkt-badge{font-size:9px;padding:2px 8px;border:1px solid var(--border2)}
 
 /* ── LAYOUT ── */
-#app{display:flex;flex-direction:column;height:100vh}
+#app{display:flex;flex-direction:column;height:100vh;height:100dvh}
 #content{flex:1;overflow:hidden;position:relative;min-height:0}
 .page{position:absolute;inset:0;display:none;contain:layout style;overflow:hidden}.page.active{display:block}.page#page-home{display:none;flex-direction:column}.page#page-home.active{display:flex}
 #page-ai{overflow-y:auto!important;overflow-x:hidden}
@@ -313,6 +313,123 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
 .post-rank{font-size:8px;padding:0 4px;border:1px solid var(--border2);color:var(--text3)}
 .post-body-txt{font-size:11px;color:var(--text);line-height:1.8}
 .reply-box{background:var(--bg2);border-top:1px solid var(--border);padding:10px 14px;flex-shrink:0}
+
+/* ══════════════════════════════════════
+   MOBILE RESPONSIVE  (max 768px)
+══════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* Fix iOS height / overflow */
+  html, body { height: 100%; overflow: hidden; }
+  #app { height: 100dvh; /* dynamic viewport for iOS safari */ }
+
+  /* ── TOPBAR ── */
+  #topbar { height: auto; min-height: 44px; flex-wrap: wrap; padding: 0 10px; gap: 0; }
+  .logo { font-size: 12px; margin-right: 10px; padding: 10px 0; }
+  .nav-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; flex: 1; }
+  .nav-tabs::-webkit-scrollbar { display: none; }
+  .tab { padding: 0 10px; font-size: 9px; min-width: max-content; }
+  .topbar-right { width: 100%; border-top: 1px solid var(--border); padding: 4px 0; gap: 8px; font-size: 9px; }
+  #start-time-badge { font-size: 8px !important; padding: 1px 4px !important; }
+  #clock { font-size: 9px; }
+  #mkt-badge { font-size: 8px; }
+
+  /* ── HOME: 3 col → single col scrollable ── */
+  .home-body {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: var(--bg);
+    gap: 0;
+  }
+  .col-left, .col-right { overflow: visible; height: auto; flex-shrink: 0; }
+  .col-center { overflow: visible; min-height: 300px; }
+
+  /* status bar wrap on mobile */
+  .status-bar { flex-wrap: wrap; height: auto; gap: 6px; padding: 6px 10px; }
+  .status-bar .sb-item:last-child { width: 100%; display: flex; gap: 4px; flex-wrap: wrap; }
+  .btn { padding: 4px 8px; font-size: 9px; }
+
+  /* ── SIGNAL CARDS left col ── */
+  .col-left { max-height: 280px; overflow-y: auto; }
+
+  /* ── RIGHT sidebar: horizontal scroll strip ── */
+  .col-right {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
+    max-height: 200px;
+  }
+  .col-right .sidebar-block { min-width: 180px; max-width: 220px; border-bottom: none; border-right: 1px solid var(--border); flex-shrink: 0; overflow-y: auto; }
+
+  /* ── SCANNER ── */
+  .scan-body { grid-template-columns: 1fr; }
+  .scan-sidebar { display: none; }          /* hide sidebar on mobile — saves space */
+  .scan-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .scan-table { min-width: 560px; }         /* table scrolls horizontally */
+  .section-hdr { gap: 5px; padding: 5px 8px; }
+  .section-title { font-size: 10px; }
+
+  /* ── STRATEGY ── */
+  .strat-layout { grid-template-columns: 1fr; display: flex; flex-direction: column; }
+  .strat-list { max-height: 200px; border-right: none; border-bottom: 1px solid var(--border); overflow-y: auto; }
+  .strat-content { padding: 14px; overflow-y: auto; flex: 1; }
+
+  /* ── FORUM ── */
+  .forum-layout { grid-template-columns: 1fr; display: flex; flex-direction: column; }
+  .forum-cats { max-height: 110px; overflow-x: auto; overflow-y: hidden; border-right: none; border-bottom: 1px solid var(--border); display: flex; flex-direction: row; flex-wrap: nowrap; }
+  .cat-item { min-width: 120px; border-bottom: none; border-right: 1px solid var(--border); padding: 7px 10px; flex-shrink: 0; }
+  .forum-main { flex: 1; min-height: 0; overflow: hidden; }
+
+  /* ── AFFILIATE ── */
+  .aff-stats-row { grid-template-columns: repeat(2, 1fr); }
+  .aff-cols { grid-template-columns: repeat(2, 1fr); }
+
+  /* ── AI PRO ── */
+  #page-ai { padding: 8px; }
+  .aip-body { padding: 10px; }
+  .aif-ind { grid-template-columns: 72px 90px 24px 1fr; gap: 5px; font-size: 8px; }
+  .aif-trade { grid-template-columns: 1fr 1fr; }   /* 3 cols → 2 cols */
+  .aif-trade-cell:last-child { grid-column: span 2; }
+
+  /* ── AI analyses feed ── */
+  .aif-head { padding: 8px 10px; gap: 6px; }
+  .aif-meters { padding: 6px 10px; gap: 4px; }
+  .aif-meter { min-width: 40px; }
+
+  /* ── ANALYSIS SIGNAL CARD (center col) ── */
+  .analysis-post .ap-head { padding: 10px; }
+  .ap-sym { font-size: 13px; }
+  .ap-title { font-size: 11px; }
+
+  /* ── POST OVERLAY ── */
+  .po-content { padding: 16px 12px; }
+  .po-title { font-size: 16px; }
+
+  /* ── MODALS ── */
+  .modal-box { width: 95vw !important; }
+
+  /* ── TOAST ── */
+  #toast-wrap { bottom: 10px; right: 8px; left: 8px; }
+  .toast { min-width: unset; width: 100%; }
+
+  /* ── FIX: pages must scroll on mobile ── */
+  .page { overflow-y: auto !important; }
+  #page-home { overflow: hidden !important; }   /* home manages its own scroll */
+  #page-home.active { display: flex; }
+}
+
+/* Extra small phones */
+@media (max-width: 400px) {
+  .tab { padding: 0 8px; font-size: 8px; }
+  .logo { font-size: 11px; }
+  .aff-cols { grid-template-columns: 1fr; }
+  .aff-stats-row { grid-template-columns: 1fr 1fr; }
+  .home-body { font-size: 10px; }
+}
 </style>
 </head>
 <body>
@@ -842,6 +959,39 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
           </div>
         </div>
 
+        <!-- Panel: Cloud Sync (owner only) -->
+        <div class="ai-panel" id="aip-cloud" draggable="true" style="display:none;border-color:var(--amber)">
+          <div class="aip-handle" style="border-bottom-color:rgba(240,165,0,.3)">
+            <span class="aip-grip">⠿⠿</span>
+            <span class="aip-title" style="color:var(--amber)">☁ CLOUD SYNC — JSONBin.io</span>
+            <span style="margin-left:auto;font-size:9px;color:var(--text3);cursor:pointer" onclick="this.closest('.ai-panel').querySelector('.aip-body').style.display=this.closest('.ai-panel').querySelector('.aip-body').style.display==='none'?'block':'none'">▲▼</span>
+          </div>
+          <div class="aip-body">
+            <div style="font-size:9px;color:var(--text3);line-height:1.7;margin-bottom:10px;padding:8px;background:rgba(240,165,0,.05);border:1px solid rgba(240,165,0,.15)">
+              1. Pojdi na <span style="color:var(--amber)">jsonbin.io</span> → Brezplačna registracija → Create new BIN<br>
+              2. Vsebina binarja: <span style="color:var(--text2)">{"feed":[]}</span> — nastavi BIN na <b>PUBLIC</b><br>
+              3. Kopiraj <b>BIN ID</b> in <b>X-MASTER-KEY</b> v polja spodaj → SAVE<br>
+              4. Kupci vidijo feed samodejno vsake 60s brez refresha
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+              <div>
+                <div style="font-size:9px;color:var(--amber);margin-bottom:4px;letter-spacing:.1em">BIN ID</div>
+                <input id="cloud-bin-id" type="text" placeholder="64abc123..." style="width:100%;background:var(--bg3);border:1px solid rgba(240,165,0,.3);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none"/>
+              </div>
+              <div>
+                <div style="font-size:9px;color:var(--amber);margin-bottom:4px;letter-spacing:.1em">X-MASTER-KEY</div>
+                <input id="cloud-master-key" type="password" placeholder="$2a$10..." style="width:100%;background:var(--bg3);border:1px solid rgba(240,165,0,.3);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none"/>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <button onclick="saveCloudCfg()" style="padding:5px 12px;background:rgba(240,165,0,.12);border:1px solid var(--amber);color:var(--amber);font-family:inherit;font-size:9px;cursor:pointer;font-weight:bold">SAVE &amp; START</button>
+              <button onclick="cloudPush()" style="padding:5px 12px;background:none;border:1px solid var(--border2);color:var(--text2);font-family:inherit;font-size:9px;cursor:pointer">⬆ PUSH NOW</button>
+              <button onclick="cloudPull()" style="padding:5px 12px;background:none;border:1px solid var(--border2);color:var(--text2);font-family:inherit;font-size:9px;cursor:pointer">⬇ PULL NOW</button>
+              <span id="cloud-status" style="font-size:9px;color:var(--text3)"></span>
+            </div>
+          </div>
+        </div>
+
         <!-- Panel: Post Analysis -->
         <div class="ai-panel" id="aip-post" draggable="true" style="border-color:#7c3aed">
           <div class="aip-handle" style="border-bottom-color:#7c3aed">
@@ -899,8 +1049,11 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
 
       <!-- AI Analyses feed — always at bottom -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-        <div style="font-size:9px;color:#a855f7;letter-spacing:.18em;font-weight:bold">🧠 AI GENERATED ANALYSES</div>
-        <button onclick="aiFeedClear()" style="font-size:9px;color:var(--text3);background:none;border:1px solid var(--border);padding:2px 8px;cursor:pointer">CLEAR HISTORY</button>
+        <div>
+          <div style="font-size:9px;color:#a855f7;letter-spacing:.18em;font-weight:bold">🧠 AI GENERATED ANALYSES — by TradeCore</div>
+          <div id="cloud-sync-status" style="font-size:8px;color:var(--text3);margin-top:2px">● Local only</div>
+        </div>
+        <button id="feed-clear-btn" onclick="aiFeedClear()" style="display:none;font-size:9px;color:var(--text3);background:none;border:1px solid var(--border);padding:2px 8px;cursor:pointer">CLEAR HISTORY</button>
       </div>
       <div id="ai-analyses-feed">
         <div style="color:var(--text3);font-size:10px;text-align:center;padding:20px">Waiting for signals to analyze...</div>
@@ -2469,33 +2622,138 @@ renderHomeForum();
 })();
 
 // ════════════════════════════════════════
-// AI PRO — UNLOCK, TELEGRAM, AI ANALYSIS
 // ════════════════════════════════════════
-const AI_CODES = ['TRADECORE2024','AIPROMATIC','TC-PRO-2025'];
-const AI_UNLOCK_KEY = 'tc_ai_unlocked';
-let aiUnlocked = localStorage.getItem(AI_UNLOCK_KEY)==='1';
+// AI PRO — UNLOCK, OWNER MODE, CLOUD SYNC
+// ════════════════════════════════════════
+const AI_CODES          = ['TRADECORE2024','AIPROMATIC','TC-PRO-2025'];
+const OWNER_CODE        = 'TC-OWNER-MATIC';   // ← owner's private master code (change this)
+const CLOUD_BIN_DEFAULT = '';                   // ← owner pastes JSONBin ID here after setup
+const AI_UNLOCK_KEY     = 'tc_ai_unlocked';
+const OWNER_KEY         = 'tc_owner_v1';
+const CLOUD_CFG_KEY     = 'tc_cloud_v1';
 
-function aiApplyUnlock() {
-  const content = document.getElementById('ai-content');
-  const badge = document.getElementById('ai-lock-badge');
-  const unlockSection = document.getElementById('ai-unlock-section');
-  if(aiUnlocked) {
-    content.style.opacity='1'; content.style.pointerEvents='auto'; content.style.filter='none';
-    badge.textContent='✓ PREMIUM ACTIVE'; badge.style.background='rgba(0,232,122,.15)'; badge.style.borderColor='var(--green)'; badge.style.color='var(--green)';
-    unlockSection.style.display='none';
-    loadTelegramSettings();
+let aiUnlocked = localStorage.getItem(AI_UNLOCK_KEY) === '1';
+let aiOwner    = localStorage.getItem(OWNER_KEY)     === '1';
+if(aiOwner) aiUnlocked = true; // owner is always unlocked
+
+let cloudCfg = {};
+try { cloudCfg = JSON.parse(localStorage.getItem(CLOUD_CFG_KEY)||'{}'); } catch(e){}
+if(!cloudCfg.binId && CLOUD_BIN_DEFAULT) cloudCfg.binId = CLOUD_BIN_DEFAULT;
+
+// ── Cloud sync helpers ──────────────────────────────────────────────────────
+let _cloudSyncInterval = null;
+
+function updateCloudIndicator(state) {
+  const el = document.getElementById('cloud-sync-status');
+  if(!el) return;
+  const map = { ok:['☁ Synced','var(--green)'], syncing:['☁ Syncing…','var(--amber)'], error:['☁ Sync error','var(--red)'], local:['● Local only','var(--text3)'] };
+  const [txt,col] = map[state]||map.local;
+  el.textContent=txt; el.style.color=col;
+}
+
+async function cloudPull() {
+  if(!cloudCfg.binId) { updateCloudIndicator('local'); return; }
+  updateCloudIndicator('syncing');
+  try {
+    const headers = {};
+    if(cloudCfg.masterKey) headers['X-Master-Key'] = cloudCfg.masterKey;
+    const res = await fetch(`https://api.jsonbin.io/v3/b/${cloudCfg.binId}/latest`, { headers });
+    if(!res.ok) { updateCloudIndicator('error'); return; }
+    const data = await res.json();
+    const remote = data.record?.feed || [];
+    if(remote.length > 0) {
+      aiAnalysesFeed = remote;
+      aiFeedSave();
+      renderAiAnalyses();
+    }
+    updateCloudIndicator('ok');
+  } catch(e) { updateCloudIndicator('error'); }
+}
+
+async function cloudPush() {
+  if(!cloudCfg.binId || !cloudCfg.masterKey) {
+    const s = document.getElementById('cloud-status');
+    if(s) { s.textContent='⚠ Set BIN ID and Master Key first'; s.style.color='var(--red)'; setTimeout(()=>s.textContent='',4000); }
+    return;
   }
+  try {
+    const res = await fetch(`https://api.jsonbin.io/v3/b/${cloudCfg.binId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type':'application/json', 'X-Master-Key':cloudCfg.masterKey, 'X-Bin-Versioning':'false' },
+      body: JSON.stringify({ feed: aiAnalysesFeed })
+    });
+    if(res.ok) {
+      updateCloudIndicator('ok');
+      const s = document.getElementById('cloud-status');
+      if(s) { s.textContent='✓ Pushed to cloud'; s.style.color='var(--green)'; setTimeout(()=>s.textContent='',3000); }
+    } else { updateCloudIndicator('error'); }
+  } catch(e) { updateCloudIndicator('error'); }
+}
+
+function startCloudSync() {
+  clearInterval(_cloudSyncInterval);
+  if(!cloudCfg.binId) { updateCloudIndicator('local'); return; }
+  cloudPull();
+  _cloudSyncInterval = setInterval(cloudPull, 60000);
+}
+
+function loadCloudSettings() {
+  const bi = document.getElementById('cloud-bin-id');
+  const mk = document.getElementById('cloud-master-key');
+  if(bi && cloudCfg.binId)     bi.value = cloudCfg.binId;
+  if(mk && cloudCfg.masterKey) mk.value = cloudCfg.masterKey;
+}
+
+function saveCloudCfg() {
+  cloudCfg.binId      = (document.getElementById('cloud-bin-id')?.value||'').trim();
+  cloudCfg.masterKey  = (document.getElementById('cloud-master-key')?.value||'').trim();
+  localStorage.setItem(CLOUD_CFG_KEY, JSON.stringify(cloudCfg));
+  const s = document.getElementById('cloud-status');
+  if(s) { s.textContent='✓ Saved'; s.style.color='var(--green)'; setTimeout(()=>s.textContent='',3000); }
+  startCloudSync();
+}
+
+// ── Apply unlock state ──────────────────────────────────────────────────────
+function aiApplyUnlock() {
+  const content       = document.getElementById('ai-content');
+  const badge         = document.getElementById('ai-lock-badge');
+  const unlockSection = document.getElementById('ai-unlock-section');
+  if(!aiUnlocked) return;
+  content.style.opacity='1'; content.style.pointerEvents='auto'; content.style.filter='none';
+  unlockSection.style.display='none';
+  loadTelegramSettings();
+
+  // Owner sees post/filter/cloud panels; viewers see only the feed
+  ['aip-tg','aip-filters','aip-post','aip-cloud'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.style.display = aiOwner ? 'block' : 'none';
+  });
+  const clearBtn = document.getElementById('feed-clear-btn');
+  if(clearBtn) clearBtn.style.display = aiOwner ? 'inline-block' : 'none';
+
+  if(aiOwner) {
+    badge.textContent='👑 OWNER MODE'; badge.style.background='rgba(240,165,0,.15)'; badge.style.borderColor='var(--amber)'; badge.style.color='var(--amber)';
+    loadCloudSettings();
+  } else {
+    badge.textContent='✓ PREMIUM ACTIVE'; badge.style.background='rgba(0,232,122,.15)'; badge.style.borderColor='var(--green)'; badge.style.color='var(--green)';
+  }
+  startCloudSync();
 }
 aiApplyUnlock();
 
 function aiUnlock() {
-  const code = document.getElementById('ai-code-input').value.trim().toUpperCase();
-  if(AI_CODES.includes(code)) {
-    aiUnlocked=true; localStorage.setItem(AI_UNLOCK_KEY,'1');
+  const code = (document.getElementById('ai-code-input')?.value||'').trim().toUpperCase();
+  if(code === OWNER_CODE) {
+    aiOwner=true; aiUnlocked=true;
+    localStorage.setItem(OWNER_KEY,'1'); localStorage.setItem(AI_UNLOCK_KEY,'1');
+    aiApplyUnlock();
+  } else if(AI_CODES.includes(code)) {
+    aiOwner=false; aiUnlocked=true;
+    localStorage.setItem(AI_UNLOCK_KEY,'1');
     aiApplyUnlock();
   } else {
     document.getElementById('ai-code-err').style.display='block';
-    setTimeout(()=>document.getElementById('ai-code-err').style.display='none',3000);
+    setTimeout(()=>{ const e=document.getElementById('ai-code-err'); if(e) e.style.display='none'; },3000);
   }
 }
 
@@ -2659,7 +2917,7 @@ function aiAnalyzeSignal(s) {
 }
 
 function aiAddAnalysis(s, market) {
-  if(!aiUnlocked) return;
+  if(!aiOwner) return;  // only owner generates analyses — viewers see cloud feed
   const minScore = parseInt(document.getElementById('ai-min-score')?.value||'65');
   const analysis = aiAnalyzeSignal(s);
   if(analysis.score < minScore) return;
@@ -2681,6 +2939,7 @@ function aiAddAnalysis(s, market) {
   if(aiAnalysesFeed.length>200) aiAnalysesFeed=aiAnalysesFeed.slice(0,200);
   aiFeedSave();
   renderAiAnalyses();
+  cloudPush(); // broadcast to all users via JSONBin
 
   // Telegram notification with SL/TP
   const tgMsg = `🤖 <b>AI GENERATED SIGNAL</b> — Score ${analysis.score}/100 (${analysis.grade.g})\n`+
@@ -2792,7 +3051,7 @@ function renderAiAnalyses() {
         <span style="font-size:8px;padding:2px 6px;border:1px solid ${sigCol};color:${sigCol}">${sigDir}</span>
         <span style="font-size:8px;padding:2px 6px;background:rgba(168,85,247,.12);border:1px solid #7c3aed;color:#a855f7">🤖 AI GENERATED</span>
         <span style="margin-left:auto;font-size:9px;color:var(--text3)">🕐 ${item.time}</span>
-        <span onclick="aiFeedRemove(${idx})" style="color:var(--text3);cursor:pointer;font-size:11px;padding:0 4px" title="Remove from history">✕</span>
+        ${aiOwner?`<span onclick="aiFeedRemove(${idx})" style="color:var(--text3);cursor:pointer;font-size:11px;padding:0 4px" title="Remove">✕</span>`:''}
       </div>
       ${metersHtml}
       ${scoreHtml}
@@ -2804,6 +3063,7 @@ function renderAiAnalyses() {
 }
 
 function aiPostManual() {
+  if(!aiOwner) return; // only owner can post
   try {
     const g = id => document.getElementById(id); // safe getter helper
     const sym = (g('ai-man-sym')?.value||'').trim().toUpperCase();
@@ -2825,8 +3085,9 @@ function aiPostManual() {
     if(aiAnalysesFeed.length>200) aiAnalysesFeed=aiAnalysesFeed.slice(0,200);
     aiFeedSave();
     renderAiAnalyses();
+    cloudPush(); // broadcast to all users instantly
     ['ai-man-sym','ai-man-entry','ai-man-sl','ai-man-tp','ai-man-text'].forEach(id=>{const el=g(id);if(el)el.value='';});
-    if(statusEl){statusEl.textContent='✓ Analysis posted';statusEl.style.color='var(--green)';}
+    if(statusEl){statusEl.textContent='✓ Posted & synced to cloud';statusEl.style.color='var(--green)';}
     setTimeout(()=>{const s=g('ai-man-status');if(s)s.textContent='';},3000);
   } catch(err) {
     const s=document.getElementById('ai-man-status');
