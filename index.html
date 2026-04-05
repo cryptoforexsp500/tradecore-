@@ -402,8 +402,12 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
 
       <!-- My posts -->
       <div class="feed-section">
-        <div class="fs-hdr">📝 MY ANALYSES & POSTS</div>
+        <div class="fs-hdr" style="display:flex;align-items:center;justify-content:space-between">
+          <span>📝 MY ANALYSES & POSTS</span>
+          <button onclick="openOwnerPostModal()" style="padding:3px 10px;background:rgba(168,85,247,.15);border:1px solid #7c3aed;color:#a855f7;font-size:9px;cursor:pointer;font-family:inherit;letter-spacing:.08em;font-weight:bold">✍ NEW POST</button>
+        </div>
         <div id="my-posts-feed"></div>
+        <div id="owner-posts-feed"></div>
       </div>
 
     </div>
@@ -426,6 +430,8 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
       </div>
       <div class="sidebar-block" style="flex:1;overflow-y:auto">
         <div class="sb-hdr">FORUM</div>
+        <!-- Category tabs -->
+        <div id="home-forum-tabs" style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:8px"></div>
         <div id="forum-sidebar"></div>
         <div style="margin-top:6px"><span onclick="nav('forum')" style="color:var(--blue);cursor:pointer;font-size:9px">→ FORUM</span></div>
       </div>
@@ -830,6 +836,56 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
   </div>
 </div>
 
+<!-- OWNER POST MODAL -->
+<div id="owner-post-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:2000;align-items:center;justify-content:center">
+  <div style="background:var(--bg2);border:1px solid #7c3aed;width:min(560px,94vw);max-height:90vh;overflow-y:auto;padding:20px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div style="font-size:11px;color:#a855f7;letter-spacing:.15em;font-weight:bold">✍ OWNER — NEW POST</div>
+      <button onclick="closeOwnerPostModal()" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px">✕</button>
+    </div>
+    <div id="opm-lock" style="">
+      <div style="font-size:9px;color:var(--text3);margin-bottom:6px">OWNER PASSWORD</div>
+      <div style="display:flex;gap:8px">
+        <input id="opm-pass" type="password" placeholder="Enter password..." style="flex:1;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none"/>
+        <button onclick="verifyOwnerPass()" style="padding:6px 14px;background:rgba(168,85,247,.2);border:1px solid #7c3aed;color:#a855f7;font-family:inherit;font-size:10px;cursor:pointer;font-weight:bold">ENTER</button>
+      </div>
+      <div id="opm-pass-err" style="font-size:9px;color:var(--red);margin-top:4px;display:none">Wrong password.</div>
+    </div>
+    <div id="opm-form" style="display:none">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+        <div>
+          <div style="font-size:9px;color:var(--text3);margin-bottom:3px">SIGNAL / TICKER</div>
+          <input id="opm-ticker" type="text" placeholder="e.g. BTC, TSLA, EURUSD" style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:5px 8px;font-family:inherit;font-size:10px;outline:none;box-sizing:border-box;text-transform:uppercase"/>
+        </div>
+        <div>
+          <div style="font-size:9px;color:var(--text3);margin-bottom:3px">DIRECTION</div>
+          <select id="opm-dir" style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:5px 8px;font-family:inherit;font-size:10px;outline:none">
+            <option value="bull">▲ BULLISH</option>
+            <option value="bear">▼ BEARISH</option>
+            <option value="neutral">◆ NEUTRAL / INFO</option>
+            <option value="ai">🤖 AI ANALYSIS</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-bottom:10px">
+        <div style="font-size:9px;color:var(--text3);margin-bottom:3px">TITLE</div>
+        <input id="opm-title" type="text" placeholder="Post title..." style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:5px 8px;font-family:inherit;font-size:10px;outline:none;box-sizing:border-box"/>
+      </div>
+      <div style="margin-bottom:10px">
+        <div style="font-size:9px;color:var(--text3);margin-bottom:3px">ANALYSIS BODY</div>
+        <textarea id="opm-body" placeholder="Write your full analysis here..." style="width:100%;min-height:120px;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:8px;font-family:inherit;font-size:10px;outline:none;resize:vertical;box-sizing:border-box"></textarea>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button onclick="submitOwnerPost()" style="padding:6px 18px;background:rgba(168,85,247,.2);border:1px solid #7c3aed;color:#a855f7;font-family:inherit;font-size:10px;cursor:pointer;font-weight:bold;letter-spacing:.08em">PUBLISH</button>
+        <label style="display:flex;align-items:center;gap:5px;font-size:9px;color:var(--text3);cursor:pointer">
+          <input id="opm-to-ai" type="checkbox"/> Also post to AI PRO feed
+        </label>
+        <span id="opm-status" style="font-size:9px;color:var(--text3)"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- EMAIL SETTINGS MODAL -->
 <div id="email-modal">
   <div class="modal-box">
@@ -1077,6 +1133,72 @@ const CR_SYMS=[
 let crData={},crAlerts=[],crSnd=true,crLoading=false,crCd=60,crPrev={};
 CR_SYMS.forEach(s=>{crData[s.id]={rsi:null,ma:null,price:null,chg:null,div:null,st:'wait'};});
 
+function findLiquidityLevels(opens, closes, highs, lows, currentPrice) {
+  const n = closes.length;
+  const start = Math.max(0, n - 120); // look back 120 candles
+  const pf = p => p > 100 ? p.toFixed(2) : p > 1 ? p.toFixed(4) : p.toFixed(6);
+  const dist = p => ((p - currentPrice) / currentPrice * 100).toFixed(2);
+  const pinbars = [], fvg = [], poi = [];
+
+  // --- PINBARS (Hammer / Shooting Star) ---
+  for(let i = start; i < n - 1; i++) {
+    const o = opens[i] ?? ((closes[i-1]||closes[i])), c = closes[i], h = highs[i], l = lows[i];
+    const bodyTop = Math.max(o,c), bodyBot = Math.min(o,c);
+    const body = bodyTop - bodyBot;
+    const range = h - l;
+    if(range < 1e-12) continue;
+    const upperWick = h - bodyTop, lowerWick = bodyBot - l;
+    // Bullish hammer: long lower wick (support / demand)
+    if(lowerWick / range > 0.6 && lowerWick > Math.max(body, range * 0.1)) {
+      const d = parseFloat(dist(l));
+      if(Math.abs(d) < 6) pinbars.push({price:l, type:'bull', label:'🔨 Hammer support', dist:d});
+    }
+    // Bearish shooting star: long upper wick (resistance / supply)
+    if(upperWick / range > 0.6 && upperWick > Math.max(body, range * 0.1)) {
+      const d = parseFloat(dist(h));
+      if(Math.abs(d) < 6) pinbars.push({price:h, type:'bear', label:'⭐ Shooting Star resist.', dist:d});
+    }
+  }
+
+  // --- FVG / IMBALANCE ---
+  for(let i = start + 2; i < n; i++) {
+    // Bullish FVG: gap up (current low > prior high — unfilled zone below)
+    if(lows[i] > highs[i-2]) {
+      const mid = (lows[i] + highs[i-2]) / 2;
+      const d = parseFloat(dist(mid));
+      if(Math.abs(d) < 6) fvg.push({low:highs[i-2], high:lows[i], mid, type:'bull', label:'📈 Bull imbalance (FVG)', dist:d, size:((lows[i]-highs[i-2])/currentPrice*100).toFixed(3)+'%'});
+    }
+    // Bearish FVG: gap down
+    if(highs[i] < lows[i-2]) {
+      const mid = (highs[i] + lows[i-2]) / 2;
+      const d = parseFloat(dist(mid));
+      if(Math.abs(d) < 6) fvg.push({low:highs[i], high:lows[i-2], mid, type:'bear', label:'📉 Bear imbalance (FVG)', dist:d, size:((lows[i-2]-highs[i])/currentPrice*100).toFixed(3)+'%'});
+    }
+  }
+
+  // --- POI (Swing Highs / Lows — key levels) ---
+  for(let i = start + 2; i < n - 2; i++) {
+    // Swing low = support
+    if(lows[i] < lows[i-1] && lows[i] < lows[i-2] && lows[i] < lows[i+1] && lows[i] < lows[i+2]) {
+      const d = parseFloat(dist(lows[i]));
+      if(d > -6 && d < 0) poi.push({price:lows[i], type:'support', label:'🔵 Swing Low (support)', dist:d});
+    }
+    // Swing high = resistance
+    if(highs[i] > highs[i-1] && highs[i] > highs[i-2] && highs[i] > highs[i+1] && highs[i] > highs[i+2]) {
+      const d = parseFloat(dist(highs[i]));
+      if(d > 0 && d < 6) poi.push({price:highs[i], type:'resistance', label:'🔴 Swing High (resistance)', dist:d});
+    }
+  }
+
+  // Sort by distance from current price, deduplicate nearby levels
+  const dedup = (arr, key) => {
+    arr.sort((a,b)=>Math.abs(a.dist)-Math.abs(b.dist));
+    const seen = []; return arr.filter(x=>{ const p=parseFloat(x[key]??x.price);
+      if(seen.some(s=>Math.abs(s-p)/currentPrice<0.003)) return false; seen.push(p); return true; });
+  };
+  return {pinbars: dedup(pinbars,'price').slice(0,4), fvg: dedup(fvg,'mid').slice(0,4), poi: dedup(poi,'price').slice(0,5), pf};
+}
+
 function calcHoursAboveBelow(closes, intervalMin) {
   if(!closes || closes.length < 102) return null;
   const n = closes.length;
@@ -1104,10 +1226,12 @@ async function crFetchOne(id){
   const r=await fetch(`https://api.binance.com/api/v3/klines?symbol=${id}&interval=5m&limit=600`);
   if(!r.ok)throw new Error(r.status);
   const d=await r.json();
-  const closes=d.map(k=>parseFloat(k[4])),lows=d.map(k=>parseFloat(k[3])),highs=d.map(k=>parseFloat(k[2]));
+  const opens=d.map(k=>parseFloat(k[1])),closes=d.map(k=>parseFloat(k[4])),lows=d.map(k=>parseFloat(k[3])),highs=d.map(k=>parseFloat(k[2]));
   const rs=rsiSeries(closes);
   const ema100=calcHoursAboveBelow(closes,5);
-  return{rsi:rs[rs.length-1]??null,ma:sma(rs,MA_LEN),price:closes[closes.length-1],chg:((closes[closes.length-1]-closes[closes.length-2])/closes[closes.length-2])*100,div:detectDiv(lows,highs,rs),ema100};
+  const price=closes[closes.length-1];
+  const liq=findLiquidityLevels(opens,closes,highs,lows,price);
+  return{rsi:rs[rs.length-1]??null,ma:sma(rs,MA_LEN),price,chg:((price-closes[closes.length-2])/closes[closes.length-2])*100,div:detectDiv(lows,highs,rs),ema100,liq};
 }
 function crRow(s,i){
   const d=crData[s.id],rsi=d?.rsi,dv=d?.div;
@@ -1203,16 +1327,17 @@ async function crFetchAll(){
     res.forEach((r,idx)=>{
       const sym=batch[idx];
       if(r.status==='fulfilled'){
-        const{id,rsi,ma,price,chg,div,ema100}=r.value;
-        crData[id]={rsi,ma,price,chg,div,ema100,st:'ok'};
+        const{id,rsi,ma,price,chg,div,ema100,liq}=r.value;
+        crData[id]={rsi,ma,price,chg,div,ema100,liq,st:'ok'};
         // KEY SIGNAL: RSI<10 ALI bullish divergence
         const crKS={rsiLow:rsi!==null&&rsi<=10, bullDiv:div?.type==='bull'};
         if(crKS.rsiLow||crKS.bullDiv){
           const pd=crPrev[id];
           const wasKS=pd&&(pd.rsiLow||pd.bullDiv);
-          if(!wasKS)
+          if(!wasKS){
             setSignalTime(id+'|CRYPTO');
             newA.push({id,rsi,ma,type:'bull',st:div?.st||0,rd:div?.rd||0,price,time:new Date().toLocaleTimeString(),market:'CRYPTO',rsiLow:crKS.rsiLow,bullDiv:crKS.bullDiv});
+          }
         }
         crPrev[id]=(rsi!==null&&rsi<=10)||(div?.type==='bull')?{rsiLow:rsi!==null&&rsi<=10,bullDiv:div?.type==='bull'}:null;
       }else crData[sym.id]={...crData[sym.id],st:'err'};
@@ -1269,12 +1394,14 @@ async function spFetchOne(sym){
       const j=await r.json();
       const res=j?.chart?.result?.[0];if(!res)throw new Error('no result');
       const q=res.indicators?.quote?.[0];if(!q)throw new Error('no quote');
-      const valid=[];(q.close||[]).forEach((v,i)=>{if(v!=null&&q.low[i]!=null&&q.high[i]!=null)valid.push({c:v,l:q.low[i],h:q.high[i]});});
+      const valid=[];(q.close||[]).forEach((v,i)=>{if(v!=null&&q.low[i]!=null&&q.high[i]!=null)valid.push({c:v,o:q.open?.[i]??v,l:q.low[i],h:q.high[i]});});
       if(valid.length<RSI_LEN+LB)throw new Error('short');
-      const vc=valid.map(x=>x.c),vl=valid.map(x=>x.l),vh=valid.map(x=>x.h);
+      const vc=valid.map(x=>x.c),vo=valid.map(x=>x.o),vl=valid.map(x=>x.l),vh=valid.map(x=>x.h);
       const rs=rsiSeries(vc);spProxy=idx;
       const ema100=calcHoursAboveBelow(vc,5);
-      return{rsi:rs[rs.length-1]??null,ma:sma(rs,MA_LEN),price:vc[vc.length-1],chg:((vc[vc.length-1]-vc[vc.length-2])/vc[vc.length-2])*100,div:detectDiv(vl,vh,rs),ema100};
+      const price=vc[vc.length-1];
+      const liq=findLiquidityLevels(vo,vc,vh,vl,price);
+      return{rsi:rs[rs.length-1]??null,ma:sma(rs,MA_LEN),price,chg:((price-vc[vc.length-2])/vc[vc.length-2])*100,div:detectDiv(vl,vh,rs),ema100,liq};
     }catch(e){lastE=e;}
   }throw lastE;
 }
@@ -1371,15 +1498,16 @@ async function spFetchAll(){
     res.forEach((r,idx)=>{
       const sym=batch[idx];
       if(r.status==='fulfilled'){
-        const{id,rsi,ma,price,chg,div,ema100}=r.value;
-        spData[id]={rsi,ma,price,chg,div,ema100,st:'ok'};
+        const{id,rsi,ma,price,chg,div,ema100,liq}=r.value;
+        spData[id]={rsi,ma,price,chg,div,ema100,liq,st:'ok'};
         const spKS={rsiLow:rsi!==null&&rsi<=10, bullDiv:div?.type==='bull'};
         if(spKS.rsiLow||spKS.bullDiv){
           const pd=spPrev[id];
           const wasKS=pd&&(pd.rsiLow||pd.bullDiv);
-          if(!wasKS)
+          if(!wasKS){
             setSignalTime(id+'|SP500');
             newA.push({id,rsi,ma,type:'bull',st:div?.st||0,rd:div?.rd||0,price,time:new Date().toLocaleTimeString(),market:'SP500',rsiLow:spKS.rsiLow,bullDiv:spKS.bullDiv});
+          }
         }
         spPrev[id]=((rsi!==null&&rsi<=10)||(div?.type==='bull'))?{rsiLow:rsi!==null&&rsi<=10,bullDiv:div?.type==='bull'}:null;
       }else{errs++;spData[sym.id]={...spData[sym.id],st:'err'};}
@@ -1453,6 +1581,51 @@ function clearStaleSignalTimes(activeKeys) {
 }
 // Track which signals already triggered sound (prevent re-trigger on re-render)
 const beepedSignals = new Set();
+
+function toggleLiqTab(btn) {
+  const tab = btn.closest('.ap-foot').nextElementSibling;
+  if(!tab || !tab.classList.contains('liq-tab')) return;
+  const open = tab.style.display !== 'none';
+  tab.style.display = open ? 'none' : 'block';
+  btn.style.background = open ? 'rgba(74,122,255,.1)' : 'rgba(74,122,255,.25)';
+  btn.style.color = open ? 'var(--blue)' : '#a0bfff';
+}
+
+function buildLiqHtml(s) {
+  const liq = s.liq;
+  if(!liq || (!liq.pinbars.length && !liq.fvg.length && !liq.poi.length)) {
+    return '<div style="color:var(--text3);text-align:center;padding:8px 0">No nearby liquidity levels found within ±6%</div>';
+  }
+  const pf = p => p > 100 ? p.toFixed(2) : p > 1 ? p.toFixed(4) : p.toFixed(6);
+  const sectionHtml = (title, color, items, rowFn) => items.length ? `
+    <div style="margin-bottom:10px">
+      <div style="font-size:8px;color:${color};letter-spacing:.15em;margin-bottom:5px;font-weight:bold">${title}</div>
+      ${items.map(rowFn).join('')}
+    </div>` : '';
+
+  return '<div style="display:flex;gap:14px;flex-wrap:wrap">'+
+    sectionHtml('📌 PINBAR LEVELS', 'var(--amber)', liq.pinbars, x=>`
+      <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border)">
+        <span style="color:${x.type==='bull'?'var(--green)':'var(--red)'}">${x.label}</span>
+        <span style="color:var(--text);margin-left:12px;font-weight:bold">${pf(x.price)}</span>
+        <span style="color:${x.dist>=0?'var(--red)':'var(--green)'};margin-left:6px">${x.dist>=0?'+':''}${x.dist}%</span>
+      </div>`)+
+    sectionHtml('⚡ IMBALANCE / FVG', '#4a9aff', liq.fvg, x=>`
+      <div style="padding:3px 0;border-bottom:1px solid var(--border)">
+        <div style="display:flex;justify-content:space-between">
+          <span style="color:${x.type==='bull'?'var(--green)':'var(--red)'}">${x.label}</span>
+          <span style="color:${x.dist>=0?'var(--red)':'var(--green)'};margin-left:6px">${x.dist>=0?'+':''}${x.dist}%</span>
+        </div>
+        <div style="color:var(--text3);margin-top:1px">Zone: ${pf(x.low)} – ${pf(x.high)} <span style="color:var(--amber)">(size ${x.size})</span></div>
+      </div>`)+
+    sectionHtml('🎯 POINTS OF INTEREST', '#a855f7', liq.poi, x=>`
+      <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border)">
+        <span style="color:${x.type==='support'?'var(--green)':'var(--red)'}">${x.label}</span>
+        <span style="color:var(--text);margin-left:12px;font-weight:bold">${pf(x.price)}</span>
+        <span style="color:${x.dist>=0?'var(--red)':'var(--green)'};margin-left:6px">${x.dist>=0?'+':''}${x.dist}%</span>
+      </div>`)+
+  '</div>';
+}
 
 function refreshHome(){
   const crKey=CR_SYMS.filter(s=>isKeySignal(crData[s.id])).map(s=>({...crData[s.id],sym:s.id.replace('USDT',''),market:'CRYPTO',id:s.id,signal:'bull'}));
@@ -1639,6 +1812,10 @@ function refreshHome(){
             (isBear?'&#9660; OPEN SHORT':'&#9654; OPEN TRADE')+
           '</a>'+
           (bullDiv?'<span style="color:var(--green);margin-left:8px">'+dots(s.div?.st||1)+'</span>':'')+
+          '<button onclick="event.stopPropagation();toggleLiqTab(this)" style="float:right;padding:3px 9px;background:rgba(74,122,255,.1);border:1px solid var(--border2);color:var(--blue);font-size:8px;cursor:pointer;font-family:inherit;letter-spacing:.06em">💧 LIQUIDITY</button>'+
+        '</div>'+
+        '<div class="liq-tab" style="display:none;border-top:1px solid var(--border2);padding:10px 14px;font-size:9px">'+
+          buildLiqHtml(s)+
         '</div>';
       feedEl.appendChild(div);
     });
@@ -1698,6 +1875,91 @@ function submitComment(){
   renderComments(currentPost);
   document.getElementById('po-comment-txt').value='';
 }
+
+// ══════════════════════════════════════
+// OWNER POSTS
+// ══════════════════════════════════════
+const OWNER_PASS = 'MATIC2024';
+const OWNER_POSTS_KEY = 'tc_owner_posts';
+let ownerPosts = JSON.parse(localStorage.getItem(OWNER_POSTS_KEY)||'[]');
+let ownerUnlocked = false;
+
+function renderOwnerPosts() {
+  const el = document.getElementById('owner-posts-feed');
+  if(!el) return;
+  if(!ownerPosts.length) { el.innerHTML=''; return; }
+  const dirColors = {bull:'var(--green)', bear:'var(--red)', neutral:'var(--amber)', ai:'#a855f7'};
+  const dirLabels = {bull:'▲ BULLISH', bear:'▼ BEARISH', neutral:'◆ NEUTRAL', ai:'🤖 AI ANALYSIS'};
+  el.innerHTML = ownerPosts.map((p,i) => `
+    <div style="background:var(--bg2);border:1px solid var(--border2);border-left:3px solid ${dirColors[p.dir]||'var(--blue)'};padding:12px 14px;margin-bottom:8px;animation:fadeIn .4s ease forwards">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
+        <span style="font-size:13px;font-weight:bold;color:${dirColors[p.dir]||'var(--blue)'}">${p.ticker||'—'}</span>
+        <span style="font-size:8px;padding:1px 6px;border:1px solid ${dirColors[p.dir]||'var(--blue)'};color:${dirColors[p.dir]||'var(--blue)'}">${dirLabels[p.dir]||p.dir}</span>
+        <span style="font-size:8px;padding:1px 5px;background:rgba(168,85,247,.1);border:1px solid #7c3aed;color:#a855f7">OWNER</span>
+        <span style="margin-left:auto;font-size:9px;color:var(--text3)">🕐 ${p.time}</span>
+        ${ownerUnlocked?`<button onclick="deleteOwnerPost(${i})" style="background:none;border:none;color:var(--text3);font-size:10px;cursor:pointer;padding:0 4px" title="Delete">✕</button>`:''}
+      </div>
+      <div style="font-size:11px;font-weight:bold;color:var(--text);margin-bottom:6px">${p.title}</div>
+      <div style="font-size:10px;color:var(--text2);line-height:1.7;white-space:pre-wrap">${p.body}</div>
+    </div>`).join('');
+}
+
+function deleteOwnerPost(idx) {
+  ownerPosts.splice(idx, 1);
+  try { localStorage.setItem(OWNER_POSTS_KEY, JSON.stringify(ownerPosts)); } catch(e){}
+  renderOwnerPosts();
+}
+
+function openOwnerPostModal() {
+  document.getElementById('owner-post-modal').style.display='flex';
+  if(ownerUnlocked) {
+    document.getElementById('opm-lock').style.display='none';
+    document.getElementById('opm-form').style.display='block';
+  } else {
+    document.getElementById('opm-lock').style.display='block';
+    document.getElementById('opm-form').style.display='none';
+  }
+}
+function closeOwnerPostModal() { document.getElementById('owner-post-modal').style.display='none'; }
+function verifyOwnerPass() {
+  const pw = document.getElementById('opm-pass').value.trim();
+  if(pw === OWNER_PASS) {
+    ownerUnlocked = true;
+    document.getElementById('opm-lock').style.display='none';
+    document.getElementById('opm-form').style.display='block';
+    document.getElementById('opm-pass-err').style.display='none';
+  } else {
+    document.getElementById('opm-pass-err').style.display='block';
+  }
+}
+function submitOwnerPost() {
+  const ticker = (document.getElementById('opm-ticker').value||'').trim().toUpperCase();
+  const title = (document.getElementById('opm-title').value||'').trim();
+  const body = (document.getElementById('opm-body').value||'').trim();
+  const dir = document.getElementById('opm-dir').value;
+  const toAi = document.getElementById('opm-to-ai').checked;
+  if(!title || !body) {
+    document.getElementById('opm-status').textContent='⚠ Fill in title and body';
+    document.getElementById('opm-status').style.color='var(--red)'; return;
+  }
+  const now = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+  const post = {ticker, title, body, dir, time:now, date:new Date().toLocaleDateString()};
+  ownerPosts.unshift(post);
+  if(ownerPosts.length>50) ownerPosts=ownerPosts.slice(0,50);
+  try { localStorage.setItem(OWNER_POSTS_KEY, JSON.stringify(ownerPosts)); } catch(e){}
+  renderOwnerPosts();
+  // Also post to AI feed if requested
+  if(toAi && aiUnlocked) {
+    aiAnalysesFeed.unshift({sym:ticker||'—', market:'MANUAL', signal:dir==='bear'?'bear':dir==='neutral'?'neutral':'bull',
+      analysis:{score:null,grade:{g:'M',c:'#a855f7'},notes:[body],rec:title}, time:now, manual:true});
+    if(aiAnalysesFeed.length>50) aiAnalysesFeed=aiAnalysesFeed.slice(0,50);
+    renderAiAnalyses();
+  }
+  document.getElementById('opm-status').textContent='✓ Published!'; document.getElementById('opm-status').style.color='var(--green)';
+  document.getElementById('opm-ticker').value=''; document.getElementById('opm-title').value=''; document.getElementById('opm-body').value='';
+  setTimeout(closeOwnerPostModal, 1200);
+}
+renderOwnerPosts();
 
 // ══════════════════════════════════════
 // STRATEGIJE
@@ -1903,7 +2165,18 @@ function submitReply(){const b=document.getElementById('tv-reply').value.trim(),
 function openNewThread(){const t=prompt('Naslov:');if(!t)return;const b=prompt('Vsebina:');if(!b)return;const a=prompt('Vzdevek:')||'Anonimno';fp2.unshift({id:Date.now(),cat:fCat,t,a,tm:'pravkar',v:1,hot:false,posts:[{a,r:'MEMBER',b,tm:'pravkar',l:0}]});FC[fCat].c++;renderForum();}
 
 // Forum sidebar
-document.getElementById('forum-sidebar').innerHTML=FT.slice(0,4).map(t=>`<div class="forum-item" onclick="nav('forum')"><div class="fi-title">${t.hot?'🔥 ':''}${t.t}</div><div class="fi-meta">@${t.a} · ${t.posts.length} replies</div></div>`).join('');
+let homeFCat = 0;
+function renderHomeForum() {
+  const tabsEl = document.getElementById('home-forum-tabs');
+  const sideEl = document.getElementById('forum-sidebar');
+  if(!tabsEl || !sideEl) return;
+  tabsEl.innerHTML = FC.map(c=>`<span onclick="homeFCat=${c.id};renderHomeForum()" style="cursor:pointer;font-size:8px;padding:2px 7px;border:1px solid ${homeFCat===c.id?'var(--blue)':'var(--border2)'};color:${homeFCat===c.id?'var(--blue)':'var(--text3)'};background:${homeFCat===c.id?'rgba(74,122,255,.12)':'transparent'};white-space:nowrap">${c.n}</span>`).join('');
+  const threads = fp2.filter(t=>t.cat===homeFCat).slice(0,5);
+  sideEl.innerHTML = threads.length
+    ? threads.map(t=>`<div class="forum-item" onclick="nav('forum');setTimeout(()=>openTV(${t.id}),80)"><div class="fi-title">${t.hot?'🔥 ':''}${t.t}</div><div class="fi-meta">@${t.a} · ${t.posts.length} replies</div></div>`).join('')
+    : '<div style="color:var(--text3);font-size:9px;padding:6px 0">No threads yet.</div>';
+}
+renderHomeForum();
 
 // ════════════════════════════════════════
 // AI PRO — UNLOCK, TELEGRAM, AI ANALYSIS
