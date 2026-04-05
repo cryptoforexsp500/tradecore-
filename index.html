@@ -959,39 +959,6 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
           </div>
         </div>
 
-        <!-- Panel: Cloud Sync (owner only) -->
-        <div class="ai-panel" id="aip-cloud" draggable="true" style="display:none;border-color:var(--amber)">
-          <div class="aip-handle" style="border-bottom-color:rgba(240,165,0,.3)">
-            <span class="aip-grip">⠿⠿</span>
-            <span class="aip-title" style="color:var(--amber)">☁ CLOUD SYNC — JSONBin.io</span>
-            <span style="margin-left:auto;font-size:9px;color:var(--text3);cursor:pointer" onclick="this.closest('.ai-panel').querySelector('.aip-body').style.display=this.closest('.ai-panel').querySelector('.aip-body').style.display==='none'?'block':'none'">▲▼</span>
-          </div>
-          <div class="aip-body">
-            <div style="font-size:9px;color:var(--text3);line-height:1.7;margin-bottom:10px;padding:8px;background:rgba(240,165,0,.05);border:1px solid rgba(240,165,0,.15)">
-              1. Pojdi na <span style="color:var(--amber)">jsonbin.io</span> → Brezplačna registracija → Create new BIN<br>
-              2. Vsebina binarja: <span style="color:var(--text2)">{"feed":[]}</span> — nastavi BIN na <b>PUBLIC</b><br>
-              3. Kopiraj <b>BIN ID</b> in <b>X-MASTER-KEY</b> v polja spodaj → SAVE<br>
-              4. Kupci vidijo feed samodejno vsake 60s brez refresha
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-              <div>
-                <div style="font-size:9px;color:var(--amber);margin-bottom:4px;letter-spacing:.1em">BIN ID</div>
-                <input id="cloud-bin-id" type="text" placeholder="64abc123..." style="width:100%;background:var(--bg3);border:1px solid rgba(240,165,0,.3);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none"/>
-              </div>
-              <div>
-                <div style="font-size:9px;color:var(--amber);margin-bottom:4px;letter-spacing:.1em">X-MASTER-KEY</div>
-                <input id="cloud-master-key" type="password" placeholder="$2a$10..." style="width:100%;background:var(--bg3);border:1px solid rgba(240,165,0,.3);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none"/>
-              </div>
-            </div>
-            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-              <button onclick="saveCloudCfg()" style="padding:5px 12px;background:rgba(240,165,0,.12);border:1px solid var(--amber);color:var(--amber);font-family:inherit;font-size:9px;cursor:pointer;font-weight:bold">SAVE &amp; START</button>
-              <button onclick="cloudPush()" style="padding:5px 12px;background:none;border:1px solid var(--border2);color:var(--text2);font-family:inherit;font-size:9px;cursor:pointer">⬆ PUSH NOW</button>
-              <button onclick="cloudPull()" style="padding:5px 12px;background:none;border:1px solid var(--border2);color:var(--text2);font-family:inherit;font-size:9px;cursor:pointer">⬇ PULL NOW</button>
-              <span id="cloud-status" style="font-size:9px;color:var(--text3)"></span>
-            </div>
-          </div>
-        </div>
-
         <!-- Panel: Post Analysis -->
         <div class="ai-panel" id="aip-post" draggable="true" style="border-color:#7c3aed">
           <div class="aip-handle" style="border-bottom-color:#7c3aed">
@@ -1041,6 +1008,39 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
             <div style="display:flex;gap:8px;align-items:center">
               <button onclick="aiPostManual()" style="padding:6px 16px;background:rgba(168,85,247,.2);border:1px solid #7c3aed;color:#a855f7;font-family:inherit;font-size:10px;cursor:pointer;font-weight:bold;letter-spacing:.08em">POST ANALYSIS</button>
               <span id="ai-man-status" style="font-size:9px;color:var(--text3)"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel: Cloud Sync (owner only) — LAST so no scrolling needed -->
+        <div class="ai-panel" id="aip-cloud" draggable="true" style="display:none;border-color:var(--amber)">
+          <div class="aip-handle" style="border-bottom-color:rgba(240,165,0,.3)">
+            <span class="aip-grip">⠿⠿</span>
+            <span class="aip-title" style="color:var(--amber)">☁ CLOUD SYNC — JSONBin.io</span>
+            <span style="margin-left:auto;font-size:9px;color:var(--text3);cursor:pointer" onclick="this.closest('.ai-panel').querySelector('.aip-body').style.display=this.closest('.ai-panel').querySelector('.aip-body').style.display==='none'?'block':'none'">▲▼</span>
+          </div>
+          <div class="aip-body">
+            <div style="font-size:9px;color:var(--text3);line-height:1.7;margin-bottom:10px;padding:8px;background:rgba(240,165,0,.05);border:1px solid rgba(240,165,0,.15)">
+              1. Pojdi na <span style="color:var(--amber)">jsonbin.io</span> → Brezplačna registracija → Create new BIN<br>
+              2. Vsebina binarja: <span style="color:var(--text2)">{"feed":[]}</span> — nastavi BIN na <b>PUBLIC</b><br>
+              3. Kopiraj <b>BIN ID</b> in <b>X-MASTER-KEY</b> v polja spodaj → SAVE<br>
+              4. Kupci vidijo feed samodejno vsake 60s brez refresha
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+              <div>
+                <div style="font-size:9px;color:var(--amber);margin-bottom:4px;letter-spacing:.1em">BIN ID</div>
+                <input id="cloud-bin-id" type="text" placeholder="64abc123..." style="width:100%;background:var(--bg3);border:1px solid rgba(240,165,0,.3);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none"/>
+              </div>
+              <div>
+                <div style="font-size:9px;color:var(--amber);margin-bottom:4px;letter-spacing:.1em">X-MASTER-KEY</div>
+                <input id="cloud-master-key" type="password" placeholder="$2a$10..." style="width:100%;background:var(--bg3);border:1px solid rgba(240,165,0,.3);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none"/>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <button onclick="saveCloudCfg()" style="padding:5px 12px;background:rgba(240,165,0,.12);border:1px solid var(--amber);color:var(--amber);font-family:inherit;font-size:9px;cursor:pointer;font-weight:bold">SAVE &amp; START</button>
+              <button onclick="cloudPush()" style="padding:5px 12px;background:none;border:1px solid var(--border2);color:var(--text2);font-family:inherit;font-size:9px;cursor:pointer">⬆ PUSH NOW</button>
+              <button onclick="cloudPull()" style="padding:5px 12px;background:none;border:1px solid var(--border2);color:var(--text2);font-family:inherit;font-size:9px;cursor:pointer">⬇ PULL NOW</button>
+              <span id="cloud-status" style="font-size:9px;color:var(--text3)"></span>
             </div>
           </div>
         </div>
