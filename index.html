@@ -529,7 +529,8 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
           <th class="th-sort r" data-col="chg" onclick="crThSort('chg')">5M%</th>
           <th class="th-sort r" data-col="str" onclick="crThSort('str')">STRENGTH</th>
           <th style="color:var(--amber);white-space:nowrap" title="Hours price has been above or below 100 EMA">EMA100</th>
-          <th style="color:#7b68ee;white-space:nowrap" title="Unfilled Fair Value Gap within 4% of price">FVG</th>
+          <th class="th-sort r" data-col="fvg" onclick="crThSort('fvg')" style="color:#7b68ee;white-space:nowrap" title="Fair Value Gap — click to sort by proximity">FVG</th>
+          <th class="th-sort r" data-col="liq" onclick="crThSort('liq')" style="color:var(--green);white-space:nowrap" title="Nearest support level — click to sort by proximity">SUPPORT</th>
         </tr></thead>
         <tbody id="cr-tb"></tbody>
       </table></div>
@@ -584,7 +585,8 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
           <th class="th-sort r" data-col="chg" onclick="spThSort('chg')">5M%</th>
           <th class="th-sort r" data-col="str" onclick="spThSort('str')">STRENGTH</th>
           <th style="color:var(--amber);white-space:nowrap" title="Hours price has been above or below 100 EMA">EMA100</th>
-          <th style="color:#7b68ee;white-space:nowrap" title="Unfilled Fair Value Gap within 4% of price">FVG</th>
+          <th class="th-sort r" data-col="fvg" onclick="spThSort('fvg')" style="color:#7b68ee;white-space:nowrap" title="Fair Value Gap — click to sort by proximity">FVG</th>
+          <th class="th-sort r" data-col="liq" onclick="spThSort('liq')" style="color:var(--green);white-space:nowrap" title="Nearest support level — click to sort by proximity">SUPPORT</th>
         </tr></thead>
         <tbody id="sp-tb"></tbody>
       </table></div>
@@ -1270,10 +1272,10 @@ function findLiquidityLevels(opens, closes, highs, lows, currentPrice) {
   // Cluster + pick: PROXIMITY FIRST — prefer levels within 2.5%, expand to 6% if needed
   function clusterAndPick(cands, isBull) {
     if(!cands.length) return [];
-    // Build clusters sorted by distance
+    // Build clusters — merge candidates within 0.3% of each other
     cands.sort((a,b) => Math.abs(a.price - currentPrice) - Math.abs(b.price - currentPrice));
     const clusters = [];
-    const CLUSTER_PCT = 0.003; // 0.3% merge radius
+    const CLUSTER_PCT = 0.003;
     cands.forEach(c => {
       const existing = clusters.find(cl => Math.abs(cl.price - c.price) / currentPrice < CLUSTER_PCT);
       if(existing) {
@@ -1285,25 +1287,33 @@ function findLiquidityLevels(opens, closes, highs, lows, currentPrice) {
       }
     });
 
-    // PROXIMITY ZONES: try close range first, expand if not enough candidates
+    // DISTANCE-FIRST: always pick nearest valid level, score is tiebreaker only
+    // Sort primarily by distance, break ties by score
     const pctDist = cl => Math.abs(cl.price - currentPrice) / currentPrice;
-    let pool = clusters.filter(cl => pctDist(cl) < 0.025); // within 2.5%
-    if(pool.length < 2) pool = clusters.filter(cl => pctDist(cl) < 0.05); // expand to 5%
-    if(pool.length < 1) pool = clusters; // fallback: all levels
+    clusters.sort((a, b) => {
+      const da = pctDist(a), db = pctDist(b);
+      // If within same 0.5% band → score decides; otherwise distance decides
+      if(Math.abs(da - db) < 0.005) return b.score - a.score;
+      return da - db;
+    });
 
-    // Within the proximity pool, sort by score (quality wins within range)
-    pool.sort((a,b) => b.score - a.score);
-
+    // Pick top 2 that are at least 0.5% apart, capped at 3.5% max distance
+    const MAX_DIST = 0.035;
     const result = [];
-    pool.forEach(cl => {
+    clusters.forEach(cl => {
       if(result.length >= 2) return;
-      if(result.length === 0 || Math.abs(result[result.length-1].price - cl.price) / currentPrice > 0.003) {
+      if(pctDist(cl) > MAX_DIST) return; // skip levels deeper than 3.5%
+      if(result.length === 0 || Math.abs(result[result.length-1].price - cl.price) / currentPrice > 0.005) {
         const d = ((cl.price - currentPrice) / currentPrice * 100);
         result.push({price: cl.price, dist: d.toFixed(2), score: cl.score, reason: cl.reasons.join(' + ')});
       }
     });
-    // Sort final: closest first
-    result.sort((a,b) => Math.abs(parseFloat(a.dist)) - Math.abs(parseFloat(b.dist)));
+    // If nothing within 3.5%, fall back to nearest regardless of distance
+    if(result.length === 0 && clusters.length > 0) {
+      const cl = clusters[0];
+      const d = ((cl.price - currentPrice) / currentPrice * 100);
+      result.push({price: cl.price, dist: d.toFixed(2), score: cl.score, reason: cl.reasons.join(' + ')});
+    }
     return result;
   }
 
@@ -1385,8 +1395,21 @@ function crRow(s,i){
   const cc=d?.chg>0?'var(--green)':d?.chg<0?'var(--red)':'var(--text3)';
   const em=d?.ema100;
   const emHtml=em?`<span style="color:${em.above?'#ff4444':'var(--green)'};font-size:9px;font-weight:bold" title="${em.hours}h ${em.above?'above':'below'} 100 EMA">${em.above?'↑':'↓'}${em.hours}h</span>`:`<span style="color:var(--text3);font-size:9px">—</span>`;
-  const fv=d?.fvg;
-  const fvHtml=fv?(fv.bull&&fv.bear?`<span style="color:#7b68ee;font-size:9px;font-weight:bold" title="Bull FVG $${fp(fv.bullPrice)} | Bear FVG $${fp(fv.bearPrice)}">▲▼</span>`:fv.bull?`<span style="color:var(--green);font-size:9px;font-weight:bold" title="Bullish FVG at $${fp(fv.bullPrice)}">▲${fp(fv.bullPrice)}</span>`:fv.bear?`<span style="color:var(--red);font-size:9px;font-weight:bold" title="Bearish FVG at $${fp(fv.bearPrice)}">▼${fp(fv.bearPrice)}</span>`:`<span style="color:var(--text3);font-size:9px">—</span>`):`<span style="color:var(--text3);font-size:9px">—</span>`;
+  const fv=d?.fvg, cp=d?.price;
+  const _fvDist=(price)=>cp&&price?((price-cp)/cp*100).toFixed(1):'';
+  const fvHtml=fv?(()=>{
+    if(fv.bull&&fv.bear){
+      const bd=_fvDist(fv.bullPrice),ad=_fvDist(fv.bearPrice);
+      return`<span style="color:#7b68ee;font-size:9px;font-weight:bold;line-height:1.4" title="▲FVG support $${fp(fv.bullPrice)} (${bd}%) · ▼FVG resistance $${fp(fv.bearPrice)} (${ad}%)">▲▼<br><span style="font-size:8px;font-weight:normal">${bd}%/${ad}%</span></span>`;
+    }
+    if(fv.bull){const d=_fvDist(fv.bullPrice);return`<span style="color:var(--green);font-size:9px;font-weight:bold;line-height:1.4" title="Bullish FVG support at $${fp(fv.bullPrice)} — place SL below this">▲${fp(fv.bullPrice)}<br><span style="font-size:8px;font-weight:normal">${d}%</span></span>`;}
+    if(fv.bear){const d=_fvDist(fv.bearPrice);return`<span style="color:var(--red);font-size:9px;font-weight:bold;line-height:1.4" title="Bearish FVG resistance at $${fp(fv.bearPrice)} — place SL above this">▼${fp(fv.bearPrice)}<br><span style="font-size:8px;font-weight:normal">${d}%</span></span>`;}
+    return`<span style="color:var(--text3);font-size:9px">—</span>`;
+  })():`<span style="color:var(--text3);font-size:9px">—</span>`;
+  const liqLvl=d?.liq?.bull?.[0];
+  const liqDist=liqLvl?parseFloat(liqLvl.dist):null;
+  const liqDc=liqDist!==null?(Math.abs(liqDist)<1?'var(--green)':Math.abs(liqDist)<2?'var(--amber)':'#ff6644'):'var(--text3)';
+  const liqHtml=liqLvl?`<span style="color:var(--green);font-size:9px;font-weight:bold;line-height:1.4" title="Support: ${liqLvl.reason} · ${liqLvl.score} pts">${fp(liqLvl.price)}<br><span style="font-size:8px;font-weight:normal;color:${liqDc}">${liqDist}%</span></span>`:`<span style="color:var(--text3);font-size:9px">—</span>`;
   return`<tr style="background:${bg};border-left:${bl};border-bottom:1px solid #090d18">
     <td style="color:var(--text3);font-size:9px">${ks?'★':i+1}</td>
     <td style="font-weight:bold;color:${nc}">${s.id.replace('USDT','')}</td>
@@ -1397,7 +1420,8 @@ function crRow(s,i){
     <td class="r" style="color:${cc};font-size:10px">${d?.chg!=null?(d.chg>0?'+':'')+d.chg.toFixed(2)+'%':'—'}</td>
     <td class="r">${stH}</td>
     <td class="r">${emHtml}</td>
-    <td class="r">${fvHtml}</td></tr>`;
+    <td class="r">${fvHtml}</td>
+    <td class="r">${liqHtml}</td></tr>`;
 }
 function crGo(){
   const q=document.getElementById('cr-search').value.toLowerCase();
@@ -1420,6 +1444,17 @@ function crGo(){
   if(srt==='ma_asc')rows.sort((a,b)=>(crData[a.id]?.ma||0)-(crData[b.id]?.ma||0));
   if(srt==='ma_desc')rows.sort((a,b)=>(crData[b.id]?.ma||0)-(crData[a.id]?.ma||0));
   if(srt==='sym')rows.sort((a,b)=>a.id.localeCompare(b.id));
+  if(srt==='fvg_asc')rows.sort((a,b)=>{
+    const fa=crData[a.id]?.fvg,fb=crData[b.id]?.fvg;
+    const da=fa?(fa.bull?Math.abs((fa.bullPrice-crData[a.id].price)/crData[a.id].price):fa.bear?Math.abs((fa.bearPrice-crData[a.id].price)/crData[a.id].price):999):999;
+    const db=fb?(fb.bull?Math.abs((fb.bullPrice-crData[b.id].price)/crData[b.id].price):fb.bear?Math.abs((fb.bearPrice-crData[b.id].price)/crData[b.id].price):999):999;
+    return da-db;
+  });
+  if(srt==='liq_asc')rows.sort((a,b)=>{
+    const la=Math.abs(parseFloat(crData[a.id]?.liq?.bull?.[0]?.dist??999));
+    const lb=Math.abs(parseFloat(crData[b.id]?.liq?.bull?.[0]?.dist??999));
+    return la-lb;
+  });
   // Key signals always on top
   rows.sort((a,b)=>isKeySignal(crData[b.id])?1:isKeySignal(crData[a.id])?-1:0);
   document.getElementById('cr-tb').innerHTML=rows.map((s,i)=>crRow(s,i)).join('');
@@ -1561,8 +1596,21 @@ function spRow(s,i){
   const cc=d?.chg>0?'var(--green)':d?.chg<0?'var(--red)':'var(--text3)';
   const em=d?.ema100;
   const emHtml=em?`<span style="color:${em.above?'#ff4444':'var(--green)'};font-size:9px;font-weight:bold" title="${em.hours}h ${em.above?'above':'below'} 100 EMA">${em.above?'↑':'↓'}${em.hours}h</span>`:`<span style="color:var(--text3);font-size:9px">—</span>`;
-  const fv=d?.fvg;
-  const fvHtml=fv?(fv.bull&&fv.bear?`<span style="color:#7b68ee;font-size:9px;font-weight:bold" title="Bull FVG $${fp(fv.bullPrice)} | Bear FVG $${fp(fv.bearPrice)}">▲▼</span>`:fv.bull?`<span style="color:var(--green);font-size:9px;font-weight:bold" title="Bullish FVG at $${fp(fv.bullPrice)}">▲${fp(fv.bullPrice)}</span>`:fv.bear?`<span style="color:var(--red);font-size:9px;font-weight:bold" title="Bearish FVG at $${fp(fv.bearPrice)}">▼${fp(fv.bearPrice)}</span>`:`<span style="color:var(--text3);font-size:9px">—</span>`):`<span style="color:var(--text3);font-size:9px">—</span>`;
+  const fv=d?.fvg, cp=d?.price;
+  const _fvDist=(price)=>cp&&price?((price-cp)/cp*100).toFixed(1):'';
+  const fvHtml=fv?(()=>{
+    if(fv.bull&&fv.bear){
+      const bd=_fvDist(fv.bullPrice),ad=_fvDist(fv.bearPrice);
+      return`<span style="color:#7b68ee;font-size:9px;font-weight:bold;line-height:1.4" title="▲FVG support $${fp(fv.bullPrice)} (${bd}%) · ▼FVG resistance $${fp(fv.bearPrice)} (${ad}%)">▲▼<br><span style="font-size:8px;font-weight:normal">${bd}%/${ad}%</span></span>`;
+    }
+    if(fv.bull){const d=_fvDist(fv.bullPrice);return`<span style="color:var(--green);font-size:9px;font-weight:bold;line-height:1.4" title="Bullish FVG support at $${fp(fv.bullPrice)} — place SL below this">▲${fp(fv.bullPrice)}<br><span style="font-size:8px;font-weight:normal">${d}%</span></span>`;}
+    if(fv.bear){const d=_fvDist(fv.bearPrice);return`<span style="color:var(--red);font-size:9px;font-weight:bold;line-height:1.4" title="Bearish FVG resistance at $${fp(fv.bearPrice)} — place SL above this">▼${fp(fv.bearPrice)}<br><span style="font-size:8px;font-weight:normal">${d}%</span></span>`;}
+    return`<span style="color:var(--text3);font-size:9px">—</span>`;
+  })():`<span style="color:var(--text3);font-size:9px">—</span>`;
+  const liqLvl=d?.liq?.bull?.[0];
+  const liqDist=liqLvl?parseFloat(liqLvl.dist):null;
+  const liqDc=liqDist!==null?(Math.abs(liqDist)<1?'var(--green)':Math.abs(liqDist)<2?'var(--amber)':'#ff6644'):'var(--text3)';
+  const liqHtml=liqLvl?`<span style="color:var(--green);font-size:9px;font-weight:bold;line-height:1.4" title="Support: ${liqLvl.reason} · ${liqLvl.score} pts">${fp(liqLvl.price)}<br><span style="font-size:8px;font-weight:normal;color:${liqDc}">${liqDist}%</span></span>`:`<span style="color:var(--text3);font-size:9px">—</span>`;
   return`<tr style="background:${bg};border-left:${bl};border-bottom:1px solid #090d18">
     <td style="color:var(--text3);font-size:9px">${ks?'★':i+1}</td>
     <td><div style="font-weight:bold;color:${nc}">${s.id}</div></td>
@@ -1574,7 +1622,8 @@ function spRow(s,i){
     <td class="r" style="color:${cc};font-size:10px">${d?.chg!=null?(d.chg>0?'+':'')+d.chg.toFixed(2)+'%':'—'}</td>
     <td class="r">${stH}</td>
     <td class="r">${emHtml}</td>
-    <td class="r">${fvHtml}</td></tr>`;
+    <td class="r">${fvHtml}</td>
+    <td class="r">${liqHtml}</td></tr>`;
 }
 function spGo(){
   const q=document.getElementById('sp-search').value.toLowerCase();
@@ -1599,6 +1648,17 @@ function spGo(){
   if(srt==='ma_asc')rows.sort((a,b)=>(spData[a.id]?.ma||0)-(spData[b.id]?.ma||0));
   if(srt==='ma_desc')rows.sort((a,b)=>(spData[b.id]?.ma||0)-(spData[a.id]?.ma||0));
   if(srt==='sym')rows.sort((a,b)=>a.id.localeCompare(b.id));
+  if(srt==='fvg_asc')rows.sort((a,b)=>{
+    const fa=spData[a.id]?.fvg,fb=spData[b.id]?.fvg;
+    const da=fa?(fa.bull?Math.abs((fa.bullPrice-spData[a.id].price)/spData[a.id].price):fa.bear?Math.abs((fa.bearPrice-spData[a.id].price)/spData[a.id].price):999):999;
+    const db=fb?(fb.bull?Math.abs((fb.bullPrice-spData[b.id].price)/spData[b.id].price):fb.bear?Math.abs((fb.bearPrice-spData[b.id].price)/spData[b.id].price):999):999;
+    return da-db;
+  });
+  if(srt==='liq_asc')rows.sort((a,b)=>{
+    const la=Math.abs(parseFloat(spData[a.id]?.liq?.bull?.[0]?.dist??999));
+    const lb=Math.abs(parseFloat(spData[b.id]?.liq?.bull?.[0]?.dist??999));
+    return la-lb;
+  });
   rows.sort((a,b)=>isKeySignal(spData[b.id])?1:isKeySignal(spData[a.id])?-1:0);
   document.getElementById('sp-tb').innerHTML=rows.map((s,i)=>spRow(s,i)).join('');
   spStats();
@@ -2693,27 +2753,34 @@ function renderAiAnalyses() {
 }
 
 function aiPostManual() {
-  const sym = (document.getElementById('ai-man-sym').value||'').trim().toUpperCase();
-  const dir = document.getElementById('ai-man-dir').value;
-  const mkt = document.getElementById('ai-man-mkt').value;
-  const txt = (document.getElementById('ai-man-text').value||'').trim();
-  const entry = parseFloat(document.getElementById('ai-man-entry').value)||null;
-  const sl = parseFloat(document.getElementById('ai-man-sl').value)||null;
-  const tp = parseFloat(document.getElementById('ai-man-tp').value)||null;
-  const statusEl = document.getElementById('ai-man-status');
-  if(!sym) { statusEl.textContent='⚠ Enter a ticker symbol'; statusEl.style.color='var(--red)'; return; }
-  if(!txt) { statusEl.textContent='⚠ Write your analysis text'; statusEl.style.color='var(--red)'; return; }
-  const now = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
-  aiAnalysesFeed.unshift({
-    sym, market:mkt, signal:dir, time:now, manual:true,
-    price:entry, sl, tp,
-    analysis:{ score:null, grade:{g:'M',c:'#a855f7'}, notes:[txt], rec:'' },
-  });
-  if(aiAnalysesFeed.length>50) aiAnalysesFeed=aiAnalysesFeed.slice(0,50);
-  renderAiAnalyses();
-  ['ai-man-sym','ai-man-entry','ai-man-sl','ai-man-tp','ai-man-text'].forEach(id=>document.getElementById(id).value='');
-  statusEl.textContent='✓ Analysis posted'; statusEl.style.color='var(--green)';
-  setTimeout(()=>statusEl.textContent='',3000);
+  try {
+    const g = id => document.getElementById(id); // safe getter helper
+    const sym = (g('ai-man-sym')?.value||'').trim().toUpperCase();
+    const dir = g('ai-man-dir')?.value || 'bull';
+    const mkt = g('ai-man-mkt')?.value || 'CRYPTO';
+    const txt = (g('ai-man-text')?.value||'').trim();
+    const entry = parseFloat(g('ai-man-entry')?.value)||null;
+    const sl    = parseFloat(g('ai-man-sl')?.value)||null;
+    const tp    = parseFloat(g('ai-man-tp')?.value)||null;
+    const statusEl = g('ai-man-status');
+    if(!sym) { if(statusEl){statusEl.textContent='⚠ Enter a ticker symbol';statusEl.style.color='var(--red)';} return; }
+    if(!txt) { if(statusEl){statusEl.textContent='⚠ Write your analysis text';statusEl.style.color='var(--red)';} return; }
+    const now = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+    aiAnalysesFeed.unshift({
+      sym, market:mkt, signal:dir, time:now, manual:true,
+      price:entry, sl, tp,
+      analysis:{ score:null, grade:{g:'M',c:'#a855f7'}, notes:[txt], rec:'' },
+    });
+    if(aiAnalysesFeed.length>50) aiAnalysesFeed=aiAnalysesFeed.slice(0,50);
+    renderAiAnalyses();
+    ['ai-man-sym','ai-man-entry','ai-man-sl','ai-man-tp','ai-man-text'].forEach(id=>{const el=g(id);if(el)el.value='';});
+    if(statusEl){statusEl.textContent='✓ Analysis posted';statusEl.style.color='var(--green)';}
+    setTimeout(()=>{const s=g('ai-man-status');if(s)s.textContent='';},3000);
+  } catch(err) {
+    const s=document.getElementById('ai-man-status');
+    if(s){s.textContent='⚠ Error: '+err.message;s.style.color='var(--red)';}
+    console.error('aiPostManual error:',err);
+  }
 }
 
 // ══════════════════════════════════════
@@ -2726,7 +2793,9 @@ const CR_TH_MAP={
   'sym':['sym','sym'],'div':['div','div'],
   'rsi':['rsi','rsi_desc'],'ma':['ma_asc','ma_desc'],
   'price':['price_asc','price_desc'],'chg':['chg_desc','chg'],
-  'str':['str','str']
+  'str':['str','str'],
+  'fvg':['fvg_asc','fvg_asc'],
+  'liq':['liq_asc','liq_asc']
 };
 let crThState={col:null,dir:0};
 let spThState={col:null,dir:0};
