@@ -64,6 +64,38 @@ button,select,input{font-family:inherit;outline:none;cursor:pointer}
 #app{display:flex;flex-direction:column;height:100vh}
 #content{flex:1;overflow:hidden;position:relative;min-height:0}
 .page{position:absolute;inset:0;display:none;contain:layout style;overflow:hidden}.page.active{display:block}.page#page-home{display:none;flex-direction:column}.page#page-home.active{display:flex}
+#page-ai{overflow-y:auto!important;overflow-x:hidden}
+#page-forum{overflow-y:auto!important}
+/* AI PRO draggable panels */
+.ai-panel{background:var(--bg2);border:1px solid var(--border2);margin-bottom:12px;transition:box-shadow .2s;position:relative}
+.ai-panel.dragging{opacity:.45;box-shadow:0 0 0 2px #7c3aed}
+.ai-panel.drag-over{border-color:#a855f7;box-shadow:0 -3px 0 0 #a855f7}
+.aip-handle{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--border);cursor:grab;user-select:none;background:rgba(168,85,247,.05)}
+.aip-handle:active{cursor:grabbing}
+.aip-grip{color:var(--text3);font-size:14px;letter-spacing:2px;line-height:1}
+.aip-title{font-size:9px;color:#a855f7;letter-spacing:.18em;font-weight:bold}
+.aip-body{padding:14px}
+/* Analysis feed cards */
+.aif-card{background:var(--bg2);border:1px solid var(--border2);margin-bottom:12px;overflow:hidden}
+.aif-head{display:flex;align-items:center;gap:8px;padding:12px 14px 8px;border-bottom:1px solid var(--border)}
+.aif-meters{display:flex;gap:6px;flex-wrap:wrap;padding:8px 14px;border-bottom:1px solid var(--border);background:rgba(0,0,0,.2)}
+.aif-meter{display:flex;flex-direction:column;align-items:center;min-width:48px}
+.aif-ml{font-size:8px;color:var(--text3);letter-spacing:.08em;margin-bottom:2px}
+.aif-mv{font-size:10px;font-weight:bold}
+.aif-trade{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border-top:1px solid var(--border)}
+.aif-trade-cell{background:var(--bg2);padding:8px 14px;text-align:center}
+.aif-trade-lbl{font-size:8px;color:var(--text3);letter-spacing:.1em;margin-bottom:3px}
+.aif-trade-val{font-size:13px;font-weight:bold}
+.aif-notes{padding:10px 14px;font-size:9px;color:var(--text3);line-height:1.7;border-top:1px solid var(--border)}
+.aif-foot{padding:8px 14px;display:flex;gap:8px;align-items:center;border-top:1px solid var(--border)}
+/* Indicator breakdown rows */
+.aif-inds{padding:8px 14px;display:flex;flex-direction:column;gap:5px;border-bottom:1px solid var(--border);background:rgba(0,0,0,.15)}
+.aif-ind{display:grid;grid-template-columns:90px 120px 28px 1fr;align-items:center;gap:8px;font-size:9px}
+.aif-ind-lbl{color:var(--text3);letter-spacing:.08em;white-space:nowrap}
+.aif-ind-track{height:5px;background:var(--bg3);border-radius:2px;overflow:hidden}
+.aif-ind-fill{height:100%;border-radius:2px;transition:width .5s}
+.aif-ind-val{font-weight:bold;font-size:10px;text-align:right}
+.aif-ind-note{color:var(--text2);font-size:9px;line-height:1.4}
 .page.active{display:block}
 
 /* ══════════════════════════════════════
@@ -497,6 +529,7 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
           <th class="th-sort r" data-col="chg" onclick="crThSort('chg')">5M%</th>
           <th class="th-sort r" data-col="str" onclick="crThSort('str')">STRENGTH</th>
           <th style="color:var(--amber);white-space:nowrap" title="Hours price has been above or below 100 EMA">EMA100</th>
+          <th style="color:#7b68ee;white-space:nowrap" title="Unfilled Fair Value Gap within 4% of price">FVG</th>
         </tr></thead>
         <tbody id="cr-tb"></tbody>
       </table></div>
@@ -551,6 +584,7 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
           <th class="th-sort r" data-col="chg" onclick="spThSort('chg')">5M%</th>
           <th class="th-sort r" data-col="str" onclick="spThSort('str')">STRENGTH</th>
           <th style="color:var(--amber);white-space:nowrap" title="Hours price has been above or below 100 EMA">EMA100</th>
+          <th style="color:#7b68ee;white-space:nowrap" title="Unfilled Fair Value Gap within 4% of price">FVG</th>
         </tr></thead>
         <tbody id="sp-tb"></tbody>
       </table></div>
@@ -748,87 +782,124 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
     <!-- MAIN AI CONTENT (locked by default) -->
     <div id="ai-content" style="opacity:.25;pointer-events:none;filter:blur(1px)">
 
-      <!-- Telegram settings -->
-      <div style="background:var(--bg2);border:1px solid var(--border2);padding:14px;margin-bottom:16px">
-        <div style="font-size:9px;color:#a855f7;letter-spacing:.18em;margin-bottom:10px">📱 TELEGRAM NOTIFICATIONS</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-          <div>
-            <div style="font-size:9px;color:var(--text3);margin-bottom:4px;letter-spacing:.1em">BOT TOKEN</div>
-            <input id="tg-token" type="text" placeholder="123456:ABC-..." style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none"/>
-          </div>
-          <div>
-            <div style="font-size:9px;color:var(--text3);margin-bottom:4px;letter-spacing:.1em">CHAT ID</div>
-            <input id="tg-chatid" type="text" placeholder="-100123456789" style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none"/>
-          </div>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <button onclick="saveTelegramSettings()" style="padding:5px 12px;background:rgba(0,232,122,.1);border:1px solid #0a5a2a;color:var(--green);font-family:inherit;font-size:9px;cursor:pointer;font-weight:bold">SAVE</button>
-          <button onclick="testTelegram()" style="padding:5px 12px;background:rgba(74,122,255,.1);border:1px solid var(--border2);color:var(--blue);font-family:inherit;font-size:9px;cursor:pointer">TEST MESSAGE</button>
-          <span id="tg-status" style="font-size:9px;color:var(--text3)"></span>
-          <label style="margin-left:auto;display:flex;align-items:center;gap:6px;font-size:9px;color:var(--text3);cursor:pointer">
-            <input id="tg-enabled" type="checkbox" style="cursor:pointer"/> Enable Telegram alerts
-          </label>
-        </div>
-        <div style="margin-top:8px;font-size:9px;color:var(--text3);line-height:1.6">
-          Get your bot token from <span style="color:var(--blue)">@BotFather</span> on Telegram. Chat ID: use <span style="color:var(--blue)">@userinfobot</span> or add bot to group.
-        </div>
-      </div>
+      <!-- Draggable settings panels -->
+      <div id="ai-panels">
 
-      <!-- Alert filter settings -->
-      <div style="background:var(--bg2);border:1px solid var(--border2);padding:14px;margin-bottom:16px">
-        <div style="font-size:9px;color:#a855f7;letter-spacing:.18em;margin-bottom:10px">⚙ AI ALERT FILTERS</div>
-        <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:10px">
-          <label style="display:flex;align-items:center;gap:5px;cursor:pointer"><input id="ai-f-crypto" type="checkbox" checked/> Crypto signals</label>
-          <label style="display:flex;align-items:center;gap:5px;cursor:pointer"><input id="ai-f-sp500" type="checkbox" checked/> S&P 500 signals</label>
-          <label style="display:flex;align-items:center;gap:5px;cursor:pointer"><input id="ai-f-forex" type="checkbox" checked/> Forex deviation</label>
-          <label style="display:flex;align-items:center;gap:5px;cursor:pointer"><input id="ai-f-bull" type="checkbox" checked/> Bullish only</label>
-          <label style="display:flex;align-items:center;gap:5px;cursor:pointer"><input id="ai-f-bear" type="checkbox" checked/> Bearish only</label>
-          <div style="margin-left:auto;display:flex;align-items:center;gap:6px;font-size:10px">
-            Min score: <select id="ai-min-score" style="background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:inherit;font-size:9px;padding:2px 4px">
-              <option value="50">50+</option><option value="65" selected>65+</option><option value="75">75+</option><option value="85">85+</option>
-            </select>
+        <!-- Panel: Telegram -->
+        <div class="ai-panel" id="aip-tg" draggable="true">
+          <div class="aip-handle">
+            <span class="aip-grip">⠿⠿</span>
+            <span class="aip-title">📱 TELEGRAM NOTIFICATIONS</span>
+            <span style="margin-left:auto;font-size:9px;color:var(--text3);cursor:pointer" onclick="this.closest('.ai-panel').querySelector('.aip-body').style.display=this.closest('.ai-panel').querySelector('.aip-body').style.display==='none'?'block':'none'">▲▼</span>
+          </div>
+          <div class="aip-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+              <div>
+                <div style="font-size:9px;color:var(--text3);margin-bottom:4px;letter-spacing:.1em">BOT TOKEN</div>
+                <input id="tg-token" type="text" placeholder="123456:ABC-..." style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none"/>
+              </div>
+              <div>
+                <div style="font-size:9px;color:var(--text3);margin-bottom:4px;letter-spacing:.1em">CHAT ID</div>
+                <input id="tg-chatid" type="text" placeholder="-100123456789" style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none"/>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <button onclick="saveTelegramSettings()" style="padding:5px 12px;background:rgba(0,232,122,.1);border:1px solid #0a5a2a;color:var(--green);font-family:inherit;font-size:9px;cursor:pointer;font-weight:bold">SAVE</button>
+              <button onclick="testTelegram()" style="padding:5px 12px;background:rgba(74,122,255,.1);border:1px solid var(--border2);color:var(--blue);font-family:inherit;font-size:9px;cursor:pointer">TEST MESSAGE</button>
+              <span id="tg-status" style="font-size:9px;color:var(--text3)"></span>
+              <label style="margin-left:auto;display:flex;align-items:center;gap:6px;font-size:9px;color:var(--text3);cursor:pointer">
+                <input id="tg-enabled" type="checkbox" style="cursor:pointer"/> Enable Telegram alerts
+              </label>
+            </div>
+            <div style="margin-top:8px;font-size:9px;color:var(--text3);line-height:1.6">
+              Get bot token from <span style="color:var(--blue)">@BotFather</span> · Chat ID: use <span style="color:var(--blue)">@userinfobot</span>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Manual AI analysis input -->
-      <div style="background:var(--bg2);border:1px solid #7c3aed;padding:14px;margin-bottom:16px">
-        <div style="font-size:9px;color:#a855f7;letter-spacing:.18em;margin-bottom:10px">✍ POST MANUAL AI ANALYSIS</div>
-        <div style="display:grid;grid-template-columns:100px 110px 1fr;gap:8px;margin-bottom:8px;align-items:end">
-          <div>
-            <div style="font-size:9px;color:var(--text3);margin-bottom:4px">TICKER</div>
-            <input id="ai-man-sym" type="text" placeholder="e.g. TSLA" style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none;text-transform:uppercase"/>
+        <!-- Panel: Alert filters -->
+        <div class="ai-panel" id="aip-filters" draggable="true">
+          <div class="aip-handle">
+            <span class="aip-grip">⠿⠿</span>
+            <span class="aip-title">⚙ AI ALERT FILTERS</span>
+            <span style="margin-left:auto;font-size:9px;color:var(--text3);cursor:pointer" onclick="this.closest('.ai-panel').querySelector('.aip-body').style.display=this.closest('.ai-panel').querySelector('.aip-body').style.display==='none'?'block':'none'">▲▼</span>
           </div>
-          <div>
-            <div style="font-size:9px;color:var(--text3);margin-bottom:4px">DIRECTION</div>
-            <select id="ai-man-dir" style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none">
-              <option value="bull">▲ BULLISH</option>
-              <option value="bear">▼ BEARISH</option>
-              <option value="neutral">◆ NEUTRAL</option>
-            </select>
-          </div>
-          <div>
-            <div style="font-size:9px;color:var(--text3);margin-bottom:4px">MARKET</div>
-            <select id="ai-man-mkt" style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none">
-              <option value="CRYPTO">CRYPTO</option>
-              <option value="SP500">S&P 500</option>
-              <option value="FOREX">FOREX</option>
-              <option value="MANUAL">MANUAL</option>
-            </select>
+          <div class="aip-body">
+            <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:10px">
+              <label style="display:flex;align-items:center;gap:5px;cursor:pointer"><input id="ai-f-crypto" type="checkbox" checked/> Crypto signals</label>
+              <label style="display:flex;align-items:center;gap:5px;cursor:pointer"><input id="ai-f-sp500" type="checkbox" checked/> S&P 500 signals</label>
+              <label style="display:flex;align-items:center;gap:5px;cursor:pointer"><input id="ai-f-forex" type="checkbox" checked/> Forex deviation</label>
+              <label style="display:flex;align-items:center;gap:5px;cursor:pointer"><input id="ai-f-bull" type="checkbox" checked/> Bullish only</label>
+              <label style="display:flex;align-items:center;gap:5px;cursor:pointer"><input id="ai-f-bear" type="checkbox" checked/> Bearish only</label>
+              <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
+                Min score: <select id="ai-min-score" style="background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:inherit;font-size:9px;padding:2px 4px">
+                  <option value="50">50+</option><option value="65" selected>65+</option><option value="75">75+</option><option value="85">85+</option>
+                </select>
+              </div>
+            </div>
           </div>
         </div>
-        <div style="margin-bottom:8px">
-          <div style="font-size:9px;color:var(--text3);margin-bottom:4px">ANALYSIS TEXT</div>
-          <textarea id="ai-man-text" placeholder="Write your analysis here... e.g. TSLA broke below 100 EMA after 3 weeks above. RSI showing bearish divergence on daily. Watching $350 support." style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:8px;font-family:inherit;font-size:10px;outline:none;resize:vertical;min-height:70px;box-sizing:border-box"></textarea>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <button onclick="aiPostManual()" style="padding:6px 16px;background:rgba(168,85,247,.2);border:1px solid #7c3aed;color:#a855f7;font-family:inherit;font-size:10px;cursor:pointer;font-weight:bold;letter-spacing:.08em">POST ANALYSIS</button>
-          <span id="ai-man-status" style="font-size:9px;color:var(--text3)"></span>
-        </div>
-      </div>
 
-      <!-- AI Analyses feed -->
-      <div style="font-size:9px;color:#a855f7;letter-spacing:.18em;margin-bottom:10px">🧠 AI SIGNAL ANALYSES</div>
+        <!-- Panel: Post Analysis -->
+        <div class="ai-panel" id="aip-post" draggable="true" style="border-color:#7c3aed">
+          <div class="aip-handle" style="border-bottom-color:#7c3aed">
+            <span class="aip-grip">⠿⠿</span>
+            <span class="aip-title">🤖 POST AI GENERATED ANALYSIS</span>
+            <span style="margin-left:auto;font-size:9px;color:var(--text3);cursor:pointer" onclick="this.closest('.ai-panel').querySelector('.aip-body').style.display=this.closest('.ai-panel').querySelector('.aip-body').style.display==='none'?'block':'none'">▲▼</span>
+          </div>
+          <div class="aip-body">
+            <div style="display:grid;grid-template-columns:90px 100px 1fr;gap:8px;margin-bottom:8px;align-items:end">
+              <div>
+                <div style="font-size:9px;color:var(--text3);margin-bottom:4px">TICKER</div>
+                <input id="ai-man-sym" type="text" placeholder="TSLA" style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none;text-transform:uppercase"/>
+              </div>
+              <div>
+                <div style="font-size:9px;color:var(--text3);margin-bottom:4px">DIRECTION</div>
+                <select id="ai-man-dir" style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none">
+                  <option value="bull">▲ BULLISH</option>
+                  <option value="bear">▼ BEARISH</option>
+                  <option value="neutral">◆ NEUTRAL</option>
+                </select>
+              </div>
+              <div>
+                <div style="font-size:9px;color:var(--text3);margin-bottom:4px">MARKET</div>
+                <select id="ai-man-mkt" style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none">
+                  <option value="CRYPTO">CRYPTO</option><option value="SP500">S&P 500</option><option value="FOREX">FOREX</option><option value="MANUAL">MANUAL</option>
+                </select>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px">
+              <div>
+                <div style="font-size:9px;color:var(--text3);margin-bottom:4px">ENTRY PRICE</div>
+                <input id="ai-man-entry" type="number" step="any" placeholder="e.g. 133.50" style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none"/>
+              </div>
+              <div>
+                <div style="font-size:9px;color:var(--red);margin-bottom:4px">STOP LOSS (SL)</div>
+                <input id="ai-man-sl" type="number" step="any" placeholder="e.g. 128.00" style="width:100%;background:var(--bg3);border:1px solid #3a1a1a;color:var(--red);padding:6px 8px;font-family:inherit;font-size:10px;outline:none"/>
+              </div>
+              <div>
+                <div style="font-size:9px;color:var(--green);margin-bottom:4px">TAKE PROFIT (TP)</div>
+                <input id="ai-man-tp" type="number" step="any" placeholder="e.g. 142.00" style="width:100%;background:var(--bg3);border:1px solid #0a3a1a;color:var(--green);padding:6px 8px;font-family:inherit;font-size:10px;outline:none"/>
+              </div>
+            </div>
+            <div style="margin-bottom:8px">
+              <div style="font-size:9px;color:var(--text3);margin-bottom:4px">ANALYSIS TEXT</div>
+              <textarea id="ai-man-text" placeholder="Your analysis... e.g. TSLA broke below 100 EMA after 3 weeks above. RSI showing bearish divergence. Watching $350 support." style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:8px;font-family:inherit;font-size:10px;outline:none;resize:vertical;min-height:65px;box-sizing:border-box"></textarea>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <button onclick="aiPostManual()" style="padding:6px 16px;background:rgba(168,85,247,.2);border:1px solid #7c3aed;color:#a855f7;font-family:inherit;font-size:10px;cursor:pointer;font-weight:bold;letter-spacing:.08em">POST ANALYSIS</button>
+              <span id="ai-man-status" style="font-size:9px;color:var(--text3)"></span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end ai-panels -->
+
+      <!-- AI Analyses feed — always at bottom -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div style="font-size:9px;color:#a855f7;letter-spacing:.18em;font-weight:bold">🧠 AI GENERATED ANALYSES</div>
+        <button onclick="aiAnalysesFeed=[];renderAiAnalyses()" style="font-size:9px;color:var(--text3);background:none;border:1px solid var(--border);padding:2px 8px;cursor:pointer">CLEAR</button>
+      </div>
       <div id="ai-analyses-feed">
         <div style="color:var(--text3);font-size:10px;text-align:center;padding:20px">Waiting for signals to analyze...</div>
       </div>
@@ -1062,8 +1133,9 @@ function detectDiv(lows,highs,rs){
   const sl=lows.slice(-n),sh=highs.slice(-n),sr=rs.slice(-n);
   const pl=pivLow(sl,PL),rl=pivLow(sr,PL),ph=pivHigh(sh,PL),rh=pivHigh(sr,PL);
   let bull=null,bear=null;
-  if(pl.length>=2&&rl.length>=2){const p1=pl[pl.length-2],p2=pl[pl.length-1],r1=rl[rl.length-2],r2=rl[rl.length-1];if(p2.v<p1.v&&r2.v>r1.v+MIN_D){const rd=r2.v-r1.v;let st=rd>8?3:rd>4?2:1;if(r2.v<50)st=Math.min(3,st+1);bull={type:'bull',st,rd,pd:((p1.v-p2.v)/p1.v)*100};}}
-  if(ph.length>=2&&rh.length>=2){const p1=ph[ph.length-2],p2=ph[ph.length-1],r1=rh[rh.length-2],r2=rh[rh.length-1];if(p2.v>p1.v&&r2.v<r1.v-MIN_D){const rd=r1.v-r2.v;let st=rd>8?3:rd>4?2:1;if(r2.v>50)st=Math.min(3,st+1);bear={type:'bear',st,rd,pd:((p2.v-p1.v)/p1.v)*100};}}
+  // Upgraded to 1-5 scale: finer ΔRSI granularity + RSI zone bonus
+  if(pl.length>=2&&rl.length>=2){const p1=pl[pl.length-2],p2=pl[pl.length-1],r1=rl[rl.length-2],r2=rl[rl.length-1];if(p2.v<p1.v&&r2.v>r1.v+MIN_D){const rd=r2.v-r1.v;let st=rd>20?5:rd>12?4:rd>7?3:rd>3?2:1;if(r2.v<30)st=Math.min(5,st+1);bull={type:'bull',st,rd,pd:((p1.v-p2.v)/p1.v)*100};}}
+  if(ph.length>=2&&rh.length>=2){const p1=ph[ph.length-2],p2=ph[ph.length-1],r1=rh[rh.length-2],r2=rh[rh.length-1];if(p2.v>p1.v&&r2.v<r1.v-MIN_D){const rd=r1.v-r2.v;let st=rd>20?5:rd>12?4:rd>7?3:rd>3?2:1;if(r2.v>70)st=Math.min(5,st+1);bear={type:'bear',st,rd,pd:((p2.v-p1.v)/p1.v)*100};}}
   if(bull&&bear)return bull.st>=bear.st?bull:bear;return bull||bear||{type:null,st:0};
 }
 // Signal: RSI < 10 ALI bullish divergenca (ne oba hkrati)
@@ -1072,7 +1144,7 @@ const isBullDiv=d=>d?.div?.type==='bull'&&(d.div.st||0)>=1;
 const isBearDiv=d=>d?.div?.type==='bear'&&(d.div.st||0)>=2;
 const isKeySignal=d=>isRsiLow(d)||isBullDiv(d);
 const isBearSignal=d=>isBearDiv(d)&&!isKeySignal(d);
-const dots=n=>'◆'.repeat(n)+'◇'.repeat(Math.max(0,3-n));
+const dots=n=>{const c=n>=5?'#00e87a':n>=4?'#4a9aff':n>=3?'var(--amber)':n>=2?'#7b68ee':'var(--text3)';return`<span style="color:${c};font-weight:bold;font-size:11px">${n}/5</span>`;}
 const fp=p=>!p?'—':p.toFixed(2);
 function badge(div){if(!div?.type)return`<span style="color:var(--text3)">—</span>`;const b=div.type==='bull';return`<span class="bb ${div.st>=2?(b?'bull2':'bear2'):(b?'bull1':'bear1')}">${b?'▲ BULL':'▼ BEAR'} DIV</span>`;}
 function barHtml(rsi){if(rsi===null)return`<span style="color:var(--text3)">…</span>`;const pct=Math.min(100,Math.max(0,rsi));const c=rsi<=10?'#ff2222':rsi<=30?'#7b68ee':rsi>=70?'#ff6633':'#2a4a7a';const tc=rsi<=10?'#ff4444':rsi<=30?'#9d8aff':rsi>=70?'#ff8844':'#5577aa';return`<span class="pbar"><span class="pfill" style="width:${pct}%;background:${c};display:block"></span></span> <span style="color:${tc};font-size:10px">${rsi.toFixed(1)}</span>`;}
@@ -1133,70 +1205,138 @@ const CR_SYMS=[
 let crData={},crAlerts=[],crSnd=true,crLoading=false,crCd=60,crPrev={};
 CR_SYMS.forEach(s=>{crData[s.id]={rsi:null,ma:null,price:null,chg:null,div:null,st:'wait'};});
 
+// findLiquidityLevels: returns { bull: [lo1, lo2], bear: [lo1, lo2] }
+// Each limit order: { price, dist, reason, score }
 function findLiquidityLevels(opens, closes, highs, lows, currentPrice) {
   const n = closes.length;
-  const start = Math.max(0, n - 120); // look back 120 candles
-  const pf = p => p > 100 ? p.toFixed(2) : p > 1 ? p.toFixed(4) : p.toFixed(6);
-  const dist = p => ((p - currentPrice) / currentPrice * 100).toFixed(2);
-  const pinbars = [], fvg = [], poi = [];
+  const lookback = Math.min(n - 3, 250);
+  const start = n - lookback;
+  const recent80 = n - 80; // recent candles get score bonus
 
-  // --- PINBARS (Hammer / Shooting Star) ---
-  for(let i = start; i < n - 1; i++) {
-    const o = opens[i] ?? ((closes[i-1]||closes[i])), c = closes[i], h = highs[i], l = lows[i];
-    const bodyTop = Math.max(o,c), bodyBot = Math.min(o,c);
-    const body = bodyTop - bodyBot;
-    const range = h - l;
-    if(range < 1e-12) continue;
-    const upperWick = h - bodyTop, lowerWick = bodyBot - l;
-    // Bullish hammer: long lower wick (support / demand)
-    if(lowerWick / range > 0.6 && lowerWick > Math.max(body, range * 0.1)) {
-      const d = parseFloat(dist(l));
-      if(Math.abs(d) < 6) pinbars.push({price:l, type:'bull', label:'🔨 Hammer support', dist:d});
-    }
-    // Bearish shooting star: long upper wick (resistance / supply)
-    if(upperWick / range > 0.6 && upperWick > Math.max(body, range * 0.1)) {
-      const d = parseFloat(dist(h));
-      if(Math.abs(d) < 6) pinbars.push({price:h, type:'bear', label:'⭐ Shooting Star resist.', dist:d});
-    }
-  }
+  const bullCands = [], bearCands = [];
 
-  // --- FVG / IMBALANCE ---
-  for(let i = start + 2; i < n; i++) {
-    // Bullish FVG: gap up (current low > prior high — unfilled zone below)
-    if(lows[i] > highs[i-2]) {
-      const mid = (lows[i] + highs[i-2]) / 2;
-      const d = parseFloat(dist(mid));
-      if(Math.abs(d) < 6) fvg.push({low:highs[i-2], high:lows[i], mid, type:'bull', label:'📈 Bull imbalance (FVG)', dist:d, size:((lows[i]-highs[i-2])/currentPrice*100).toFixed(3)+'%'});
-    }
-    // Bearish FVG: gap down
-    if(highs[i] < lows[i-2]) {
-      const mid = (highs[i] + lows[i-2]) / 2;
-      const d = parseFloat(dist(mid));
-      if(Math.abs(d) < 6) fvg.push({low:highs[i], high:lows[i-2], mid, type:'bear', label:'📉 Bear imbalance (FVG)', dist:d, size:((lows[i-2]-highs[i])/currentPrice*100).toFixed(3)+'%'});
-    }
-  }
-
-  // --- POI (Swing Highs / Lows — key levels) ---
+  // 1. Swing lows/highs — 2-candle confirmation each side (score=3), recent bonus +2
   for(let i = start + 2; i < n - 2; i++) {
-    // Swing low = support
-    if(lows[i] < lows[i-1] && lows[i] < lows[i-2] && lows[i] < lows[i+1] && lows[i] < lows[i+2]) {
-      const d = parseFloat(dist(lows[i]));
-      if(d > -6 && d < 0) poi.push({price:lows[i], type:'support', label:'🔵 Swing Low (support)', dist:d});
-    }
-    // Swing high = resistance
-    if(highs[i] > highs[i-1] && highs[i] > highs[i-2] && highs[i] > highs[i+1] && highs[i] > highs[i+2]) {
-      const d = parseFloat(dist(highs[i]));
-      if(d > 0 && d < 6) poi.push({price:highs[i], type:'resistance', label:'🔴 Swing High (resistance)', dist:d});
+    const rb = i >= recent80 ? 2 : 0;
+    const swingLow  = lows[i]  < lows[i-1]  && lows[i]  < lows[i-2]  && lows[i]  < lows[i+1]  && lows[i]  < lows[i+2];
+    const swingHigh = highs[i] > highs[i-1] && highs[i] > highs[i-2] && highs[i] > highs[i+1] && highs[i] > highs[i+2];
+    if(swingLow  && lows[i]  < currentPrice) bullCands.push({price: lows[i],  score: 3 + rb, reason: 'Swing Low'});
+    if(swingHigh && highs[i] > currentPrice) bearCands.push({price: highs[i], score: 3 + rb, reason: 'Swing High'});
+  }
+
+  // 2. Pinbar wicks — score=2, recent +1
+  for(let i = start; i < n - 1; i++) {
+    const rb = i >= recent80 ? 1 : 0;
+    const o = opens[i] ?? closes[Math.max(0,i-1)];
+    const c = closes[i], h = highs[i], l = lows[i];
+    const bodyTop = Math.max(o,c), bodyBot = Math.min(o,c);
+    const range = h - l; if(range < 1e-12) continue;
+    const lowerWick = bodyBot - l, upperWick = h - bodyTop;
+    if(lowerWick / range > 0.55 && l < currentPrice) bullCands.push({price: l, score: 2 + rb, reason: 'Pinbar'});
+    if(upperWick / range > 0.55 && h > currentPrice) bearCands.push({price: h, score: 2 + rb, reason: 'Pinbar'});
+  }
+
+  // 3. FVG gap edges — score=2
+  for(let i = start + 2; i < n; i++) {
+    const rb = i >= recent80 ? 1 : 0;
+    if(lows[i] > highs[i-2] && highs[i-2] < currentPrice)
+      bullCands.push({price: highs[i-2], score: 2 + rb, reason: 'FVG'});
+    if(highs[i] < lows[i-2] && lows[i-2] > currentPrice)
+      bearCands.push({price: lows[i-2], score: 2 + rb, reason: 'FVG'});
+  }
+
+  // 4. Imbalance candles — large momentum candles, their open/close = demand/supply zone (score=4)
+  // avgBody = average candle body size over last 60 candles
+  let sumBody = 0, bodyCount = 0;
+  for(let i = Math.max(start, n-60); i < n-1; i++) { sumBody += Math.abs(closes[i]-opens[i]); bodyCount++; }
+  const avgBody = bodyCount > 0 ? sumBody / bodyCount : 0;
+  if(avgBody > 0) {
+    for(let i = start; i < n - 1; i++) {
+      const rb = i >= recent80 ? 1 : 0;
+      const o = opens[i] ?? closes[Math.max(0,i-1)];
+      const c = closes[i];
+      const body = Math.abs(c - o);
+      if(body < 2.2 * avgBody) continue; // only strong imbalance candles
+      const bullImb = c > o; // green imbalance = demand, open = support zone
+      const bearImb = c < o; // red imbalance = supply, open = resistance zone
+      if(bullImb && o < currentPrice) bullCands.push({price: o, score: 4 + rb, reason: 'Imbalance'});
+      if(bearImb && o > currentPrice) bearCands.push({price: o, score: 4 + rb, reason: 'Imbalance'});
+      // Also the close of imbalance candle is key
+      if(bullImb && c < currentPrice) bullCands.push({price: c, score: 3 + rb, reason: 'Imbalance'});
+      if(bearImb && c > currentPrice) bearCands.push({price: c, score: 3 + rb, reason: 'Imbalance'});
     }
   }
 
-  // Sort by distance from current price, deduplicate nearby levels
-  const dedup = (arr, key) => {
-    arr.sort((a,b)=>Math.abs(a.dist)-Math.abs(b.dist));
-    const seen = []; return arr.filter(x=>{ const p=parseFloat(x[key]??x.price);
-      if(seen.some(s=>Math.abs(s-p)/currentPrice<0.003)) return false; seen.push(p); return true; });
+  // Cluster + pick: PROXIMITY FIRST — prefer levels within 2.5%, expand to 6% if needed
+  function clusterAndPick(cands, isBull) {
+    if(!cands.length) return [];
+    // Build clusters sorted by distance
+    cands.sort((a,b) => Math.abs(a.price - currentPrice) - Math.abs(b.price - currentPrice));
+    const clusters = [];
+    const CLUSTER_PCT = 0.003; // 0.3% merge radius
+    cands.forEach(c => {
+      const existing = clusters.find(cl => Math.abs(cl.price - c.price) / currentPrice < CLUSTER_PCT);
+      if(existing) {
+        existing.score += c.score;
+        existing.price = isBull ? Math.min(existing.price, c.price) : Math.max(existing.price, c.price);
+        if(!existing.reasons.includes(c.reason)) existing.reasons.push(c.reason);
+      } else {
+        clusters.push({price: c.price, score: c.score, reasons: [c.reason]});
+      }
+    });
+
+    // PROXIMITY ZONES: try close range first, expand if not enough candidates
+    const pctDist = cl => Math.abs(cl.price - currentPrice) / currentPrice;
+    let pool = clusters.filter(cl => pctDist(cl) < 0.025); // within 2.5%
+    if(pool.length < 2) pool = clusters.filter(cl => pctDist(cl) < 0.05); // expand to 5%
+    if(pool.length < 1) pool = clusters; // fallback: all levels
+
+    // Within the proximity pool, sort by score (quality wins within range)
+    pool.sort((a,b) => b.score - a.score);
+
+    const result = [];
+    pool.forEach(cl => {
+      if(result.length >= 2) return;
+      if(result.length === 0 || Math.abs(result[result.length-1].price - cl.price) / currentPrice > 0.003) {
+        const d = ((cl.price - currentPrice) / currentPrice * 100);
+        result.push({price: cl.price, dist: d.toFixed(2), score: cl.score, reason: cl.reasons.join(' + ')});
+      }
+    });
+    // Sort final: closest first
+    result.sort((a,b) => Math.abs(parseFloat(a.dist)) - Math.abs(parseFloat(b.dist)));
+    return result;
+  }
+
+  return {
+    bull: clusterAndPick(bullCands, true),
+    bear: clusterAndPick(bearCands, false),
   };
-  return {pinbars: dedup(pinbars,'price').slice(0,4), fvg: dedup(fvg,'mid').slice(0,4), poi: dedup(poi,'price').slice(0,5), pf};
+}
+
+// detectNearFVG: finds nearest unfilled FVG within ~4% — returns price levels for column display
+function detectNearFVG(highs, lows, currentPrice) {
+  const n = lows.length;
+  const lookback = Math.min(n - 3, 150);
+  const start = n - lookback;
+  const pct = 0.04;
+  let bullPrice = null, bearPrice = null, bullDist = Infinity, bearDist = Infinity;
+  for(let i = start + 2; i < n; i++) {
+    if(lows[i] > highs[i-2]) {
+      const gapTop = lows[i], gapBot = highs[i-2];
+      let filled = false;
+      for(let j = i+1; j < n; j++) { if(lows[j] <= gapTop) { filled = true; break; } }
+      const d = (currentPrice - gapBot) / currentPrice;
+      if(!filled && gapBot < currentPrice && d < pct && d < bullDist) { bullDist = d; bullPrice = gapBot; }
+    }
+    if(highs[i] < lows[i-2]) {
+      const gapTop = lows[i-2], gapBot = highs[i];
+      let filled = false;
+      for(let j = i+1; j < n; j++) { if(highs[j] >= gapBot) { filled = true; break; } }
+      const d = (gapTop - currentPrice) / currentPrice;
+      if(!filled && gapTop > currentPrice && d < pct && d < bearDist) { bearDist = d; bearPrice = gapTop; }
+    }
+  }
+  return { bull: bullPrice !== null, bear: bearPrice !== null, bullPrice, bearPrice };
 }
 
 function calcHoursAboveBelow(closes, intervalMin) {
@@ -1231,7 +1371,8 @@ async function crFetchOne(id){
   const ema100=calcHoursAboveBelow(closes,5);
   const price=closes[closes.length-1];
   const liq=findLiquidityLevels(opens,closes,highs,lows,price);
-  return{rsi:rs[rs.length-1]??null,ma:sma(rs,MA_LEN),price,chg:((price-closes[closes.length-2])/closes[closes.length-2])*100,div:detectDiv(lows,highs,rs),ema100,liq};
+  const fvg=detectNearFVG(highs,lows,price);
+  return{rsi:rs[rs.length-1]??null,ma:sma(rs,MA_LEN),price,chg:((price-closes[closes.length-2])/closes[closes.length-2])*100,div:detectDiv(lows,highs,rs),ema100,liq,fvg};
 }
 function crRow(s,i){
   const d=crData[s.id],rsi=d?.rsi,dv=d?.div;
@@ -1244,6 +1385,8 @@ function crRow(s,i){
   const cc=d?.chg>0?'var(--green)':d?.chg<0?'var(--red)':'var(--text3)';
   const em=d?.ema100;
   const emHtml=em?`<span style="color:${em.above?'#ff4444':'var(--green)'};font-size:9px;font-weight:bold" title="${em.hours}h ${em.above?'above':'below'} 100 EMA">${em.above?'↑':'↓'}${em.hours}h</span>`:`<span style="color:var(--text3);font-size:9px">—</span>`;
+  const fv=d?.fvg;
+  const fvHtml=fv?(fv.bull&&fv.bear?`<span style="color:#7b68ee;font-size:9px;font-weight:bold" title="Bull FVG $${fp(fv.bullPrice)} | Bear FVG $${fp(fv.bearPrice)}">▲▼</span>`:fv.bull?`<span style="color:var(--green);font-size:9px;font-weight:bold" title="Bullish FVG at $${fp(fv.bullPrice)}">▲${fp(fv.bullPrice)}</span>`:fv.bear?`<span style="color:var(--red);font-size:9px;font-weight:bold" title="Bearish FVG at $${fp(fv.bearPrice)}">▼${fp(fv.bearPrice)}</span>`:`<span style="color:var(--text3);font-size:9px">—</span>`):`<span style="color:var(--text3);font-size:9px">—</span>`;
   return`<tr style="background:${bg};border-left:${bl};border-bottom:1px solid #090d18">
     <td style="color:var(--text3);font-size:9px">${ks?'★':i+1}</td>
     <td style="font-weight:bold;color:${nc}">${s.id.replace('USDT','')}</td>
@@ -1253,7 +1396,8 @@ function crRow(s,i){
     <td class="r" style="color:var(--text2);font-size:10px">$${fp(d?.price)}</td>
     <td class="r" style="color:${cc};font-size:10px">${d?.chg!=null?(d.chg>0?'+':'')+d.chg.toFixed(2)+'%':'—'}</td>
     <td class="r">${stH}</td>
-    <td class="r">${emHtml}</td></tr>`;
+    <td class="r">${emHtml}</td>
+    <td class="r">${fvHtml}</td></tr>`;
 }
 function crGo(){
   const q=document.getElementById('cr-search').value.toLowerCase();
@@ -1327,8 +1471,8 @@ async function crFetchAll(){
     res.forEach((r,idx)=>{
       const sym=batch[idx];
       if(r.status==='fulfilled'){
-        const{id,rsi,ma,price,chg,div,ema100,liq}=r.value;
-        crData[id]={rsi,ma,price,chg,div,ema100,liq,st:'ok'};
+        const{id,rsi,ma,price,chg,div,ema100,liq,fvg}=r.value;
+        crData[id]={rsi,ma,price,chg,div,ema100,liq,fvg,st:'ok'};
         // KEY SIGNAL: RSI<10 ALI bullish divergence
         const crKS={rsiLow:rsi!==null&&rsi<=10, bullDiv:div?.type==='bull'};
         if(crKS.rsiLow||crKS.bullDiv){
@@ -1401,7 +1545,8 @@ async function spFetchOne(sym){
       const ema100=calcHoursAboveBelow(vc,5);
       const price=vc[vc.length-1];
       const liq=findLiquidityLevels(vo,vc,vh,vl,price);
-      return{rsi:rs[rs.length-1]??null,ma:sma(rs,MA_LEN),price,chg:((price-vc[vc.length-2])/vc[vc.length-2])*100,div:detectDiv(vl,vh,rs),ema100,liq};
+      const fvg=detectNearFVG(vh,vl,price);
+      return{rsi:rs[rs.length-1]??null,ma:sma(rs,MA_LEN),price,chg:((price-vc[vc.length-2])/vc[vc.length-2])*100,div:detectDiv(vl,vh,rs),ema100,liq,fvg};
     }catch(e){lastE=e;}
   }throw lastE;
 }
@@ -1416,6 +1561,8 @@ function spRow(s,i){
   const cc=d?.chg>0?'var(--green)':d?.chg<0?'var(--red)':'var(--text3)';
   const em=d?.ema100;
   const emHtml=em?`<span style="color:${em.above?'#ff4444':'var(--green)'};font-size:9px;font-weight:bold" title="${em.hours}h ${em.above?'above':'below'} 100 EMA">${em.above?'↑':'↓'}${em.hours}h</span>`:`<span style="color:var(--text3);font-size:9px">—</span>`;
+  const fv=d?.fvg;
+  const fvHtml=fv?(fv.bull&&fv.bear?`<span style="color:#7b68ee;font-size:9px;font-weight:bold" title="Bull FVG $${fp(fv.bullPrice)} | Bear FVG $${fp(fv.bearPrice)}">▲▼</span>`:fv.bull?`<span style="color:var(--green);font-size:9px;font-weight:bold" title="Bullish FVG at $${fp(fv.bullPrice)}">▲${fp(fv.bullPrice)}</span>`:fv.bear?`<span style="color:var(--red);font-size:9px;font-weight:bold" title="Bearish FVG at $${fp(fv.bearPrice)}">▼${fp(fv.bearPrice)}</span>`:`<span style="color:var(--text3);font-size:9px">—</span>`):`<span style="color:var(--text3);font-size:9px">—</span>`;
   return`<tr style="background:${bg};border-left:${bl};border-bottom:1px solid #090d18">
     <td style="color:var(--text3);font-size:9px">${ks?'★':i+1}</td>
     <td><div style="font-weight:bold;color:${nc}">${s.id}</div></td>
@@ -1426,7 +1573,8 @@ function spRow(s,i){
     <td class="r" style="color:var(--text2);font-size:10px">$${fp(d?.price)}</td>
     <td class="r" style="color:${cc};font-size:10px">${d?.chg!=null?(d.chg>0?'+':'')+d.chg.toFixed(2)+'%':'—'}</td>
     <td class="r">${stH}</td>
-    <td class="r">${emHtml}</td></tr>`;
+    <td class="r">${emHtml}</td>
+    <td class="r">${fvHtml}</td></tr>`;
 }
 function spGo(){
   const q=document.getElementById('sp-search').value.toLowerCase();
@@ -1498,8 +1646,8 @@ async function spFetchAll(){
     res.forEach((r,idx)=>{
       const sym=batch[idx];
       if(r.status==='fulfilled'){
-        const{id,rsi,ma,price,chg,div,ema100,liq}=r.value;
-        spData[id]={rsi,ma,price,chg,div,ema100,liq,st:'ok'};
+        const{id,rsi,ma,price,chg,div,ema100,liq,fvg}=r.value;
+        spData[id]={rsi,ma,price,chg,div,ema100,liq,fvg,st:'ok'};
         const spKS={rsiLow:rsi!==null&&rsi<=10, bullDiv:div?.type==='bull'};
         if(spKS.rsiLow||spKS.bullDiv){
           const pd=spPrev[id];
@@ -1593,38 +1741,39 @@ function toggleLiqTab(btn) {
 
 function buildLiqHtml(s) {
   const liq = s.liq;
-  if(!liq || (!liq.pinbars.length && !liq.fvg.length && !liq.poi.length)) {
-    return '<div style="color:var(--text3);text-align:center;padding:8px 0">No nearby liquidity levels found within ±6%</div>';
-  }
-  const pf = p => p > 100 ? p.toFixed(2) : p > 1 ? p.toFixed(4) : p.toFixed(6);
-  const sectionHtml = (title, color, items, rowFn) => items.length ? `
-    <div style="margin-bottom:10px">
-      <div style="font-size:8px;color:${color};letter-spacing:.15em;margin-bottom:5px;font-weight:bold">${title}</div>
-      ${items.map(rowFn).join('')}
-    </div>` : '';
+  if(!liq) return '';
+  const isBear = s.signal === 'bear';
+  const orders = isBear ? liq.bear : liq.bull;
+  if(!orders || !orders.length) return '';
 
-  return '<div style="display:flex;gap:14px;flex-wrap:wrap">'+
-    sectionHtml('📌 PINBAR LEVELS', 'var(--amber)', liq.pinbars, x=>`
-      <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border)">
-        <span style="color:${x.type==='bull'?'var(--green)':'var(--red)'}">${x.label}</span>
-        <span style="color:var(--text);margin-left:12px;font-weight:bold">${pf(x.price)}</span>
-        <span style="color:${x.dist>=0?'var(--red)':'var(--green)'};margin-left:6px">${x.dist>=0?'+':''}${x.dist}%</span>
-      </div>`)+
-    sectionHtml('⚡ IMBALANCE / FVG', '#4a9aff', liq.fvg, x=>`
-      <div style="padding:3px 0;border-bottom:1px solid var(--border)">
-        <div style="display:flex;justify-content:space-between">
-          <span style="color:${x.type==='bull'?'var(--green)':'var(--red)'}">${x.label}</span>
-          <span style="color:${x.dist>=0?'var(--red)':'var(--green)'};margin-left:6px">${x.dist>=0?'+':''}${x.dist}%</span>
-        </div>
-        <div style="color:var(--text3);margin-top:1px">Zone: ${pf(x.low)} – ${pf(x.high)} <span style="color:var(--amber)">(size ${x.size})</span></div>
-      </div>`)+
-    sectionHtml('🎯 POINTS OF INTEREST', '#a855f7', liq.poi, x=>`
-      <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border)">
-        <span style="color:${x.type==='support'?'var(--green)':'var(--red)'}">${x.label}</span>
-        <span style="color:var(--text);margin-left:12px;font-weight:bold">${pf(x.price)}</span>
-        <span style="color:${x.dist>=0?'var(--red)':'var(--green)'};margin-left:6px">${x.dist>=0?'+':''}${x.dist}%</span>
-      </div>`)+
-  '</div>';
+  const pf = p => {
+    if(p == null) return '—';
+    return p > 100 ? p.toFixed(2) : p > 1 ? p.toFixed(4) : p.toFixed(6);
+  };
+  const accentCol = isBear ? 'var(--red)' : 'var(--green)';
+  const bgCol     = isBear ? 'rgba(255,68,68,.06)' : 'rgba(0,232,122,.06)';
+  const borderCol = isBear ? '#5a1010' : '#0a3a1a';
+
+  const orderRows = orders.map((o, idx) => {
+    const d = parseFloat(o.dist);
+    return `<div style="display:flex;align-items:center;gap:0;margin-bottom:6px">
+      <div style="padding:6px 12px;background:${bgCol};border:1px solid ${borderCol};border-right:none;min-width:110px">
+        <div style="font-size:8px;color:var(--text3);letter-spacing:.12em;margin-bottom:2px">LIMIT ORDER ${idx+1}</div>
+        <div style="font-size:13px;font-weight:bold;color:${accentCol};font-family:monospace;letter-spacing:.04em">${pf(o.price)}</div>
+      </div>
+      <div style="padding:6px 12px;background:var(--bg3);border:1px solid var(--border2);flex:1">
+        <div style="font-size:9px;color:var(--text3)">${o.reason}</div>
+        <div style="font-size:10px;color:${d>=0?'#ff6644':'var(--green)'};margin-top:1px;font-weight:bold">${d>=0?'+':''}${d}%${Math.abs(d)>3?' ⚠ deep':''}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  return `<div style="border-top:2px solid #1a2040;padding:10px 14px;background:rgba(5,10,30,.6)">
+    <div style="font-size:8px;color:${accentCol};letter-spacing:.2em;margin-bottom:8px;font-weight:bold">
+      💧 ${isBear?'RESISTANCE — LIMIT SHORT':'SUPPORT — LIMIT LONG'}
+    </div>
+    ${orderRows}
+  </div>`;
 }
 
 function refreshHome(){
@@ -1786,9 +1935,9 @@ function refreshHome(){
       div.style.cssText='animation:fadeIn .5s ease forwards;opacity:0';
       const affUrlCenter=getAffLink(s.market, s.market==='CRYPTO'?s.id:(s.sector||'default'));
       const signalTimeCenter=signalTimes[key]||'—';
-      div.onclick=()=>nav(s.market==='CRYPTO'?'crypto':'sp500');
+      // Only navigate when clicking the header/body area, not the footer or liquidity panel
       div.innerHTML=
-        '<div class="ap-head">'+
+        '<div class="ap-head" onclick="nav(\''+( s.market==='CRYPTO'?'crypto':'sp500')+'\')" style="cursor:pointer" title="Open scan for this market">'+
           '<span class="ap-sym">'+(s.market==='CRYPTO'?s.sym:s.id)+'</span>'+
           '<span class="ap-market">'+s.market+(s.sector?' · '+s.sector:'')+'</span>'+
           rsiLowBadge+bullDivBadge+bearDivBadge2+
@@ -1812,11 +1961,8 @@ function refreshHome(){
             (isBear?'&#9660; OPEN SHORT':'&#9654; OPEN TRADE')+
           '</a>'+
           (bullDiv?'<span style="color:var(--green);margin-left:8px">'+dots(s.div?.st||1)+'</span>':'')+
-          '<button onclick="event.stopPropagation();toggleLiqTab(this)" style="float:right;padding:3px 9px;background:rgba(74,122,255,.1);border:1px solid var(--border2);color:var(--blue);font-size:8px;cursor:pointer;font-family:inherit;letter-spacing:.06em">💧 LIQUIDITY</button>'+
         '</div>'+
-        '<div class="liq-tab" style="display:none;border-top:1px solid var(--border2);padding:10px 14px;font-size:9px">'+
-          buildLiqHtml(s)+
-        '</div>';
+        buildLiqHtml(s);
       feedEl.appendChild(div);
     });
     // Re-order center cards to match current sort
@@ -2179,6 +2325,38 @@ function renderHomeForum() {
 renderHomeForum();
 
 // ════════════════════════════════════════
+// AI PANEL DRAG & DROP (rearrangeable)
+// ════════════════════════════════════════
+(function(){
+  let dragEl=null, dragOver=null;
+  document.addEventListener('dragstart',e=>{
+    const p=e.target.closest('.ai-panel');
+    if(!p)return;
+    dragEl=p; p.classList.add('dragging');
+    e.dataTransfer.effectAllowed='move';
+  });
+  document.addEventListener('dragend',e=>{
+    if(dragEl){dragEl.classList.remove('dragging');dragEl=null;}
+    if(dragOver){dragOver.classList.remove('drag-over');dragOver=null;}
+  });
+  document.addEventListener('dragover',e=>{
+    e.preventDefault();
+    const p=e.target.closest('.ai-panel');
+    if(!p||p===dragEl)return;
+    if(dragOver&&dragOver!==p)dragOver.classList.remove('drag-over');
+    dragOver=p; p.classList.add('drag-over');
+    const cont=document.getElementById('ai-panels');
+    if(!cont||!dragEl)return;
+    const kids=[...cont.children];
+    const si=kids.indexOf(dragEl),ti=kids.indexOf(p);
+    if(si<0||ti<0)return;
+    if(si<ti)cont.insertBefore(dragEl,p.nextSibling);
+    else cont.insertBefore(dragEl,p);
+  });
+  document.addEventListener('drop',e=>{e.preventDefault();if(dragOver)dragOver.classList.remove('drag-over');dragOver=null;});
+})();
+
+// ════════════════════════════════════════
 // AI PRO — UNLOCK, TELEGRAM, AI ANALYSIS
 // ════════════════════════════════════════
 const AI_CODES = ['TRADECORE2024','AIPROMATIC','TC-PRO-2025'];
@@ -2240,65 +2418,136 @@ async function testTelegram() {
   setTimeout(()=>document.getElementById('tg-status').textContent='',4000);
 }
 
-// AI Signal Score & Analysis
+// ── AI SWING TRADE SCORING ── 5 indicators × 1-5 = max 25 pts → scaled to 100
+// ─────────────────────────────────────────────────────────────────────────────
 function aiAnalyzeSignal(s) {
-  const scores = [];
-  const notes = [];
+  const isBull = s.signal !== 'bear';
+  const inds = {};
 
-  // RSI score (lower = stronger oversold for bull)
-  if(s.signal==='bull'||!s.signal) {
-    if(s.rsi < 10) { scores.push(30); notes.push('RSI extremely oversold (<10) — rare & strong signal'); }
-    else if(s.rsi < 20) { scores.push(20); notes.push('RSI oversold (<20)'); }
-    else if(s.rsi < 30) { scores.push(10); notes.push('RSI below 30'); }
-  } else {
-    if(s.rsi > 80) { scores.push(25); notes.push('RSI extremely overbought (>80)'); }
-    else if(s.rsi > 70) { scores.push(15); notes.push('RSI overbought (>70)'); }
-  }
+  // ── 1. RSI (25%) ─── extreme readings = highest edge for reversal
+  (()=>{
+    let sc=1, note='RSI — no data';
+    if(s.rsi != null) {
+      if(isBull) {
+        if(s.rsi < 10)      { sc=5; note=`RSI ${s.rsi.toFixed(1)} — Extreme oversold (<10), highest-probability reversal`; }
+        else if(s.rsi < 20) { sc=4; note=`RSI ${s.rsi.toFixed(1)} — Very oversold (<20), strong setup`; }
+        else if(s.rsi < 30) { sc=3; note=`RSI ${s.rsi.toFixed(1)} — Oversold zone (<30), valid entry zone`; }
+        else if(s.rsi < 40) { sc=2; note=`RSI ${s.rsi.toFixed(1)} — Below neutral, weak setup`; }
+        else                { sc=1; note=`RSI ${s.rsi.toFixed(1)} — Neutral, not ideal for long entry`; }
+      } else {
+        if(s.rsi > 85)      { sc=5; note=`RSI ${s.rsi.toFixed(1)} — Extreme overbought (>85), highest-probability reversal`; }
+        else if(s.rsi > 78) { sc=4; note=`RSI ${s.rsi.toFixed(1)} — Very overbought (>78), strong setup`; }
+        else if(s.rsi > 70) { sc=3; note=`RSI ${s.rsi.toFixed(1)} — Overbought zone (>70), valid short zone`; }
+        else if(s.rsi > 62) { sc=2; note=`RSI ${s.rsi.toFixed(1)} — Above neutral, weak setup`; }
+        else                { sc=1; note=`RSI ${s.rsi.toFixed(1)} — Neutral, not ideal for short entry`; }
+      }
+    }
+    inds.rsi = {sc, label:'RSI', weight:25, note};
+  })();
 
-  // Divergence strength
-  if(s.div?.st >= 3) { scores.push(25); notes.push(`Strong divergence (strength: ${s.div.st}/5)`); }
-  else if(s.div?.st >= 2) { scores.push(15); notes.push(`Moderate divergence (strength: ${s.div.st}/5)`); }
-  else if(s.div?.st >= 1) { scores.push(8); notes.push('Weak divergence detected'); }
+  // ── 2. Divergence (25%) ─── price-RSI divergence = primary swing signal
+  (()=>{
+    let sc=1, note='No divergence detected — setup is weaker without it';
+    if(s.div?.type && s.div.st >= 1) {
+      const st=s.div.st, rd=s.div.rd||0;
+      sc = Math.min(5, st + (rd > 15 ? 1 : 0));
+      const labels=['','Weak','Moderate','Strong','Very Strong','Extreme'];
+      note=`${labels[sc]||'Strong'} divergence — Strength ${st}/5, ΔRSI ${rd.toFixed(1)} (price vs RSI split)`;
+    }
+    inds.div = {sc, label:'Divergence', weight:25, note};
+  })();
 
-  // ΔRSI (divergence magnitude)
-  if(s.div?.rd > 15) { scores.push(15); notes.push(`Large RSI divergence gap (ΔRSI: ${s.div.rd?.toFixed(1)})`); }
-  else if(s.div?.rd > 8) { scores.push(8); notes.push(`RSI divergence gap ΔRSI: ${s.div.rd?.toFixed(1)}`); }
+  // ── 3. EMA100 Duration (20%) ─── time extended from MA = mean-reversion fuel
+  (()=>{
+    let sc=1, note='EMA100 — no data';
+    if(s.ema100) {
+      const h=s.ema100.hours, above=s.ema100.above;
+      if(isBull) {
+        if(!above) {
+          if(h > 24)     { sc=5; note=`${h}h below 100 EMA — highly extended, strong mean-reversion fuel`; }
+          else if(h > 14){ sc=4; note=`${h}h below 100 EMA — extended, reversal zone valid`; }
+          else if(h > 7) { sc=3; note=`${h}h below 100 EMA — moderate extension`; }
+          else if(h > 2) { sc=2; note=`${h}h below 100 EMA — fresh, limited extension`; }
+          else           { sc=1; note=`${h}h below 100 EMA — too short, wait for more time`; }
+        } else           { sc=1; note=`${h}h ABOVE 100 EMA — price not below MA, poor for bull swing`; }
+      } else {
+        if(above) {
+          if(h > 24)     { sc=5; note=`${h}h above 100 EMA — highly extended overbought`; }
+          else if(h > 14){ sc=4; note=`${h}h above 100 EMA — extended, bear reversal zone`; }
+          else if(h > 7) { sc=3; note=`${h}h above 100 EMA — moderate extension`; }
+          else if(h > 2) { sc=2; note=`${h}h above 100 EMA — limited extension`; }
+          else           { sc=1; note=`${h}h above 100 EMA — too fresh`; }
+        } else           { sc=1; note=`${h}h BELOW 100 EMA — price not above MA, poor for bear swing`; }
+      }
+    }
+    inds.ema = {sc, label:'EMA100 Time', weight:20, note};
+  })();
 
-  // EMA100 duration — if price has been below EMA100 for a while (bull), that's good
-  if(s.ema100) {
-    const h = s.ema100.hours;
-    if(s.signal==='bull' && !s.ema100.above && h > 10) { scores.push(15); notes.push(`Price below 100 EMA for ${h}h — extended oversold, reversal likely`); }
-    else if(s.signal==='bull' && !s.ema100.above && h > 3) { scores.push(8); notes.push(`Price below 100 EMA for ${h}h`); }
-    else if(s.signal==='bull' && s.ema100.above) { scores.push(3); notes.push(`Price above 100 EMA (${h}h) — less ideal for long`); }
-    else if(s.signal==='bear' && s.ema100.above && h > 10) { scores.push(15); notes.push(`Price above 100 EMA for ${h}h — extended overbought`); }
-  }
+  // ── 4. Liquidity Level (15%) ─── quality + proximity of the key level
+  (()=>{
+    let sc=1, note='No clear liquidity level found nearby';
+    const liq = s.liq || {};
+    const lvls = isBull ? liq.bull : liq.bear;
+    if(lvls && lvls.length > 0) {
+      const best=lvls[0], dist=Math.abs(parseFloat(best.dist||0)), cscore=best.score||0;
+      const hasImb=best.reason?.includes('Imbalance'), hasFVG=best.reason?.includes('FVG');
+      if(hasImb || cscore >= 8)          sc = dist < 1.5 ? 5 : dist < 3 ? 4 : 3;
+      else if(hasFVG || cscore >= 5)     sc = dist < 2   ? 4 : dist < 4 ? 3 : 2;
+      else if(cscore >= 3)               sc = dist < 3   ? 3 : 2;
+      else                               sc = 2;
+      const q=['','Low quality','Moderate','Good','Strong','Excellent'][sc]||'Good';
+      const icon = hasImb ? '⚡ Imbalance' : hasFVG ? '◻ FVG' : best.reason?.includes('Swing') ? '◆ Swing' : best.reason?.includes('Pinbar') ? '⊙ Pinbar' : '◉ Level';
+      note=`${q} — $${fp(best.price)} (${best.dist}%) · ${icon} · Score ${cscore}`;
+    }
+    inds.liq = {sc, label:'Liquidity', weight:15, note};
+  })();
 
-  // Price momentum (5m% change)
-  if(s.chg !== null && s.chg !== undefined) {
-    if(s.signal==='bull' && s.chg < -1) { scores.push(10); notes.push(`Strong negative momentum (${s.chg?.toFixed(2)}%) — capitulation possible`); }
-    else if(s.signal==='bear' && s.chg > 1) { scores.push(10); notes.push(`Strong positive momentum (${s.chg?.toFixed(2)}%) — exhaustion possible`); }
-    else { scores.push(3); notes.push(`Price change: ${(s.chg>0?'+':'')+s.chg?.toFixed(2)}%`); }
-  }
+  // ── 5. Momentum / Deviation (15%) ─── price action into the setup
+  (()=>{
+    let sc=1, note='', label='Momentum 5M';
+    if(s.devPct !== undefined && s.devPct !== null) {
+      label='MA Deviation';
+      const dev=Math.abs(s.devPct);
+      if(dev >= 3)        { sc=5; note=`Extreme deviation ${s.devPct>0?'+':''}${s.devPct.toFixed(3)}% — mean reversion very likely`; }
+      else if(dev >= 2)   { sc=4; note=`Large deviation ${s.devPct>0?'+':''}${s.devPct.toFixed(3)}% — strong pull-back pressure`; }
+      else if(dev >= 1.5) { sc=3; note=`Notable deviation ${s.devPct>0?'+':''}${s.devPct.toFixed(3)}%`; }
+      else if(dev >= 0.8) { sc=2; note=`Mild deviation ${s.devPct>0?'+':''}${s.devPct.toFixed(3)}%`; }
+      else                { sc=1; note=`Minimal deviation ${s.devPct>0?'+':''}${s.devPct.toFixed(3)}% — no significant stretch`; }
+    } else if(s.chg != null) {
+      const c=s.chg;
+      if(isBull) {
+        if(c < -2)        { sc=5; note=`${c.toFixed(2)}% — Strong sell-off into support, capitulation likely`; }
+        else if(c < -1)   { sc=4; note=`${c.toFixed(2)}% — Dropping into support zone`; }
+        else if(c < -0.5) { sc=3; note=`${c.toFixed(2)}% — Mild pullback into level`; }
+        else if(c < 0)    { sc=2; note=`${c.toFixed(2)}% — Slight dip, weak confirmation`; }
+        else              { sc=1; note=`+${c.toFixed(2)}% — Rising away from entry, unfavorable`; }
+      } else {
+        if(c > 2)         { sc=5; note=`+${c.toFixed(2)}% — Strong rally into resistance, exhaustion likely`; }
+        else if(c > 1)    { sc=4; note=`+${c.toFixed(2)}% — Pushing into resistance zone`; }
+        else if(c > 0.5)  { sc=3; note=`+${c.toFixed(2)}% — Mild push into resistance`; }
+        else if(c > 0)    { sc=2; note=`+${c.toFixed(2)}% — Small uptick, weak confirmation`; }
+        else              { sc=1; note=`${c.toFixed(2)}% — Falling, unfavorable for short`; }
+      }
+      note = note || `${(c>0?'+':'')+c.toFixed(2)}%`;
+    }
+    inds.mom = {sc, label, weight:15, note};
+  })();
 
-  // Forex deviation from 100 MA (bonus scoring)
-  if(s.devPct !== undefined && s.devPct !== null) {
-    const dev = Math.abs(s.devPct);
-    if(dev >= 3) { scores.push(30); notes.push(`Extreme deviation from 100 MA: ${s.devPct>0?'+':''}${s.devPct?.toFixed(3)}% — mean reversion highly likely`); }
-    else if(dev >= 2) { scores.push(22); notes.push(`Large deviation from 100 MA: ${s.devPct>0?'+':''}${s.devPct?.toFixed(3)}%`); }
-    else if(dev >= 1.5) { scores.push(15); notes.push(`Notable deviation from 100 MA: ${s.devPct>0?'+':''}${s.devPct?.toFixed(3)}%`); }
-    else { scores.push(8); notes.push(`Deviation from 100 MA: ${s.devPct>0?'+':''}${s.devPct?.toFixed(3)}%`); }
-  }
+  // ── Weighted total (max 100) ──────────────────────────────────────────────
+  const total = Math.round(Math.min(100,
+    Object.values(inds).reduce((sum, i) => sum + (i.sc / 5) * i.weight, 0)
+  ));
+  const grade = total>=85?{g:'A+',c:'#00e87a'}:total>=75?{g:'A',c:'#00c866'}:total>=65?{g:'B',c:'#4a9aff'}:total>=50?{g:'C',c:'var(--amber)'}:{g:'D',c:'var(--text3)'};
+  const rec = total>=80 ? (isBull?'✅ HIGH confidence LONG — wait for reversal candle at level':'⚠ HIGH confidence SHORT — wait for rejection candle') :
+              total>=65 ? (isBull?'🔍 Moderate LONG — 1-2 more confirmations needed':'🔍 Moderate SHORT — confirm with price rejection') :
+              total>=50 ? '⏳ Weak setup — monitor, avoid immediate entry' :
+              '🚫 Low confidence — do not trade this signal yet';
 
-  const total = Math.min(100, scores.reduce((a,b)=>a+b,0));
-  const grade = total >= 80 ? {g:'A',c:'#00e87a'} : total >= 65 ? {g:'B',c:'#4a9aff'} : total >= 50 ? {g:'C',c:'var(--amber)'} : {g:'D',c:'var(--text3)'};
-  const rec = total >= 75 ? (s.signal==='bear'?'⚠ SHORT opportunity — confirm with price action':'✅ HIGH confidence setup — watch for entry confirmation') :
-              total >= 55 ? '🔍 Moderate signal — wait for additional confirmation' :
-              '⏳ Weak setup — monitor but avoid immediate entry';
-
-  return { score: total, grade, notes, rec };
+  return { score: total, grade, rec, indicators: inds, notes: Object.values(inds).map(i=>i.note).filter(Boolean) };
 }
 
 let aiAnalysesFeed = [];
+
 function aiAddAnalysis(s, market) {
   if(!aiUnlocked) return;
   const minScore = parseInt(document.getElementById('ai-min-score')?.value||'65');
@@ -2307,16 +2556,28 @@ function aiAddAnalysis(s, market) {
 
   const now = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
   const sym = s.sym || s.id?.replace('USDT','') || s.l || '?';
-  aiAnalysesFeed.unshift({sym, market, signal:s.signal||'bull', analysis, time:now});
+  const isBull = s.signal !== 'bear';
+  // Calculate SL/TP from liquidity levels
+  const liq = s.liq || {};
+  const tp = isBull ? liq.bear?.[0] : liq.bull?.[0];   // TP = first level in profit direction
+  const sl = isBull ? liq.bull?.[0] : liq.bear?.[0];   // SL = first level against position
+  aiAnalysesFeed.unshift({
+    sym, market, signal: s.signal||'bull', analysis, time: now,
+    price: s.price, rsi: s.rsi, ma: s.ma, ema100: s.ema100,
+    fvg: s.fvg, div: s.div, chg: s.chg,
+    sl: sl ? sl.price : null,
+    tp: tp ? tp.price : null,
+  });
   if(aiAnalysesFeed.length>50) aiAnalysesFeed=aiAnalysesFeed.slice(0,50);
   renderAiAnalyses();
 
-  // Send Telegram notification
-  const tgMsg = `🤖 <b>AI PRO ALERT</b> — Score ${analysis.score}/100 (${analysis.grade.g})\n` +
-    `<b>${sym}</b> [${market}] — ${s.signal==='bear'?'BEAR ▼':'BULL ▲'}\n` +
-    `RSI: ${s.rsi?.toFixed(1)} | Price: $${s.price?.toFixed?.(s.price>100?2:4)||'—'}\n` +
-    `📊 ${analysis.rec}\n` +
-    `⏰ ${now}`;
+  // Telegram notification with SL/TP
+  const tgMsg = `🤖 <b>AI GENERATED SIGNAL</b> — Score ${analysis.score}/100 (${analysis.grade.g})\n`+
+    `<b>${sym}</b> [${market}] ${isBull?'▲ BULL':'▼ BEAR'}\n`+
+    `RSI: ${s.rsi?.toFixed(1)||'—'} | Price: $${fp(s.price)}\n`+
+    (sl?`🛑 SL: $${fp(sl.price)} (${sl.dist}%)\n`:'')+
+    (tp?`🎯 TP: $${fp(tp.price)} (${tp.dist}%)\n`:'')+
+    `📊 ${analysis.rec}\n⏰ ${now}`;
   sendTelegram(tgMsg);
 }
 
@@ -2324,47 +2585,109 @@ function renderAiAnalyses() {
   const el = document.getElementById('ai-analyses-feed');
   if(!el) return;
   if(!aiAnalysesFeed.length) {
-    el.innerHTML='<div style="color:var(--text3);font-size:10px;text-align:center;padding:20px">No signals analyzed yet. Waiting for data...</div>';
+    el.innerHTML='<div style="color:var(--text3);font-size:10px;text-align:center;padding:24px">No analyses yet. Waiting for signals...</div>';
     return;
   }
-  el.innerHTML = aiAnalysesFeed.map(item => {
+  el.innerHTML = aiAnalysesFeed.map((item,idx) => {
     const a = item.analysis;
-    const sigDir = item.signal==='bear'?'▼ BEAR':item.signal==='neutral'?'◆ NEUTRAL':'▲ BULL';
-    const sigCol = item.signal==='bear'?'var(--red)':item.signal==='neutral'?'var(--amber)':'var(--green)';
-    if(item.manual) {
-      return `<div style="background:var(--bg2);border:1px solid #7c3aed;border-left:3px solid #a855f7;padding:14px;margin-bottom:10px">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-          <span style="font-size:16px;font-weight:bold;color:#a855f7;letter-spacing:.05em">${item.sym}</span>
-          <span style="font-size:8px;padding:2px 6px;border:1px solid var(--border2);color:var(--text3)">${item.market}</span>
-          <span style="font-size:8px;padding:2px 6px;border:1px solid ${sigCol};color:${sigCol}">${sigDir}</span>
-          <span style="font-size:8px;padding:2px 6px;background:rgba(168,85,247,.1);border:1px solid #7c3aed;color:#a855f7">✍ MANUAL</span>
-          <span style="margin-left:auto;font-size:9px;color:var(--text3)">🕐 ${item.time}</span>
-        </div>
-        <div style="font-size:10px;color:var(--text);line-height:1.7;white-space:pre-wrap">${a.notes[0]}</div>
-        <a href="${MEXC_AFF}" target="_blank" rel="noopener" style="display:inline-block;margin-top:10px;padding:4px 14px;background:rgba(168,85,247,.12);border:1px solid #7c3aed;color:#a855f7;font-size:9px;text-decoration:none;font-weight:bold">▶ OPEN TRADE ON MEXC</a>
+    const isBull = item.signal !== 'bear', isNeutral = item.signal==='neutral';
+    const sigDir = isNeutral?'◆ NEUTRAL':isBull?'▲ BULL':'▼ BEAR';
+    const sigCol = isNeutral?'var(--amber)':isBull?'var(--green)':'var(--red)';
+    const brdCol = item.manual?'#a855f7':a.grade?.c||'var(--border2)';
+
+    // ── Indicator bar colours helper ──────────────────────────────────────
+    const indColor = n => n>=5?'#00e87a':n>=4?'#4a9aff':n>=3?'var(--amber)':n>=2?'#7b68ee':'var(--text3)';
+
+    // Compact raw data row (prices, FVG etc.)
+    const em = item.ema100, fv = item.fvg;
+    const rawRow = `<div class="aif-meters">
+        ${item.rsi!=null?`<div class="aif-meter"><div class="aif-ml">RSI</div><div class="aif-mv" style="color:${item.rsi<30?'var(--green)':item.rsi>70?'var(--red)':'var(--text2)'}">${item.rsi.toFixed(1)}</div></div>`:''}
+        ${item.ma!=null?`<div class="aif-meter"><div class="aif-ml">MA(14)</div><div class="aif-mv" style="color:var(--amber)">${item.ma.toFixed(1)}</div></div>`:''}
+        ${em?`<div class="aif-meter"><div class="aif-ml">EMA100</div><div class="aif-mv" style="color:${em.above?'var(--red)':'var(--green)'}">${em.above?'↑':'↓'}${em.hours}h</div></div>`:''}
+        ${fv?.bull?`<div class="aif-meter"><div class="aif-ml">FVG↑</div><div class="aif-mv" style="color:var(--green)">$${fp(fv.bullPrice)}</div></div>`:''}
+        ${fv?.bear?`<div class="aif-meter"><div class="aif-ml">FVG↓</div><div class="aif-mv" style="color:var(--red)">$${fp(fv.bearPrice)}</div></div>`:''}
+        ${item.chg!=null?`<div class="aif-meter"><div class="aif-ml">5M%</div><div class="aif-mv" style="color:${item.chg>0?'var(--green)':item.chg<0?'var(--red)':'var(--text3)'}">${item.chg>0?'+':''}${item.chg.toFixed(2)}%</div></div>`:''}
+      </div>`;
+
+    // ── Detailed 1-5 indicator breakdown ──────────────────────────────────
+    const inds = a.indicators || {};
+    const indsHtml = Object.keys(inds).length ? `<div class="aif-inds">
+        ${Object.values(inds).map(ind=>{
+          const c=indColor(ind.sc); const pct=ind.sc*20;
+          return `<div class="aif-ind">
+            <div class="aif-ind-lbl">${ind.label}</div>
+            <div class="aif-ind-track"><div class="aif-ind-fill" style="width:${pct}%;background:${c}"></div></div>
+            <div class="aif-ind-val" style="color:${c}">${ind.sc}/5</div>
+            <div class="aif-ind-note">${ind.note||''}</div>
+          </div>`;
+        }).join('')}
+      </div>` : rawRow;
+
+    const metersHtml = indsHtml;
+
+    // SL / TP / R:R
+    const ep = item.price;
+    const sl = item.sl, tp = item.tp;
+    let rrHtml = '';
+    if(ep && sl && tp) {
+      const risk = Math.abs(ep - sl), reward = Math.abs(tp - ep);
+      const rr = risk > 0 ? (reward/risk).toFixed(2) : '—';
+      const rrCol = parseFloat(rr) >= 2 ? 'var(--green)' : parseFloat(rr) >= 1 ? 'var(--amber)' : 'var(--red)';
+      rrHtml = `<div class="aif-trade">
+        <div class="aif-trade-cell"><div class="aif-trade-lbl">ENTRY</div><div class="aif-trade-val" style="color:var(--text2)">$${fp(ep)}</div></div>
+        <div class="aif-trade-cell"><div class="aif-trade-lbl" style="color:var(--red)">STOP LOSS</div><div class="aif-trade-val" style="color:var(--red)">$${fp(sl)}</div><div style="font-size:8px;color:var(--text3)">${((sl-ep)/ep*100).toFixed(2)}%</div></div>
+        <div class="aif-trade-cell"><div class="aif-trade-lbl" style="color:var(--green)">TAKE PROFIT</div><div class="aif-trade-val" style="color:var(--green)">$${fp(tp)}</div><div style="font-size:8px;color:var(--text3)">${((tp-ep)/ep*100).toFixed(2)}%</div></div>
+      </div>
+      <div style="padding:6px 14px;background:rgba(0,0,0,.2);display:flex;gap:16px;align-items:center;border-top:1px solid var(--border)">
+        <span style="font-size:9px;color:var(--text3)">RISK/REWARD</span>
+        <span style="font-size:13px;font-weight:bold;color:${rrCol}">1 : ${rr}</span>
+        ${parseFloat(rr)>=2?'<span style="font-size:8px;color:var(--green);background:rgba(0,232,122,.1);border:1px solid #0a5a2a;padding:1px 6px">GOOD SETUP</span>':parseFloat(rr)>=1?'<span style="font-size:8px;color:var(--amber);background:rgba(240,165,0,.08);border:1px solid #5a4000;padding:1px 6px">MODERATE</span>':'<span style="font-size:8px;color:var(--red);background:rgba(255,68,85,.08);border:1px solid #5a0a1a;padding:1px 6px">POOR R:R</span>'}
+      </div>`;
+    } else if(sl || tp) {
+      rrHtml = `<div class="aif-trade">
+        ${ep?`<div class="aif-trade-cell"><div class="aif-trade-lbl">ENTRY</div><div class="aif-trade-val" style="color:var(--text2)">$${fp(ep)}</div></div>`:'<div class="aif-trade-cell"></div>'}
+        <div class="aif-trade-cell"><div class="aif-trade-lbl" style="color:var(--red)">STOP LOSS</div><div class="aif-trade-val" style="color:${sl?'var(--red)':'var(--text3)'}">${sl?'$'+fp(sl):'—'}</div></div>
+        <div class="aif-trade-cell"><div class="aif-trade-lbl" style="color:var(--green)">TAKE PROFIT</div><div class="aif-trade-val" style="color:${tp?'var(--green)':'var(--text3)'}">${tp?'$'+fp(tp):'—'}</div></div>
       </div>`;
     }
-    const barW = Math.round(a.score);
-    const barCol = a.score>=75?'#00e87a':a.score>=55?'#4a9aff':'var(--amber)';
-    return `<div style="background:var(--bg2);border:1px solid var(--border2);border-left:3px solid ${a.grade.c};padding:14px;margin-bottom:10px">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-        <span style="font-size:16px;font-weight:bold;color:${a.grade.c};letter-spacing:.05em">${item.sym}</span>
-        <span style="font-size:8px;padding:2px 6px;border:1px solid var(--border2);color:var(--text3)">${item.market}</span>
-        <span style="font-size:8px;padding:2px 6px;border:1px solid ${sigCol};color:${sigCol}">${sigDir}</span>
-        <span style="margin-left:auto;font-size:9px;color:var(--text3)">🕐 ${item.time}</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-        <div style="font-size:28px;font-weight:bold;color:${a.grade.c};min-width:40px">${a.grade.g}</div>
+
+    // Score bar (auto signals only)
+    const scoreHtml = (!item.manual && a.score!=null) ? `
+      <div style="padding:8px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)">
+        <div style="font-size:24px;font-weight:bold;color:${a.grade.c};min-width:34px">${a.grade.g}</div>
         <div style="flex:1">
-          <div style="font-size:9px;color:var(--text3);margin-bottom:3px">AI SCORE: ${a.score}/100</div>
-          <div style="height:6px;background:var(--bg3);border-radius:3px;overflow:hidden">
-            <div style="height:100%;width:${barW}%;background:${barCol};transition:width .5s;border-radius:3px"></div>
+          <div style="font-size:8px;color:var(--text3);margin-bottom:3px">AI SCORE: ${a.score}/100</div>
+          <div style="height:5px;background:var(--bg3);border-radius:2px;overflow:hidden">
+            <div style="height:100%;width:${a.score}%;background:${a.score>=75?'#00e87a':a.score>=55?'#4a9aff':'var(--amber)'};transition:width .6s;border-radius:2px"></div>
           </div>
         </div>
+        <div style="font-size:9px;color:${a.grade.c};max-width:220px;text-align:right">${a.rec}</div>
+      </div>` : '';
+
+    // Notes
+    const notesHtml = a.notes?.length ? `<div class="aif-notes">${a.notes.map(n=>`• ${n}`).join('<br>')}</div>` : '';
+
+    // Trade button — pre-filled with symbol/direction for future automation
+    const mexcUrl = `${MEXC_AFF}`;
+    const tradeBtn = `<a href="${mexcUrl}" target="_blank" rel="noopener"
+      data-sym="${item.sym}" data-dir="${item.signal}" data-entry="${ep||''}" data-sl="${sl||''}" data-tp="${tp||''}"
+      style="padding:5px 14px;background:rgba(168,85,247,.15);border:1px solid #7c3aed;color:#a855f7;font-size:9px;text-decoration:none;font-weight:bold;letter-spacing:.06em;display:inline-block">
+      ▶ OPEN TRADE ON MEXC</a>`;
+
+    return `<div class="aif-card" style="border-left:3px solid ${brdCol}">
+      <div class="aif-head">
+        <span style="font-size:15px;font-weight:bold;color:${brdCol};letter-spacing:.05em">${item.sym}</span>
+        <span style="font-size:8px;padding:2px 6px;border:1px solid var(--border2);color:var(--text3)">${item.market}</span>
+        <span style="font-size:8px;padding:2px 6px;border:1px solid ${sigCol};color:${sigCol}">${sigDir}</span>
+        <span style="font-size:8px;padding:2px 6px;background:rgba(168,85,247,.12);border:1px solid #7c3aed;color:#a855f7">🤖 AI GENERATED</span>
+        <span style="margin-left:auto;font-size:9px;color:var(--text3)">🕐 ${item.time}</span>
+        <span onclick="aiAnalysesFeed.splice(${idx},1);renderAiAnalyses()" style="color:var(--text3);cursor:pointer;font-size:11px;padding:0 4px" title="Remove">✕</span>
       </div>
-      <div style="font-size:10px;color:${a.grade.c};margin-bottom:8px;font-weight:bold">${a.rec}</div>
-      <div style="font-size:9px;color:var(--text3);line-height:1.7">${a.notes.map(n=>'• '+n).join('<br>')}</div>
-      <a href="${MEXC_AFF}" target="_blank" rel="noopener" style="display:inline-block;margin-top:10px;padding:4px 14px;background:rgba(168,85,247,.12);border:1px solid #7c3aed;color:#a855f7;font-size:9px;text-decoration:none;font-weight:bold">▶ OPEN TRADE ON MEXC</a>
+      ${metersHtml}
+      ${scoreHtml}
+      ${rrHtml}
+      ${notesHtml}
+      <div class="aif-foot">${tradeBtn}</div>
     </div>`;
   }).join('');
 }
@@ -2374,20 +2697,21 @@ function aiPostManual() {
   const dir = document.getElementById('ai-man-dir').value;
   const mkt = document.getElementById('ai-man-mkt').value;
   const txt = (document.getElementById('ai-man-text').value||'').trim();
+  const entry = parseFloat(document.getElementById('ai-man-entry').value)||null;
+  const sl = parseFloat(document.getElementById('ai-man-sl').value)||null;
+  const tp = parseFloat(document.getElementById('ai-man-tp').value)||null;
   const statusEl = document.getElementById('ai-man-status');
   if(!sym) { statusEl.textContent='⚠ Enter a ticker symbol'; statusEl.style.color='var(--red)'; return; }
   if(!txt) { statusEl.textContent='⚠ Write your analysis text'; statusEl.style.color='var(--red)'; return; }
   const now = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
-  const manualAnalysis = {
-    score: null, grade: {g:'M', c:'#a855f7'},
-    notes: [txt],
-    rec: txt.length > 80 ? txt.substring(0,80)+'…' : txt
-  };
-  aiAnalysesFeed.unshift({sym, market:mkt, signal:dir, analysis:manualAnalysis, time:now, manual:true});
+  aiAnalysesFeed.unshift({
+    sym, market:mkt, signal:dir, time:now, manual:true,
+    price:entry, sl, tp,
+    analysis:{ score:null, grade:{g:'M',c:'#a855f7'}, notes:[txt], rec:'' },
+  });
   if(aiAnalysesFeed.length>50) aiAnalysesFeed=aiAnalysesFeed.slice(0,50);
   renderAiAnalyses();
-  document.getElementById('ai-man-sym').value='';
-  document.getElementById('ai-man-text').value='';
+  ['ai-man-sym','ai-man-entry','ai-man-sl','ai-man-tp','ai-man-text'].forEach(id=>document.getElementById(id).value='');
   statusEl.textContent='✓ Analysis posted'; statusEl.style.color='var(--green)';
   setTimeout(()=>statusEl.textContent='',3000);
 }
