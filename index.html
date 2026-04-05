@@ -425,7 +425,7 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
       <div class="feed-section" id="section-alarmlog">
         <div class="fs-hdr" style="display:flex;align-items:center;justify-content:space-between">
           <span>🕐 ALARM HISTORY (last 100)</span>
-          <button onclick="globalAlarmLog=[];renderAlarmLog()" style="background:none;border:none;color:var(--text3);font-size:9px;cursor:pointer;letter-spacing:.1em">CLEAR</button>
+          <button onclick="globalAlarmLog=[];alarmLogSave();renderAlarmLog()" style="background:none;border:none;color:var(--text3);font-size:9px;cursor:pointer;letter-spacing:.1em">CLEAR</button>
         </div>
         <div id="home-alarm-log">
           <div style="color:var(--text3);font-size:10px;text-align:center;padding:12px 0;opacity:.5">No alarms in this session.</div>
@@ -1038,6 +1038,14 @@ function aiFeedRemove(idx) {
 // Global state — load persisted analyses immediately
 var aiAnalysesFeed = aiFeedLoad();
 
+// ── Render persisted data as soon as all functions are defined ──
+// setTimeout(0) defers until after the entire script block has parsed,
+// so renderAiAnalyses / renderAlarmLog are guaranteed to exist.
+setTimeout(function() {
+  try { renderAiAnalyses(); } catch(e) {}
+  try { renderAlarmLog();   } catch(e) {}
+}, 0);
+
 // ══════════════════════════════════════
 // MY POSTS — uredi tukaj!
 // ══════════════════════════════════════
@@ -1228,7 +1236,13 @@ const CR_SYMS=[
   {id:'QTUMUSDT'},{id:'ICXUSDT'},{id:'CELOUSDT'},{id:'API3USDT'},{id:'ARKMUSDT'},
   {id:'CYBERUSDT'},{id:'ALTUSDT'},{id:'THETAUSDT'},{id:'XAIUSDT'},{id:'PORTALUSDT'},
 ];
-let crData={},crAlerts=[],crSnd=true,crLoading=false,crCd=60,crPrev={};
+// ── Persist crPrev across refresh so scanner doesn't re-fire all alarms ──
+const CR_PREV_KEY = 'tc_crPrev_v1';
+function crPrevLoad(){ try{return JSON.parse(localStorage.getItem(CR_PREV_KEY)||'{}');}catch(e){return {};} }
+function crPrevSave(){ try{localStorage.setItem(CR_PREV_KEY,JSON.stringify(crPrev));}catch(e){} }
+
+let crData={},crAlerts=[],crSnd=true,crLoading=false,crCd=60;
+let crPrev = crPrevLoad();
 CR_SYMS.forEach(s=>{crData[s.id]={rsi:null,ma:null,price:null,chg:null,div:null,st:'wait'};});
 
 // findLiquidityLevels: returns { bull: [lo1, lo2], bear: [lo1, lo2] }
@@ -1545,6 +1559,7 @@ async function crFetchAll(){
         crPrev[id]=(rsi!==null&&rsi<=10)||(div?.type==='bull')?{rsiLow:rsi!==null&&rsi<=10,bullDiv:div?.type==='bull'}:null;
       }else crData[sym.id]={...crData[sym.id],st:'err'};
     });
+    crPrevSave(); // persist so refresh doesn't re-fire all alarms
     crGo();
     if(batches.indexOf(batch)<batches.length-1)await new Promise(r=>setTimeout(r,200));
   }
@@ -1582,7 +1597,13 @@ const SP_STOCKS=[
 ];
 const SP_SC={Tech:'#4a7aff',Health:'#00cc66',Finance:'#f0a500',Energy:'#ff8844',Consumer:'#aa88ff',Indust:'#88aabb'};
 const SP_PROXIES=['https://corsproxy.io/?','https://api.allorigins.win/raw?url='];
-let spData={},spAlerts=[],spSnd=true,spLoading=false,spCd=300,spPrev={},spProxy=0;
+// ── Persist spPrev across refresh ──
+const SP_PREV_KEY = 'tc_spPrev_v1';
+function spPrevLoad(){ try{return JSON.parse(localStorage.getItem(SP_PREV_KEY)||'{}');}catch(e){return {};} }
+function spPrevSave(){ try{localStorage.setItem(SP_PREV_KEY,JSON.stringify(spPrev));}catch(e){} }
+
+let spData={},spAlerts=[],spSnd=true,spLoading=false,spCd=300,spProxy=0;
+let spPrev = spPrevLoad();
 SP_STOCKS.forEach(s=>{spData[s.id]={rsi:null,ma:null,price:null,chg:null,div:null,st:'wait'};});
 
 async function spFetchOne(sym){
@@ -1744,6 +1765,7 @@ async function spFetchAll(){
         spPrev[id]=((rsi!==null&&rsi<=10)||(div?.type==='bull'))?{rsiLow:rsi!==null&&rsi<=10,bullDiv:div?.type==='bull'}:null;
       }else{errs++;spData[sym.id]={...spData[sym.id],st:'err'};}
     });
+    spPrevSave(); // persist so refresh doesn't re-fire all alarms
     spGo();
     if(batches.indexOf(batch)<batches.length-1)await new Promise(r=>setTimeout(r,1000));
   }
@@ -2383,7 +2405,12 @@ const FT=[
   {id:2,cat:3,t:'Zakaj samo RSI pod 10?',a:'Analize_SI',tm:'3h',v:201,hot:true,posts:[{a:'Analize_SI',r:'MEMBER',b:'Vidim da terminal samo signalizira RSI<10+bull div. Zakaj ne 20 ali 30?',tm:'3h',l:12},{a:'TradeCore',r:'FOUNDER',b:'Ker RSI pod 10 se zgodi redko — signal je bolj ekskluziven in zanesljiv. Manj lažnih signals.',tm:'2h',l:9}]},
   {id:3,cat:4,t:'TradingView affiliate — izkušnje?',a:'PassiveIncome',tm:'5h',v:134,hot:false,posts:[{a:'PassiveIncome',r:'MEMBER',b:'Kdo dela TradingView affiliate? Kakšen mesečni zaslužek?',tm:'5h',l:3},{a:'AffKing',r:'PRO',b:'Recurring komisija je odlična. Jaz dobim ~200€/mesec z 150 referali.',tm:'4h',l:8}]},
 ];
-let fp2=[...FT];
+// ── Persist forum threads across refresh ──
+const FORUM_KEY = 'tc_forum_v1';
+function forumLoad(){ try{ const d=JSON.parse(localStorage.getItem(FORUM_KEY)||'null'); return d&&d.length?d:[...FT]; }catch(e){return [...FT];} }
+function forumSave(){ try{localStorage.setItem(FORUM_KEY,JSON.stringify(fp2));}catch(e){} }
+let fp2 = forumLoad();
+
 function renderForum(){
   document.getElementById('forum-cats').innerHTML=FC.map(c=>`<div class="cat-item${c.id===fCat?' active':''}" onclick="selCat(${c.id})"><div class="ci-name">${c.n}</div><div class="ci-count">${c.c} posts</div></div>`).join('');
   renderThreads();
@@ -2392,8 +2419,8 @@ function selCat(id){fCat=id;document.getElementById('forum-cat-title').textConte
 function renderThreads(){document.getElementById('thread-threads').innerHTML=fp2.filter(t=>t.cat===fCat).map(t=>`<div class="thread-item" onclick="openTV(${t.id})"><div><div class="ti-title">${t.hot?'<span class="ti-hot">🔥 </span>':''}${t.t}</div><div class="ti-meta">@${t.a} · ${t.tm} · ${t.posts.length} odg.</div></div><div style="text-align:right;font-size:9px;color:var(--text3)">${t.v}</div></div>`).join('');}
 function openTV(id){openT=id;const t=fp2.find(x=>x.id===id);document.getElementById('tv-title').textContent=t.t;document.getElementById('tv-posts').innerHTML=t.posts.map(p=>`<div class="post-item"><div class="post-author"><span style="color:var(--blue)">@${p.a}</span><span class="post-rank">${p.r}</span><span style="color:var(--text3)">${p.tm}</span></div><div class="post-body-txt">${p.b}</div><div style="margin-top:5px;font-size:9px;color:var(--text3)">👍 ${p.l}</div></div>`).join('');document.getElementById('thread-list').classList.add('hidden');document.getElementById('thread-view').classList.add('open');}
 function closeThread(){openT=null;document.getElementById('thread-list').classList.remove('hidden');document.getElementById('thread-view').classList.remove('open');}
-function submitReply(){const b=document.getElementById('tv-reply').value.trim(),a=document.getElementById('tv-author').value.trim()||'Anonimno';if(!b||openT===null)return;fp2.find(x=>x.id===openT).posts.push({a,r:'MEMBER',b,tm:'pravkar',l:0});openTV(openT);document.getElementById('tv-reply').value='';}
-function openNewThread(){const t=prompt('Naslov:');if(!t)return;const b=prompt('Vsebina:');if(!b)return;const a=prompt('Vzdevek:')||'Anonimno';fp2.unshift({id:Date.now(),cat:fCat,t,a,tm:'pravkar',v:1,hot:false,posts:[{a,r:'MEMBER',b,tm:'pravkar',l:0}]});FC[fCat].c++;renderForum();}
+function submitReply(){const b=document.getElementById('tv-reply').value.trim(),a=document.getElementById('tv-author').value.trim()||'Anonimno';if(!b||openT===null)return;fp2.find(x=>x.id===openT).posts.push({a,r:'MEMBER',b,tm:'pravkar',l:0});forumSave();openTV(openT);document.getElementById('tv-reply').value='';}
+function openNewThread(){const t=prompt('Naslov:');if(!t)return;const b=prompt('Vsebina:');if(!b)return;const a=prompt('Vzdevek:')||'Anonimno';fp2.unshift({id:Date.now(),cat:fCat,t,a,tm:'pravkar',v:1,hot:false,posts:[{a,r:'MEMBER',b,tm:'pravkar',l:0}]});FC[fCat].c++;forumSave();renderForum();}
 
 // Forum sidebar
 let homeFCat = 0;
@@ -2891,13 +2918,18 @@ document.getElementById('start-time-badge').textContent = '⏻ ' + TERMINAL_STAR
 // ════════════════════════════════════════
 // GLOBAL ALARM LOG (zadnjih 100)
 // ════════════════════════════════════════
-let globalAlarmLog = [];
+const ALARM_LOG_KEY = 'tc_alarmLog_v1';
+function alarmLogLoad(){ try{return JSON.parse(localStorage.getItem(ALARM_LOG_KEY)||'[]');}catch(e){return [];} }
+function alarmLogSave(){ try{localStorage.setItem(ALARM_LOG_KEY,JSON.stringify(globalAlarmLog));}catch(e){} }
+
+let globalAlarmLog = alarmLogLoad();
 
 function addGlobalAlarm(type, sym, detail, color) {
   const now = new Date();
   const time = now.toLocaleTimeString('sl-SI',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
   globalAlarmLog.unshift({type, sym, detail, color, time, ts: now.getTime()});
   if(globalAlarmLog.length > 100) globalAlarmLog = globalAlarmLog.slice(0,100);
+  alarmLogSave();
   renderAlarmLog();
 }
 
@@ -3418,8 +3450,7 @@ updateNotifBtn();
 
 initEmailJS();
 
-// ── Render persisted AI analyses on page load ──
-renderAiAnalyses();
+// (initial renders are triggered via setTimeout at script top — see aiFeedLoad block)
 
 </script>
 </body>
