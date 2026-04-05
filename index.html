@@ -883,7 +883,7 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
         <div style="font-size:16px;font-weight:bold;color:#a855f7;letter-spacing:.2em">🤖 AI PRO ANALYSIS</div>
         <div style="font-size:10px;color:var(--text3);margin-top:3px">Advanced multi-factor signal analysis · Email & Telegram alerts</div>
       </div>
-      <div id="ai-lock-badge" style="font-size:9px;padding:4px 12px;background:rgba(168,85,247,.15);border:1px solid #7c3aed;color:#a855f7;letter-spacing:.1em">🔒 PREMIUM</div>
+      <div id="ai-lock-badge" onclick="aiOwnerPrompt()" style="font-size:9px;padding:4px 12px;background:rgba(168,85,247,.15);border:1px solid #7c3aed;color:#a855f7;letter-spacing:.1em;cursor:pointer" title="Click to enter owner code">🔒 PREMIUM</div>
     </div>
 
     <!-- Unlock section -->
@@ -2740,6 +2740,20 @@ function aiApplyUnlock() {
   startCloudSync();
 }
 aiApplyUnlock();
+
+function aiOwnerPrompt() {
+  // If already owner, do nothing special
+  if(aiOwner) return;
+  const code = (prompt('Enter owner code:')||'').trim().toUpperCase();
+  if(!code) return;
+  if(code === OWNER_CODE) {
+    aiOwner=true; aiUnlocked=true;
+    localStorage.setItem(OWNER_KEY,'1'); localStorage.setItem(AI_UNLOCK_KEY,'1');
+    aiApplyUnlock();
+  } else {
+    alert('Invalid owner code.');
+  }
+}
 
 function aiUnlock() {
   const code = (document.getElementById('ai-code-input')?.value||'').trim().toUpperCase();
