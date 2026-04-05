@@ -1078,20 +1078,30 @@ let crData={},crAlerts=[],crSnd=true,crLoading=false,crCd=60,crPrev={};
 CR_SYMS.forEach(s=>{crData[s.id]={rsi:null,ma:null,price:null,chg:null,div:null,st:'wait'};});
 
 function calcHoursAboveBelow(closes, intervalMin) {
-  if(!closes || closes.length < 101) return null;
-  const ma100 = closes.slice(-100).reduce((a,b)=>a+b,0)/100;
-  const last = closes[closes.length-1];
-  const above = last > ma100;
+  if(!closes || closes.length < 102) return null;
+  const n = closes.length;
+  // Build rolling MA100 array using sliding window (O(n), fast)
+  // rollingMa[i] = average of closes[i-100..i-1], compared with closes[i]
+  const rollingMa = new Float64Array(n);
+  let windowSum = 0;
+  for(let k = 0; k < 100; k++) windowSum += closes[k];
+  for(let i = 100; i < n; i++) {
+    rollingMa[i] = windowSum / 100;
+    windowSum += closes[i] - closes[i - 100];
+  }
+  const ma100 = rollingMa[n-1];
+  const above = closes[n-1] > ma100;
+  // Count consecutive candles from the end where price is on the same side of its own rolling MA
   let count = 0;
-  for(let i=closes.length-1; i>=0; i--) {
-    if((closes[i] > ma100) === above) count++;
+  for(let i = n-1; i >= 100; i--) {
+    if((closes[i] > rollingMa[i]) === above) count++;
     else break;
   }
   return { hours: Math.round((count * intervalMin / 60) * 10) / 10, above, ma100 };
 }
 
 async function crFetchOne(id){
-  const r=await fetch(`https://api.binance.com/api/v3/klines?symbol=${id}&interval=5m&limit=200`);
+  const r=await fetch(`https://api.binance.com/api/v3/klines?symbol=${id}&interval=5m&limit=600`);
   if(!r.ok)throw new Error(r.status);
   const d=await r.json();
   const closes=d.map(k=>parseFloat(k[4])),lows=d.map(k=>parseFloat(k[3])),highs=d.map(k=>parseFloat(k[2]));
