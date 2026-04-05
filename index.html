@@ -900,7 +900,7 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
       <!-- AI Analyses feed — always at bottom -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
         <div style="font-size:9px;color:#a855f7;letter-spacing:.18em;font-weight:bold">🧠 AI GENERATED ANALYSES</div>
-        <button onclick="aiAnalysesFeed=[];renderAiAnalyses()" style="font-size:9px;color:var(--text3);background:none;border:1px solid var(--border);padding:2px 8px;cursor:pointer">CLEAR</button>
+        <button onclick="aiFeedClear()" style="font-size:9px;color:var(--text3);background:none;border:1px solid var(--border);padding:2px 8px;cursor:pointer">CLEAR HISTORY</button>
       </div>
       <div id="ai-analyses-feed">
         <div style="color:var(--text3);font-size:10px;text-align:center;padding:20px">Waiting for signals to analyze...</div>
@@ -1014,8 +1014,29 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
 </div>
 
 <script>
-// Global state — declared first to prevent temporal dead zone errors
-var aiAnalysesFeed = [];
+// ── AI FEED PERSISTENCE ───────────────────────────────────────────────────────
+// Analyses persist in localStorage — survive refresh, stay forever per device.
+const AI_FEED_KEY = 'tc_ai_feed_v2';
+
+function aiFeedLoad() {
+  try { return JSON.parse(localStorage.getItem(AI_FEED_KEY)||'[]'); } catch(e) { return []; }
+}
+function aiFeedSave() {
+  try { localStorage.setItem(AI_FEED_KEY, JSON.stringify(aiAnalysesFeed)); } catch(e) {}
+}
+function aiFeedClear() {
+  aiAnalysesFeed = [];
+  localStorage.removeItem(AI_FEED_KEY);
+  renderAiAnalyses();
+}
+function aiFeedRemove(idx) {
+  aiAnalysesFeed.splice(idx, 1);
+  aiFeedSave();
+  renderAiAnalyses();
+}
+
+// Global state — load persisted analyses immediately
+var aiAnalysesFeed = aiFeedLoad();
 
 // ══════════════════════════════════════
 // MY POSTS — uredi tukaj!
@@ -2161,7 +2182,8 @@ function submitOwnerPost() {
   if(toAi && aiUnlocked) {
     aiAnalysesFeed.unshift({sym:ticker||'—', market:'MANUAL', signal:dir==='bear'?'bear':dir==='neutral'?'neutral':'bull',
       analysis:{score:null,grade:{g:'M',c:'#a855f7'},notes:[body],rec:title}, time:now, manual:true});
-    if(aiAnalysesFeed.length>50) aiAnalysesFeed=aiAnalysesFeed.slice(0,50);
+    if(aiAnalysesFeed.length>200) aiAnalysesFeed=aiAnalysesFeed.slice(0,200);
+    aiFeedSave();
     renderAiAnalyses();
   }
   document.getElementById('opm-status').textContent='✓ Published!'; document.getElementById('opm-status').style.color='var(--green)';
@@ -2629,7 +2651,8 @@ function aiAddAnalysis(s, market) {
     sl: sl ? sl.price : null,
     tp: tp ? tp.price : null,
   });
-  if(aiAnalysesFeed.length>50) aiAnalysesFeed=aiAnalysesFeed.slice(0,50);
+  if(aiAnalysesFeed.length>200) aiAnalysesFeed=aiAnalysesFeed.slice(0,200);
+  aiFeedSave();
   renderAiAnalyses();
 
   // Telegram notification with SL/TP
@@ -2742,7 +2765,7 @@ function renderAiAnalyses() {
         <span style="font-size:8px;padding:2px 6px;border:1px solid ${sigCol};color:${sigCol}">${sigDir}</span>
         <span style="font-size:8px;padding:2px 6px;background:rgba(168,85,247,.12);border:1px solid #7c3aed;color:#a855f7">🤖 AI GENERATED</span>
         <span style="margin-left:auto;font-size:9px;color:var(--text3)">🕐 ${item.time}</span>
-        <span onclick="aiAnalysesFeed.splice(${idx},1);renderAiAnalyses()" style="color:var(--text3);cursor:pointer;font-size:11px;padding:0 4px" title="Remove">✕</span>
+        <span onclick="aiFeedRemove(${idx})" style="color:var(--text3);cursor:pointer;font-size:11px;padding:0 4px" title="Remove from history">✕</span>
       </div>
       ${metersHtml}
       ${scoreHtml}
@@ -2766,13 +2789,14 @@ function aiPostManual() {
     const statusEl = g('ai-man-status');
     if(!sym) { if(statusEl){statusEl.textContent='⚠ Enter a ticker symbol';statusEl.style.color='var(--red)';} return; }
     if(!txt) { if(statusEl){statusEl.textContent='⚠ Write your analysis text';statusEl.style.color='var(--red)';} return; }
-    const now = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+    const now = new Date().toLocaleString('en-US',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
     aiAnalysesFeed.unshift({
       sym, market:mkt, signal:dir, time:now, manual:true,
       price:entry, sl, tp,
       analysis:{ score:null, grade:{g:'M',c:'#a855f7'}, notes:[txt], rec:'' },
     });
-    if(aiAnalysesFeed.length>50) aiAnalysesFeed=aiAnalysesFeed.slice(0,50);
+    if(aiAnalysesFeed.length>200) aiAnalysesFeed=aiAnalysesFeed.slice(0,200);
+    aiFeedSave();
     renderAiAnalyses();
     ['ai-man-sym','ai-man-entry','ai-man-sl','ai-man-tp','ai-man-text'].forEach(id=>{const el=g(id);if(el)el.value='';});
     if(statusEl){statusEl.textContent='✓ Analysis posted';statusEl.style.color='var(--green)';}
