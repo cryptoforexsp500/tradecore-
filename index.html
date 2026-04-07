@@ -1348,8 +1348,8 @@ function detectDiv(lows,highs,rs){
   const pl=pivLow(sl,PL),rl=pivLow(sr,PL),ph=pivHigh(sh,PL),rh=pivHigh(sr,PL);
   let bull=null,bear=null;
   // Upgraded to 1-5 scale: finer ΔRSI granularity + RSI zone bonus
-  if(pl.length>=2&&rl.length>=2){const p1=pl[pl.length-2],p2=pl[pl.length-1],r1=rl[rl.length-2],r2=rl[rl.length-1];if(p2.v<p1.v&&r2.v>r1.v+MIN_D){const rd=r2.v-r1.v;let st=rd>20?5:rd>12?4:rd>7?3:rd>3?2:1;if(r2.v<30)st=Math.min(5,st+1);bull={type:'bull',st,rd,pd:((p1.v-p2.v)/p1.v)*100};}}
-  if(ph.length>=2&&rh.length>=2){const p1=ph[ph.length-2],p2=ph[ph.length-1],r1=rh[rh.length-2],r2=rh[rh.length-1];if(p2.v>p1.v&&r2.v<r1.v-MIN_D){const rd=r1.v-r2.v;let st=rd>20?5:rd>12?4:rd>7?3:rd>3?2:1;if(r2.v>70)st=Math.min(5,st+1);bear={type:'bear',st,rd,pd:((p2.v-p1.v)/p1.v)*100};}}
+  if(pl.length>=2&&rl.length>=2){const p1=pl[pl.length-2],p2=pl[pl.length-1],r1=rl[rl.length-2],r2=rl[rl.length-1];if(p2.v<p1.v&&r2.v>r1.v+MIN_D){const rd=r2.v-r1.v;let st=rd>20?5:rd>12?4:rd>7?3:rd>3?2:1;if(r2.v<30)st=Math.min(5,st+1);bull={type:'bull',st,rd,pd:((p1.v-p2.v)/p1.v)*100,lowPrice:p2.v};}}
+  if(ph.length>=2&&rh.length>=2){const p1=ph[ph.length-2],p2=ph[ph.length-1],r1=rh[rh.length-2],r2=rh[rh.length-1];if(p2.v>p1.v&&r2.v<r1.v-MIN_D){const rd=r1.v-r2.v;let st=rd>20?5:rd>12?4:rd>7?3:rd>3?2:1;if(r2.v>70)st=Math.min(5,st+1);bear={type:'bear',st,rd,pd:((p2.v-p1.v)/p1.v)*100,highPrice:p2.v};}}
   if(bull&&bear)return bull.st>=bear.st?bull:bear;return bull||bear||{type:null,st:0};
 }
 // Signal: RSI < 10 ALI bullish divergenca (ne oba hkrati)
@@ -1359,7 +1359,7 @@ const isBearDiv=d=>d?.div?.type==='bear'&&(d.div.st||0)>=2;
 const isKeySignal=d=>isRsiLow(d)||isBullDiv(d);
 const isBearSignal=d=>isBearDiv(d)&&!isKeySignal(d);
 const dots=n=>{const c=n>=5?'#00e87a':n>=4?'#4a9aff':n>=3?'var(--amber)':n>=2?'#7b68ee':'var(--text3)';return`<span style="color:${c};font-weight:bold;font-size:11px">${n}/5</span>`;}
-const fp=p=>!p?'—':p.toFixed(2);
+const fp=p=>(!p&&p!==0)?'—':p>=1000?p.toFixed(2):p>=100?p.toFixed(3):p>=1?p.toFixed(4):p>=0.01?p.toFixed(5):p.toFixed(6);
 function badge(div){if(!div?.type)return`<span style="color:var(--text3)">—</span>`;const b=div.type==='bull';return`<span class="bb ${div.st>=2?(b?'bull2':'bear2'):(b?'bull1':'bear1')}">${b?'▲ BULL':'▼ BEAR'} DIV</span>`;}
 function barHtml(rsi){if(rsi===null)return`<span style="color:var(--text3)">…</span>`;const pct=Math.min(100,Math.max(0,rsi));const c=rsi<=10?'#ff2222':rsi<=30?'#7b68ee':rsi>=70?'#ff6633':'#2a4a7a';const tc=rsi<=10?'#ff4444':rsi<=30?'#9d8aff':rsi>=70?'#ff8844':'#5577aa';return`<span class="pbar"><span class="pfill" style="width:${pct}%;background:${c};display:block"></span></span> <span style="color:${tc};font-size:10px">${rsi.toFixed(1)}</span>`;}
 let _audioCtx=null;
@@ -1602,6 +1602,25 @@ async function crFetchOne(id){
   const fvg=detectNearFVG(highs,lows,price);
   return{rsi:rs[rs.length-1]??null,ma:sma(rs,MA_LEN),price,chg:((price-closes[closes.length-2])/closes[closes.length-2])*100,div:detectDiv(lows,highs,rs),ema100,liq,fvg};
 }
+
+// Fetch liquidity levels from 15m, 30m, 1h charts for bearish signals
+// Returns { '15m': {bull,bear}, '30m': {bull,bear}, '1h': {bull,bear} }
+async function crFetchHtfLiq(id, price) {
+  const tfs = ['15m', '30m', '1h'];
+  const out = {};
+  for(const tf of tfs) {
+    try {
+      const r = await fetch(`https://api.binance.com/api/v3/klines?symbol=${id}&interval=${tf}&limit=200`);
+      if(!r.ok) continue;
+      const d = await r.json();
+      const opens=d.map(k=>parseFloat(k[1])),closes=d.map(k=>parseFloat(k[4])),
+            lows=d.map(k=>parseFloat(k[3])),highs=d.map(k=>parseFloat(k[2]));
+      out[tf] = findLiquidityLevels(opens,closes,highs,lows,price);
+    } catch(e) {}
+  }
+  return out;
+}
+
 function crRow(s,i){
   const d=crData[s.id],rsi=d?.rsi,dv=d?.div;
   const ks=isKeySignal(d);
@@ -1698,12 +1717,24 @@ function crStats(){
 }
 function crRenderLog(){
   const l=document.getElementById('cr-log');
-  if(!crAlerts.length){l.innerHTML=`<div style="color:var(--text3);font-size:10px;line-height:2.2">No signals.<br>Waiting for RSI&lt;10 or bull div...</div>`;return;}
-  l.innerHTML=crAlerts.map(a=>`<div class="acard bc">
-    <div style="color:var(--green);font-weight:bold">${a.id.replace('USDT','')} ${a.bullDiv?dots(a.st):''}</div>
-    <div style="margin-top:3px;display:flex;gap:4px">${a.rsiLow?'<span style="font-size:8px;background:rgba(255,68,85,.15);color:#ff4444;border:1px solid #5a0a1a;padding:0 4px">RSI&lt;10</span>':''}${a.bullDiv?'<span style="font-size:8px;background:rgba(0,232,122,.12);color:var(--green);border:1px solid #0a5a2a;padding:0 4px">▲ BULL DIV</span>':''}</div>
-    <div style="font-size:10px;margin-top:3px"><span style="color:${a.rsiLow?'var(--red)':'var(--purple)'}">RSI ${a.rsi?.toFixed(1)}</span> / <span style="color:var(--amber)">MA ${a.ma?.toFixed(1)||'—'}</span></div>
-    <div style="font-size:9px;color:var(--text3)">${a.bullDiv?'ΔRSI '+a.rd?.toFixed(1)+' · ':''} $${fp(a.price)} · ${a.time}</div></div>`).join('');
+  if(!crAlerts.length){l.innerHTML=`<div style="color:var(--text3);font-size:10px;line-height:2.2">No signals.<br>Waiting for RSI&lt;10, bull div or bear div...</div>`;return;}
+  l.innerHTML=crAlerts.map(a=>{
+    const isBear = a.type==='bear';
+    const cardCls = isBear ? 'acard rc' : 'acard bc';
+    const symColor = isBear ? 'var(--red)' : 'var(--green)';
+    const limitPriceTxt = isBear && a.highPrice
+      ? `<div style="margin-top:3px;font-size:9px;color:var(--text3)">LIMIT SHORT: <span style="color:var(--red);font-weight:bold;font-family:monospace">$${fp(a.highPrice)}</span></div>` : '';
+    const badges = isBear
+      ? `<span style="font-size:8px;background:rgba(255,68,85,.12);color:var(--red);border:1px solid #5a0a1a;padding:0 4px">▼ BEAR DIV</span>`
+      : `${a.rsiLow?'<span style="font-size:8px;background:rgba(255,68,85,.15);color:#ff4444;border:1px solid #5a0a1a;padding:0 4px">RSI&lt;10</span>':''}${a.bullDiv?'<span style="font-size:8px;background:rgba(0,232,122,.12);color:var(--green);border:1px solid #0a5a2a;padding:0 4px">▲ BULL DIV</span>':''}`;
+    return `<div class="${cardCls}">
+      <div style="color:${symColor};font-weight:bold">${a.id.replace('USDT','')} ${!isBear&&a.bullDiv?dots(a.st):isBear?dots(a.st):''}</div>
+      <div style="margin-top:3px;display:flex;gap:4px">${badges}</div>
+      <div style="font-size:10px;margin-top:3px"><span style="color:${isBear?'#ff8844':'var(--purple)'}">RSI ${a.rsi?.toFixed(2)}</span> / <span style="color:var(--amber)">MA ${a.ma?.toFixed(2)||'—'}</span></div>
+      <div style="font-size:9px;color:var(--text3);font-family:monospace">${!isBear&&a.bullDiv?'ΔRSI +'+a.rd?.toFixed(1)+' · ':isBear?'ΔRSI -'+a.rd?.toFixed(1)+' · ':''} <span style="color:var(--text2)">$${fp(a.price)}</span> · ${a.time}</div>
+      ${limitPriceTxt}
+    </div>`;
+  }).join('');
 }
 function crTglSnd(){crSnd=!crSnd;document.getElementById('cr-snd').style.color=crSnd?'var(--green)':'var(--text3)';}
 async function crFetchAll(){
@@ -1736,13 +1767,34 @@ async function crFetchAll(){
             newA.push({id,rsi,ma,type:'bull',st:div?.st||0,rd:div?.rd||0,price,time:new Date().toLocaleTimeString(),market:'CRYPTO',rsiLow:crKS.rsiLow,bullDiv:crKS.bullDiv});
           }
         }
-        crPrev[id]=(rsi!==null&&rsi<=10)||(div?.type==='bull')?{rsiLow:rsi!==null&&rsi<=10,bullDiv:div?.type==='bull'}:null;
+        // BEAR SIGNAL: bearish divergence
+        const crBearS=div?.type==='bear'&&(div.st||0)>=2;
+        if(crBearS){
+          const pd=crPrev[id];
+          const wasBear=pd&&pd.bearDiv;
+          if(!wasBear){
+            setSignalTime(id+'|CRYPTO');
+            newA.push({id,rsi,ma,type:'bear',st:div.st,rd:div.rd,price,time:new Date().toLocaleTimeString(),market:'CRYPTO',bearDiv:true,highPrice:div.highPrice||null});
+          }
+        }
+        crPrev[id]=(rsi!==null&&rsi<=10)||(div?.type==='bull')?{rsiLow:rsi!==null&&rsi<=10,bullDiv:div?.type==='bull'}:
+                   (div?.type==='bear'&&(div.st||0)>=2)?{bearDiv:true}:null;
       }else crData[sym.id]={...crData[sym.id],st:'err'};
     });
     crPrevSave(); // persist so refresh doesn't re-fire all alarms
     crGo();
     if(batches.indexOf(batch)<batches.length-1)await new Promise(r=>setTimeout(r,200));
   }
+  // Background HTF fetch for active bear signals (15m, 30m, 1h resistance levels)
+  const htfBearIds = CR_SYMS.filter(s => isBearSignal(crData[s.id])).map(s => s.id);
+  htfBearIds.forEach(id => {
+    const price = crData[id]?.price;
+    if(!price) return;
+    crFetchHtfLiq(id, price).then(htf => {
+      if(crData[id]) { crData[id].liqHtf = htf; refreshHome(); }
+    }).catch(()=>{});
+  });
+
   if(newA.length) crDispatchSignals(newA);
   pw.style.display='none';document.getElementById('cr-rb').style.opacity='1';crLoading=false;crCd=60;
   setScanStatus('ok',`Crypto posodobljeno · ${new Date().toLocaleTimeString('sl-SI')}`);
@@ -1942,7 +1994,18 @@ async function spFetchAll(){
             newA.push({id,rsi,ma,type:'bull',st:div?.st||0,rd:div?.rd||0,price,time:new Date().toLocaleTimeString(),market:'SP500',rsiLow:spKS.rsiLow,bullDiv:spKS.bullDiv});
           }
         }
-        spPrev[id]=((rsi!==null&&rsi<=10)||(div?.type==='bull'))?{rsiLow:rsi!==null&&rsi<=10,bullDiv:div?.type==='bull'}:null;
+        // BEAR SIGNAL: bearish divergence
+        const spBearS=div?.type==='bear'&&(div.st||0)>=2;
+        if(spBearS){
+          const pd=spPrev[id];
+          const wasBear=pd&&pd.bearDiv;
+          if(!wasBear){
+            setSignalTime(id+'|SP500');
+            newA.push({id,rsi,ma,type:'bear',st:div.st,rd:div.rd,price,time:new Date().toLocaleTimeString(),market:'SP500',bearDiv:true,highPrice:div.highPrice||null});
+          }
+        }
+        spPrev[id]=((rsi!==null&&rsi<=10)||(div?.type==='bull'))?{rsiLow:rsi!==null&&rsi<=10,bullDiv:div?.type==='bull'}:
+                   (div?.type==='bear'&&(div.st||0)>=2)?{bearDiv:true}:null;
       }else{errs++;spData[sym.id]={...spData[sym.id],st:'err'};}
     });
     spPrevSave(); // persist so refresh doesn't re-fire all alarms
@@ -2027,39 +2090,120 @@ function toggleLiqTab(btn) {
 
 function buildLiqHtml(s) {
   const liq = s.liq;
-  if(!liq) return '';
   const isBear = s.signal === 'bear';
-  const orders = isBear ? liq.bear : liq.bull;
-  if(!orders || !orders.length) return '';
 
   const pf = p => {
     if(p == null) return '—';
-    return p > 100 ? p.toFixed(2) : p > 1 ? p.toFixed(4) : p.toFixed(6);
+    return p>=1000?p.toFixed(2):p>=100?p.toFixed(3):p>=1?p.toFixed(4):p>=0.01?p.toFixed(5):p.toFixed(6);
   };
-  const accentCol = isBear ? 'var(--red)' : 'var(--green)';
-  const bgCol     = isBear ? 'rgba(255,68,68,.06)' : 'rgba(0,232,122,.06)';
-  const borderCol = isBear ? '#5a1010' : '#0a3a1a';
 
-  const orderRows = orders.map((o, idx) => {
-    const d = parseFloat(o.dist);
-    return `<div style="display:flex;align-items:center;gap:0;margin-bottom:6px">
-      <div style="padding:6px 12px;background:${bgCol};border:1px solid ${borderCol};border-right:none;min-width:110px">
-        <div style="font-size:8px;color:var(--text3);letter-spacing:.12em;margin-bottom:2px">LIMIT ORDER ${idx+1}</div>
-        <div style="font-size:13px;font-weight:bold;color:${accentCol};font-family:monospace;letter-spacing:.04em">${pf(o.price)}</div>
+  if(isBear) {
+    // ── BEARISH SIGNAL: show multi-TF short entry zones + TP support ──
+    const res5m = (liq?.bear || []).map(o=>({...o,tf:'5m'}));
+    const sup5m  = liq?.bull || [];   // support levels below = take-profit targets
+
+    // Merge HTF resistance levels (15m, 30m, 1h) if already fetched
+    const htf = s.liqHtf || null;
+    const htfRes = htf ? [
+      ...(htf['15m']?.bear||[]).map(o=>({...o,tf:'15m'})),
+      ...(htf['30m']?.bear||[]).map(o=>({...o,tf:'30m'})),
+      ...(htf['1h'] ?.bear||[]).map(o=>({...o,tf:'1h'})),
+    ] : [];
+
+    // Combine + deduplicate by clustering within 0.5% of current price
+    const allRes = [...res5m, ...htfRes].filter(o => parseFloat(o.dist||0) >= 0);
+    const cp = s.price || 1;
+    const merged = [];
+    allRes.sort((a,b) => parseFloat(a.dist) - parseFloat(b.dist));
+    allRes.forEach(o => {
+      const ex = merged.find(e => Math.abs(e.price - o.price) / cp < 0.005);
+      if(ex) {
+        if(!ex.tf.includes(o.tf)) ex.tf += '+' + o.tf;
+        ex.score = (ex.score||0) + (o.score||0);
+      } else {
+        merged.push({...o});
+      }
+    });
+
+    if(!merged.length && !sup5m.length) {
+      // HTF still loading
+      if(!htf) return `<div style="border-top:2px solid #1a2040;padding:10px 14px;background:rgba(5,10,30,.6)">
+        <div style="font-size:8px;color:var(--text3);letter-spacing:.15em">⏳ Loading HTF resistance levels (15m / 30m / 1h)...</div>
+      </div>`;
+      return '';
+    }
+
+    let html = `<div style="border-top:2px solid #3a0a1a;padding:10px 14px;background:rgba(30,5,10,.7)">`;
+
+    // ── SHORT ENTRY ZONES (resistance above price) ──
+    if(merged.length) {
+      html += `<div style="font-size:8px;color:var(--red);letter-spacing:.18em;margin-bottom:8px;font-weight:bold">🎯 SHORT ENTRY ZONE — RESISTANCE</div>`;
+      html += merged.map((o, idx) => {
+        const d = parseFloat(o.dist);
+        const tfBadge = o.tf.split('+').map(t=>`<span style="font-size:7px;padding:0 3px;margin-left:3px;border:1px solid #4a1020;color:#ff7788;background:rgba(255,50,50,.12)">${t}</span>`).join('');
+        const isFirst = idx === 0;
+        return `<div style="display:flex;align-items:stretch;gap:0;margin-bottom:5px${isFirst?';box-shadow:0 0 0 1px #7a1020':''}">
+          <div style="padding:6px 10px;background:rgba(255,40,60,.09);border:1px solid ${isFirst?'#8a1020':'#5a1010'};border-right:none;min-width:130px">
+            <div style="font-size:8px;color:var(--text3);letter-spacing:.1em;margin-bottom:2px">LIMIT SHORT ${idx+1}${tfBadge}</div>
+            <div style="font-size:13px;font-weight:bold;color:var(--red);font-family:monospace;letter-spacing:.03em">${pf(o.price)}</div>
+          </div>
+          <div style="padding:6px 10px;background:var(--bg3);border:1px solid var(--border2);flex:1">
+            <div style="font-size:9px;color:var(--text3)">${o.reason}</div>
+            <div style="font-size:10px;color:#ff7744;margin-top:1px;font-weight:bold">+${d}%${d>3?' ⚠':''}</div>
+          </div>
+        </div>`;
+      }).join('');
+    } else if(!htf) {
+      html += `<div style="font-size:8px;color:var(--text3);letter-spacing:.12em;margin-bottom:8px">⏳ HTF resistance loading (15m/30m/1h)...</div>`;
+    }
+
+    // ── TAKE PROFIT TARGETS (support below price) ──
+    if(sup5m.length) {
+      html += `<div style="font-size:8px;color:var(--green);letter-spacing:.18em;margin:8px 0 6px;font-weight:bold">🎯 TAKE PROFIT — SUPPORT</div>`;
+      html += sup5m.map(o => {
+        const d = parseFloat(o.dist);
+        return `<div style="display:flex;align-items:stretch;gap:0;margin-bottom:4px">
+          <div style="padding:5px 10px;background:rgba(0,200,100,.05);border:1px solid #0a3a1a;border-right:none;min-width:130px">
+            <div style="font-size:8px;color:var(--text3);letter-spacing:.08em;margin-bottom:1px">TP TARGET <span style="font-size:7px;padding:0 3px;border:1px solid #0a3a1a;color:#00aa55">5m</span></div>
+            <div style="font-size:12px;font-weight:bold;color:var(--green);font-family:monospace">${pf(o.price)}</div>
+          </div>
+          <div style="padding:5px 10px;background:var(--bg3);border:1px solid var(--border2);flex:1">
+            <div style="font-size:9px;color:var(--text3)">${o.reason}</div>
+            <div style="font-size:9px;color:var(--green);margin-top:1px">${d}%</div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    html += '</div>';
+    return html;
+
+  } else {
+    // ── BULL SIGNAL: original logic ──
+    const orders = liq?.bull;
+    if(!orders || !orders.length) return '';
+
+    const orderRows = orders.map((o, idx) => {
+      const d = parseFloat(o.dist);
+      return `<div style="display:flex;align-items:center;gap:0;margin-bottom:6px">
+        <div style="padding:6px 12px;background:rgba(0,232,122,.06);border:1px solid #0a3a1a;border-right:none;min-width:110px">
+          <div style="font-size:8px;color:var(--text3);letter-spacing:.12em;margin-bottom:2px">LIMIT ORDER ${idx+1}</div>
+          <div style="font-size:13px;font-weight:bold;color:var(--green);font-family:monospace;letter-spacing:.04em">${pf(o.price)}</div>
+        </div>
+        <div style="padding:6px 12px;background:var(--bg3);border:1px solid var(--border2);flex:1">
+          <div style="font-size:9px;color:var(--text3)">${o.reason}</div>
+          <div style="font-size:10px;color:${d>=0?'#ff6644':'var(--green)'};margin-top:1px;font-weight:bold">${d>=0?'+':''}${d}%${Math.abs(d)>3?' ⚠ deep':''}</div>
+        </div>
+      </div>`;
+    }).join('');
+
+    return `<div style="border-top:2px solid #1a2040;padding:10px 14px;background:rgba(5,10,30,.6)">
+      <div style="font-size:8px;color:var(--green);letter-spacing:.2em;margin-bottom:8px;font-weight:bold">
+        💧 SUPPORT — LIMIT LONG
       </div>
-      <div style="padding:6px 12px;background:var(--bg3);border:1px solid var(--border2);flex:1">
-        <div style="font-size:9px;color:var(--text3)">${o.reason}</div>
-        <div style="font-size:10px;color:${d>=0?'#ff6644':'var(--green)'};margin-top:1px;font-weight:bold">${d>=0?'+':''}${d}%${Math.abs(d)>3?' ⚠ deep':''}</div>
-      </div>
+      ${orderRows}
     </div>`;
-  }).join('');
-
-  return `<div style="border-top:2px solid #1a2040;padding:10px 14px;background:rgba(5,10,30,.6)">
-    <div style="font-size:8px;color:${accentCol};letter-spacing:.2em;margin-bottom:8px;font-weight:bold">
-      💧 ${isBear?'RESISTANCE — LIMIT SHORT':'SUPPORT — LIMIT LONG'}
-    </div>
-    ${orderRows}
-  </div>`;
+  }
 }
 
 function refreshHome(){
@@ -2145,6 +2289,22 @@ function refreshHome(){
       const card=document.createElement('div');
       const affUrl=getAffLink(s.market, s.market==='CRYPTO'?s.id:(s.sector||'default'));
       const signalTime=signalTimes[key]||'—';
+      // For bearish: show nearest 5m resistance (liq.bear[0]) as primary SHORT entry
+      // For bullish: show swing low (div.lowPrice) as LONG entry
+      const bearRes = isBearCard ? (s.liq?.bear?.[0] || null) : null;
+      const limitPrice = bearRes ? bearRes.price : (isBearCard ? s.div?.highPrice : (isBullDiv(s)?s.div?.lowPrice:null));
+      const limitDist = limitPrice&&s.price?((limitPrice-s.price)/s.price*100).toFixed(2):null;
+      const limitLabel = isBearCard
+        ? (bearRes ? 'SHORT ENTRY ('+bearRes.reason+')' : 'DIV HIGH')
+        : 'LIMIT LONG';
+      const limitBit=limitPrice?
+        '<div style="margin-top:5px;padding:4px 6px;background:'+(isBearCard?'rgba(255,68,85,0.12)':'rgba(0,232,122,0.10)')+
+          ';border:1px solid '+(isBearCard?'#7a1020':'#0a5a2a')+'">'+
+          '<span style="font-size:8px;color:var(--text3);letter-spacing:.06em">'+limitLabel+'</span>'+
+          '<span style="font-size:12px;font-weight:bold;color:'+(isBearCard?'var(--red)':'var(--green)')+';margin-left:6px;font-family:monospace">$'+fp(limitPrice)+'</span>'+
+          (limitDist?'<span style="font-size:9px;color:var(--text3);margin-left:4px">'+(parseFloat(limitDist)>0?'+':'')+limitDist+'%</span>':'')+
+        '</div>':
+        '';
       card.className='signal-card';
       card.dataset.key=key;
       card.style.cssText='animation:fadeIn .4s ease forwards;opacity:0;cursor:default;border-left-color:'+(isBearCard?'var(--red)':'var(--green)');
@@ -2159,6 +2319,7 @@ function refreshHome(){
           '<span class="sc-price">$'+fp(s.price)+'</span>'+
         '</div>'+
         deltaBit+
+        limitBit+
         '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:5px">'+
           '<span style="font-size:9px;color:var(--text3);letter-spacing:.05em">🕐 '+signalTime+'</span>'+
           '<span style="font-size:9px;color:'+(s.chg>0?'var(--green)':s.chg<0?'var(--red)':'var(--text3)')+'">'+
@@ -2167,8 +2328,8 @@ function refreshHome(){
         '</div>'+
         '<a href="'+affUrl+'" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="'+
           'display:block;margin-top:7px;padding:5px 8px;'+
-          'background:rgba(0,232,122,0.1);border:1px solid #0a5a2a;'+
-          'color:var(--green);font-size:9px;text-align:center;'+
+          'background:'+(isBearCard?'rgba(255,68,85,0.1)':'rgba(0,232,122,0.1)')+';border:1px solid '+(isBearCard?'#5a0a1a':'#0a5a2a')+';'+
+          'color:'+(isBearCard?'var(--red)':'var(--green)')+';font-size:9px;text-align:center;'+
           'text-decoration:none;letter-spacing:.08em;font-weight:bold;'+
           'transition:background .15s'+
           '">'+
@@ -2239,6 +2400,8 @@ function refreshHome(){
             '<div class="ap-m"><span class="ml">5M%</span><span class="mv ap-chg-val" style="color:'+(s.chg>0?'var(--green)':s.chg<0?'var(--red)':'var(--text3)')+'">'+
               (s.chg>0?'+':'')+(s.chg?.toFixed(2)||'')+'%</span></div>'+
             (s.ema100?'<div class="ap-m" title="Hours price has been '+(s.ema100.above?'above':'below')+' 100-period EMA"><span class="ml">EMA100</span><span class="mv" style="color:'+(s.ema100.above?'var(--red)':'var(--green)')+';font-weight:bold">'+(s.ema100.above?'↑':'↓')+s.ema100.hours+'h</span></div>':'')+
+            (bearDiv&&s.div?.highPrice?'<div class="ap-m" title="Swing high resistance — ideal LIMIT SHORT entry"><span class="ml" style="color:var(--red)">LIMIT ▼</span><span class="mv" style="color:var(--red);font-weight:bold">$'+fp(s.div.highPrice)+'</span></div>':'')+
+            (bullDiv&&s.div?.lowPrice?'<div class="ap-m" title="Swing low support — ideal LIMIT LONG entry"><span class="ml" style="color:var(--green)">LIMIT ▲</span><span class="mv" style="color:var(--green);font-weight:bold">$'+fp(s.div.lowPrice)+'</span></div>':'')+
           '</div>'+
         '</div>'+
         '<div class="ap-foot" style="padding:10px 14px">'+
@@ -3740,9 +3903,18 @@ function crDispatchSignals(newA) {
   crRenderLog();
   newA.forEach(a => {
     const sym = a.id.replace('USDT','');
-    const lbl = a.rsiLow && a.bullDiv ? 'RSI<10 + BULL DIV' : a.rsiLow ? 'RSI<10' : 'BULL DIV';
-    addGlobalAlarm('CRYPTO', sym, lbl + ' · RSI ' + (a.rsi?.toFixed(1)||'—'), 'var(--green)');
-    aiAddAnalysis({...a, sym, signal: a.bearDiv ? 'bear' : 'bull'}, 'CRYPTO');
+    if(a.type==='bear'){
+      // Show current price + divergence high + nearest 5m resistance level
+      const liqBear = crData[a.id]?.liq?.bear?.[0];
+      const liqTxt = liqBear ? ' · 💧 R1: $'+fp(liqBear.price)+'('+liqBear.dist+'%)' : '';
+      const limitTxt = a.highPrice ? ' · Div high: $'+fp(a.highPrice) : '';
+      const detail = '▼ BEAR DIV · RSI ' + (a.rsi?.toFixed(2)||'—') + ' · $' + fp(a.price) + liqTxt + limitTxt + ' · ΔRSI -'+(a.rd?.toFixed(1)||'—');
+      addGlobalAlarm('CRYPTO ▼', sym, detail, 'var(--red)');
+    } else {
+      const lbl = a.rsiLow && a.bullDiv ? 'RSI<10 + BULL DIV' : a.rsiLow ? 'RSI<10' : 'BULL DIV';
+      addGlobalAlarm('CRYPTO', sym, lbl + ' · RSI ' + (a.rsi?.toFixed(2)||'—') + ' · $' + fp(a.price), 'var(--green)');
+    }
+    aiAddAnalysis({...a, sym, signal: a.type==='bear' ? 'bear' : 'bull'}, 'CRYPTO');
   });
   if (newA.length) sendSignalEmail(newA.map(a => ({...a, sym: a.id.replace('USDT','')}))).catch(()=>{});
 }
@@ -3750,9 +3922,14 @@ function spDispatchSignals(newA) {
   spAlerts = [...newA, ...spAlerts].slice(0, 50);
   spRenderLog();
   newA.forEach(a => {
-    const lbl = a.rsiLow && a.bullDiv ? 'RSI<10 + BULL DIV' : a.rsiLow ? 'RSI<10' : 'BULL DIV';
-    addGlobalAlarm('SP500', a.id, lbl + ' · RSI ' + (a.rsi?.toFixed(1)||'—'), 'var(--amber)');
-    aiAddAnalysis({...a, sym: a.id, signal: a.bearDiv ? 'bear' : 'bull'}, 'SP500');
+    if(a.type==='bear'){
+      const limitTxt = a.highPrice ? ' · LIMIT SHORT $'+fp(a.highPrice) : '';
+      addGlobalAlarm('SP500', a.id, '▼ BEAR DIV · RSI ' + (a.rsi?.toFixed(1)||'—') + limitTxt, 'var(--red)');
+    } else {
+      const lbl = a.rsiLow && a.bullDiv ? 'RSI<10 + BULL DIV' : a.rsiLow ? 'RSI<10' : 'BULL DIV';
+      addGlobalAlarm('SP500', a.id, lbl + ' · RSI ' + (a.rsi?.toFixed(1)||'—'), 'var(--amber)');
+    }
+    aiAddAnalysis({...a, sym: a.id, signal: a.type==='bear' ? 'bear' : 'bull'}, 'SP500');
   });
   if (newA.length) sendSignalEmail(newA.map(a => ({...a, sym: a.id}))).catch(()=>{});
 }
