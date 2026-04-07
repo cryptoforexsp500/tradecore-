@@ -747,8 +747,13 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
   <div class="scan-page">
     <div class="section-hdr">
       <span class="section-title" style="color:var(--amber)">◈ DEVIATION SCAN</span>
-      <span style="color:var(--text3);font-size:9px">FOREX · YAHOO FINANCE · 100-PERIOD MA</span>
-      <div style="background:var(--bg3);padding:2px 8px;border:1px solid var(--border2);font-size:10px;color:var(--amber)">
+      <!-- Sub-tab switcher -->
+      <div style="display:flex;gap:0;margin:0 8px">
+        <button id="dv-tab-ma" onclick="dvSetTab('ma')" style="padding:2px 10px;font-size:9px;font-family:inherit;cursor:pointer;background:rgba(240,165,0,.15);border:1px solid var(--amber);color:var(--amber);font-weight:bold;letter-spacing:.08em">MA DEV</button>
+        <button id="dv-tab-corr" onclick="dvSetTab('corr')" style="padding:2px 10px;font-size:9px;font-family:inherit;cursor:pointer;background:none;border:1px solid var(--border2);border-left:none;color:var(--text3);letter-spacing:.08em">CORRELATION</button>
+      </div>
+      <span style="color:var(--text3);font-size:9px" id="dv-subtitle">FOREX · YAHOO FINANCE · 100-PERIOD MA</span>
+      <div id="dv-ma-badge" style="background:var(--bg3);padding:2px 8px;border:1px solid var(--border2);font-size:10px;color:var(--amber)">
         Donnelly: &gt;1% od MA = signal
       </div>
       <div class="prog-wrap" id="dv-pw">
@@ -794,7 +799,8 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
     </div>
     <div class="b-err" id="dv-err"></div>
 
-    <div class="scan-body">
+    <!-- MA DEVIATION body -->
+    <div class="scan-body" id="dv-body-ma">
       <!-- MAIN TABLE -->
       <div class="scan-table-wrap">
         <table class="scan-table">
@@ -837,6 +843,56 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
         </div>
       </div>
     </div>
+
+    <!-- CORRELATION DEVIATION body (hidden by default) -->
+    <div id="dv-body-corr" style="display:none;flex:1;overflow:hidden;display:none;flex-direction:column">
+      <div style="background:var(--bg2);border-bottom:1px solid var(--border);padding:6px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0">
+        <span style="font-size:9px;color:var(--purple);letter-spacing:.15em;font-weight:bold">◈ CORRELATION PAIR SCANNER</span>
+        <span style="font-size:9px;color:var(--text3)">Z-score deviation · 1h · historical correlation pairs</span>
+        <select id="corr-thresh" onchange="corrGo()" style="font-size:9px;margin-left:auto">
+          <option value="1.5">Z-score &gt;1.5σ</option>
+          <option value="2.0" selected>Z-score &gt;2.0σ (default)</option>
+          <option value="2.5">Z-score &gt;2.5σ</option>
+        </select>
+        <select id="corr-filter" onchange="corrGo()" style="font-size:9px">
+          <option value="all">All pairs</option>
+          <option value="pos">+ Positive corr only</option>
+          <option value="neg">− Negative corr only</option>
+          <option value="alert">⚡ Alerts only</option>
+        </select>
+      </div>
+      <div style="display:flex;flex:1;overflow:hidden;min-height:0">
+        <div class="scan-table-wrap" style="flex:1">
+          <table class="scan-table">
+            <thead><tr>
+              <th>#</th>
+              <th>PAIR A</th>
+              <th>PAIR B</th>
+              <th style="color:var(--purple)">HIST CORR</th>
+              <th style="color:var(--purple)">LIVE CORR</th>
+              <th style="min-width:160px">SPREAD Z-SCORE</th>
+              <th class="r">A SPOT</th>
+              <th class="r">B SPOT</th>
+              <th class="r">SIGNAL</th>
+            </tr></thead>
+            <tbody id="corr-tb"><tr><td colspan="9" style="text-align:center;color:var(--text3);padding:20px;font-size:10px">Loading correlation data... (waits for MA scan)</td></tr></tbody>
+          </table>
+        </div>
+        <div class="scan-sidebar" style="min-width:230px">
+          <div class="sb-title">CORR SIGNAL LOG <button onclick="corrAlerts=[];corrRenderLog()" style="background:none;border:none;color:var(--text3);font-size:9px;cursor:pointer">X</button></div>
+          <div id="corr-log"><div style="color:var(--text3);font-size:10px;line-height:2">Waiting for<br>correlation data...</div></div>
+          <div style="margin-top:10px;border-top:1px solid var(--border);padding-top:8px;font-size:9px;color:var(--text3);line-height:2">
+            <div style="color:var(--purple);font-size:9px;letter-spacing:.1em;margin-bottom:4px">HOW IT WORKS</div>
+            <div>Spread = log(A) ± log(B)</div>
+            <div>Z-score = (now - mean) / std</div>
+            <div style="margin-top:4px"><span style="color:var(--red)">Z &gt;+2σ</span> = spread stretched → mean reversion</div>
+            <div><span style="color:var(--green)">Z &lt;-2σ</span> = spread compressed → divergence</div>
+            <div style="margin-top:4px;color:var(--text3)">Lookback: 100 candles (1h)<br>Pairs: 16 correlation groups</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -3559,6 +3615,225 @@ const DV_PROXIES = ['https://corsproxy.io/?','https://api.allorigins.win/raw?url
 let dvData={}, dvAlerts=[], dvLoading=false, dvCd=300, dvPrevDev={}, dvProxy=0;
 DV_PAIRS.forEach(p=>{ dvData[p.id]={spot:null,ma:null,dev:null,devPct:null,dir:null,st:'wait'}; });
 
+// ══════════════════════════════════════════════════
+// CORRELATION PAIR SCANNER
+// Measures when historically correlated pairs diverge
+// ══════════════════════════════════════════════════
+// type 'pos' = normally move together (positive corr)
+//      'neg' = normally move opposite (negative corr / inverse)
+// hist = approximate historical correlation coefficient
+const CORR_PAIRS = [
+  // ── Positive correlation groups (should move together) ──
+  { a:'AUDUSD=X', b:'NZDUSD=X', la:'AUD/USD', lb:'NZD/USD', type:'pos', hist:0.92, note:'Commodity currencies · strongest pair' },
+  { a:'EURUSD=X', b:'GBPUSD=X', la:'EUR/USD', lb:'GBP/USD', type:'pos', hist:0.82, note:'European majors · USD-driven' },
+  { a:'EURUSD=X', b:'AUDUSD=X', la:'EUR/USD', lb:'AUD/USD', type:'pos', hist:0.65, note:'Risk-on correlation' },
+  { a:'EURUSD=X', b:'NZDUSD=X', la:'EUR/USD', lb:'NZD/USD', type:'pos', hist:0.60, note:'USD-driven' },
+  { a:'GBPUSD=X', b:'AUDUSD=X', la:'GBP/USD', lb:'AUD/USD', type:'pos', hist:0.62, note:'USD-driven' },
+  { a:'GBPUSD=X', b:'NZDUSD=X', la:'GBP/USD', lb:'NZD/USD', type:'pos', hist:0.58, note:'USD-driven' },
+  { a:'EURJPY=X', b:'GBPJPY=X', la:'EUR/JPY', lb:'GBP/JPY', type:'pos', hist:0.87, note:'JPY crosses · same risk driver' },
+  { a:'EURJPY=X', b:'AUDJPY=X', la:'EUR/JPY', lb:'AUD/JPY', type:'pos', hist:0.78, note:'JPY crosses' },
+  { a:'AUDJPY=X', b:'NZDJPY=X', la:'AUD/JPY', lb:'NZD/JPY', type:'pos', hist:0.91, note:'Commodity JPY crosses · very strong' },
+  { a:'EURCHF=X', b:'GBPCHF=X', la:'EUR/CHF', lb:'GBP/CHF', type:'pos', hist:0.85, note:'CHF crosses' },
+  { a:'AUDUSD=X', b:'XAUUSD=X', la:'AUD/USD', lb:'XAU/USD', type:'pos', hist:0.55, note:'Gold-commodity link' },
+  // ── Negative correlation groups (should move opposite) ──
+  { a:'EURUSD=X', b:'USDCHF=X', la:'EUR/USD', lb:'USD/CHF', type:'neg', hist:-0.92, note:'Strongest inverse in forex' },
+  { a:'GBPUSD=X', b:'USDCHF=X', la:'GBP/USD', lb:'USD/CHF', type:'neg', hist:-0.86, note:'GBP vs CHF inverse' },
+  { a:'AUDUSD=X', b:'USDCAD=X', la:'AUD/USD', lb:'USD/CAD', type:'neg', hist:-0.76, note:'Commodity currencies inverse' },
+  { a:'NZDUSD=X', b:'USDCAD=X', la:'NZD/USD', lb:'USD/CAD', type:'neg', hist:-0.70, note:'Commodity vs USD' },
+  { a:'EURUSD=X', b:'USDJPY=X', la:'EUR/USD', lb:'USD/JPY', type:'neg', hist:-0.48, note:'Risk sentiment proxy' },
+];
+
+let corrData = {}, corrAlerts = [], corrPrevZ = {};
+
+// Calculate spread z-score between two close series
+function calcCorrSpread(closesA, closesB, type) {
+  if(!closesA||!closesB||closesA.length<52||closesB.length<52) return null;
+  const n = Math.min(closesA.length, closesB.length, 200);
+  const la = closesA.slice(-n), lb = closesB.slice(-n);
+  // Spread: log ratio for positive corr, log product for negative corr
+  const spreads = la.map((a,i)=>type==='pos'
+    ? Math.log(a)-Math.log(lb[i])
+    : Math.log(a)+Math.log(lb[i]));
+  const LB = Math.min(100, spreads.length);
+  const win = spreads.slice(-LB);
+  const mean = win.reduce((s,v)=>s+v,0)/LB;
+  const variance = win.reduce((s,v)=>s+(v-mean)**2,0)/LB;
+  const std = Math.sqrt(variance);
+  const current = spreads[spreads.length-1];
+  const zscore = std>1e-12 ? (current-mean)/std : 0;
+
+  // Rolling Pearson correlation over last LB candles
+  const cA=la.slice(-LB), cB=lb.slice(-LB);
+  const mA=cA.reduce((s,v)=>s+v,0)/LB, mB=cB.reduce((s,v)=>s+v,0)/LB;
+  let cov=0,varA=0,varB=0;
+  for(let i=0;i<LB;i++){const da=cA[i]-mA,db=cB[i]-mB;cov+=da*db;varA+=da*da;varB+=db*db;}
+  const corr=(varA>0&&varB>0)?cov/Math.sqrt(varA*varB):0;
+  return { zscore, mean, std, current, corr };
+}
+
+// Interpret z-score signal for a correlation pair
+function corrSignal(cp, z) {
+  if(z===null||Math.abs(z)<1.5) return null;
+  const thresh = parseFloat(document.getElementById('corr-thresh')?.value||'2.0');
+  if(Math.abs(z) < thresh) return null;
+  // For positive corr: large +z → A overbought vs B (sell A/buy B), large -z → A oversold vs B
+  // For negative corr: large +z → both went up together (abnormal), large -z → both went down
+  const isStretch = z > 0; // spread stretched above mean
+  if(cp.type==='pos') {
+    return isStretch
+      ? { sig:'↓ A weak vs B', col:'#ff6633', trade:`SHORT ${cp.la} / LONG ${cp.lb}`, dir:'short_a' }
+      : { sig:'↑ A strong vs B', col:'#4a9aff', trade:`LONG ${cp.la} / SHORT ${cp.lb}`, dir:'long_a' };
+  } else { // neg
+    return isStretch
+      ? { sig:'Diverging (uncorrelated)', col:'#ff6633', trade:`Watch for mean reversion`, dir:'div' }
+      : { sig:'Converging (over-corr)', col:'#4a9aff', trade:`Watch for divergence`, dir:'conv' };
+  }
+}
+
+function corrRow(cp, i) {
+  const dA = dvData[cp.a], dB = dvData[cp.b];
+  const ready = dA?.st==='ok' && dB?.st==='ok';
+  if(!ready) {
+    return `<tr style="border-bottom:1px solid #090d18">
+      <td style="color:var(--text3)">${i+1}</td>
+      <td style="color:var(--text)">${cp.la}</td><td style="color:var(--text)">${cp.lb}</td>
+      <td colspan="6" style="color:var(--text3);font-size:9px">⏳ Loading data...</td></tr>`;
+  }
+  const spread = calcCorrSpread(dA.closes, dB.closes, cp.type);
+  if(!spread) return '';
+  const {zscore, corr} = spread;
+  const thresh = parseFloat(document.getElementById('corr-thresh')?.value||'2.0');
+  const isAlert = Math.abs(zscore)>=thresh;
+  const isExtreme = Math.abs(zscore)>=2.5;
+  const sig = corrSignal(cp, zscore);
+  const zCol = isExtreme?(zscore>0?'#ff2222':'#00e87a'):isAlert?(zscore>0?'#ff6633':'#4a9aff'):'var(--text3)';
+  const bg = isExtreme?`rgba(${zscore>0?'255,34,34':'0,232,122'},0.07)`:isAlert?`rgba(${zscore>0?'255,102,51':'74,154,255'},0.04)`:'transparent';
+  const bl = isAlert?`2px solid ${zCol}`:'2px solid transparent';
+  // Z-score bar
+  const zPct = Math.min(100, Math.abs(zscore)/3*100);
+  const zBar = `<div style="display:flex;align-items:center;gap:5px;${zscore<0?'flex-direction:row-reverse':''}">
+    <div style="width:60px;height:4px;background:var(--bg3);border-radius:2px;overflow:hidden"><div style="width:${zPct}%;height:100%;background:${zCol};transition:width .5s"></div></div>
+    <span style="color:${zCol};font-weight:${isAlert?'bold':'normal'};font-size:11px">${zscore>0?'+':''}${zscore.toFixed(2)}σ</span>
+    ${isExtreme?'<span style="font-size:9px;color:'+zCol+'">⚡</span>':''}
+  </div>`;
+  // Correlation badge
+  const corrCol = Math.abs(corr)>0.7?'var(--green)':Math.abs(corr)>0.4?'var(--amber)':'var(--red)';
+  const histCol = '#6677aa';
+  const fpL = v=>v>=100?v.toFixed(2):v>=1?v.toFixed(4):v.toFixed(5);
+  return `<tr style="background:${bg};border-left:${bl};border-bottom:1px solid #090d18">
+    <td style="color:var(--text3);font-size:9px">${isAlert?'★':i+1}</td>
+    <td style="font-weight:bold;color:${isAlert?zCol:'var(--text)'}">
+      ${cp.la}<div style="font-size:8px;color:var(--text3);font-weight:normal;margin-top:1px">${cp.type==='pos'?'<span style="color:#4a7aff">+ corr</span>':'<span style="color:#ff7733">− inv</span>'}</div>
+    </td>
+    <td style="color:${isAlert?zCol:'var(--text)'}">${cp.lb}</td>
+    <td style="text-align:right"><span style="color:${histCol};font-size:10px">${(cp.hist*100).toFixed(0)}%</span></td>
+    <td style="text-align:right"><span style="color:${corrCol};font-size:10px;font-weight:bold">${(corr*100).toFixed(0)}%</span></td>
+    <td style="padding:4px 7px">${zBar}</td>
+    <td class="r" style="color:var(--text2);font-size:10px">${fpL(dA.spot)}</td>
+    <td class="r" style="color:var(--text2);font-size:10px">${fpL(dB.spot)}</td>
+    <td class="r">
+      ${sig?`<div style="font-size:9px;color:${sig.col};font-weight:bold;line-height:1.5">${sig.sig}</div><div style="font-size:8px;color:var(--text3)">${sig.trade}</div>`:'<span style="color:var(--text3);font-size:9px">ok</span>'}
+    </td>
+  </tr>`;
+}
+
+function corrGo() {
+  const filter = document.getElementById('corr-filter')?.value||'all';
+  const thresh = parseFloat(document.getElementById('corr-thresh')?.value||'2.0');
+  let rows = [...CORR_PAIRS];
+  if(filter==='pos') rows=rows.filter(cp=>cp.type==='pos');
+  if(filter==='neg') rows=rows.filter(cp=>cp.type==='neg');
+  if(filter==='alert') {
+    rows=rows.filter(cp=>{
+      const dA=dvData[cp.a],dB=dvData[cp.b];
+      if(!dA?.closes||!dB?.closes) return false;
+      const s=calcCorrSpread(dA.closes,dB.closes,cp.type);
+      return s&&Math.abs(s.zscore)>=thresh;
+    });
+  }
+  // Sort: alerts first, then by |zscore|
+  rows.sort((a,b)=>{
+    const sA=dvData[a.a]?.closes&&dvData[a.b]?.closes?calcCorrSpread(dvData[a.a].closes,dvData[a.b].closes,a.type):null;
+    const sB=dvData[b.a]?.closes&&dvData[b.b]?.closes?calcCorrSpread(dvData[b.a].closes,dvData[b.b].closes,b.type):null;
+    const zA=sA?Math.abs(sA.zscore):0, zB=sB?Math.abs(sB.zscore):0;
+    return zB-zA;
+  });
+  document.getElementById('corr-tb').innerHTML = rows.map((cp,i)=>corrRow(cp,i)).join('') || '<tr><td colspan="9" style="text-align:center;color:var(--text3);padding:16px">No correlation data yet</td></tr>';
+
+  // Check for new alerts
+  const newCorrA = [];
+  CORR_PAIRS.forEach(cp=>{
+    const dA=dvData[cp.a],dB=dvData[cp.b];
+    if(!dA?.closes||!dB?.closes) return;
+    const s=calcCorrSpread(dA.closes,dB.closes,cp.type);
+    if(!s) return;
+    const key=cp.a+'|'+cp.b;
+    if(Math.abs(s.zscore)>=thresh) {
+      const prev=corrPrevZ[key];
+      if(!prev||Math.abs(prev)<thresh) {
+        const sig=corrSignal(cp,s.zscore);
+        newCorrA.push({...cp,zscore:s.zscore,corr:s.corr,sig,time:new Date().toLocaleTimeString()});
+        setSignalTime(key+'|CORR');
+      }
+      corrPrevZ[key]=s.zscore;
+    } else {
+      corrPrevZ[key]=null;
+    }
+  });
+  if(newCorrA.length) {
+    corrAlerts=[...newCorrA,...corrAlerts].slice(0,50);
+    corrRenderLog();
+    newCorrA.forEach(a=>{
+      const col=a.zscore>0?'var(--red)':'var(--green)';
+      const detail=`Z:${a.zscore>0?'+':''}${a.zscore.toFixed(2)}σ · ${a.sig?.trade||''} · corr:${(a.corr*100).toFixed(0)}%`;
+      addGlobalAlarm('CORR',`${a.la}/${a.lb}`,detail,col);
+    });
+  }
+}
+
+function corrRenderLog() {
+  const l=document.getElementById('corr-log');
+  if(!corrAlerts.length){l.innerHTML='<div style="color:var(--text3);font-size:10px;line-height:2">No correlation alerts yet.</div>';return;}
+  l.innerHTML=corrAlerts.map(a=>{
+    const isUp=a.zscore>0;
+    const col=isUp?'var(--red)':'var(--green)';
+    return `<div class="acard ${isUp?'rc':'bc'}">
+      <div style="color:${col};font-weight:bold;font-size:10px">${a.la} / ${a.lb}</div>
+      <div style="font-size:9px;color:var(--purple);margin-top:2px">${a.type==='pos'?'+ POS CORR':'− NEG CORR'} · hist ${(a.hist*100).toFixed(0)}%</div>
+      <div style="font-size:10px;margin-top:2px"><span style="color:${col}">Z ${isUp?'+':''}${a.zscore.toFixed(2)}σ</span> · live corr ${(a.corr*100).toFixed(0)}%</div>
+      <div style="font-size:9px;color:var(--text3);margin-top:2px">${a.sig?.sig||''}</div>
+      <div style="font-size:9px;color:var(--text3)">${a.time}</div>
+    </div>`;
+  }).join('');
+}
+
+function dvSetTab(tab) {
+  const ma=document.getElementById('dv-body-ma');
+  const corr=document.getElementById('dv-body-corr');
+  const tabMa=document.getElementById('dv-tab-ma');
+  const tabCorr=document.getElementById('dv-tab-corr');
+  const sub=document.getElementById('dv-subtitle');
+  const badge=document.getElementById('dv-ma-badge');
+  // MA deviation filter/sort controls
+  const maCtls=['dv-tf','dv-thresh','dv-filter','dv-srt'];
+  if(tab==='ma'){
+    ma.style.display=''; corr.style.display='none';
+    tabMa.style.background='rgba(240,165,0,.15)';tabMa.style.color='var(--amber)';tabMa.style.borderColor='var(--amber)';
+    tabCorr.style.background='none';tabCorr.style.color='var(--text3)';tabCorr.style.borderColor='var(--border2)';
+    if(sub)sub.textContent='FOREX · YAHOO FINANCE · 100-PERIOD MA';
+    if(badge)badge.style.display='';
+    maCtls.forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='';});
+  } else {
+    ma.style.display='none'; corr.style.display='flex';
+    tabCorr.style.background='rgba(168,85,247,.15)';tabCorr.style.color='#a855f7';tabCorr.style.borderColor='#7c3aed';
+    tabMa.style.background='none';tabMa.style.color='var(--text3)';tabMa.style.borderColor='var(--border2)';
+    if(sub)sub.textContent='FOREX · 1h · Z-SCORE MEAN REVERSION';
+    if(badge)badge.style.display='none';
+    maCtls.forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+    corrGo();
+  }
+}
+
 function dvCalcMA(arr, period) {
   if(arr.length < period) return null;
   return arr.slice(-period).reduce((s,v)=>s+v,0) / period;
@@ -3590,7 +3865,7 @@ async function dvFetchOne(sym) {
       const devPct = (dev / ma) * 100;
       const dir = devPct > 0 ? 'above' : 'below';
       dvProxy = idx;
-      return { spot, ma, dev, devPct, dir };
+      return { spot, ma, dev, devPct, dir, closes }; // closes stored for correlation scan
     } catch(e) { lastE = e; }
   }
   throw lastE;
@@ -3743,8 +4018,8 @@ async function dvFetchAll() {
     res.forEach((r,idx)=>{
       const pair = batch[idx];
       if(r.status==='fulfilled'){
-        const{id,l,spot,ma,dev,devPct,dir}=r.value;
-        dvData[id]={spot,ma,dev,devPct,dir,st:'ok'};
+        const{id,l,spot,ma,dev,devPct,dir,closes}=r.value;
+        dvData[id]={spot,ma,dev,devPct,dir,closes,st:'ok'};
         // Alert on new deviation crossing threshold
         const abs = Math.abs(devPct);
         if(abs >= thresh){
@@ -3788,6 +4063,8 @@ async function dvFetchAll() {
   pw.style.display='none';
   document.getElementById('dv-rb').style.opacity='1';
   dvLoading=false; dvCd=300;
+  // Auto-calculate correlation data after all pairs loaded
+  try { corrGo(); } catch(e){}
 }
 
 setInterval(()=>{ dvCd=Math.max(0,dvCd-1); const m=Math.floor(dvCd/60),s=dvCd%60; const el=document.getElementById('dv-cd'); if(el) el.textContent=`${m}m${s}s`; },1000);
