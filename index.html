@@ -887,15 +887,44 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
     </div>
 
     <!-- Unlock section -->
-    <div id="ai-unlock-section" style="background:var(--bg2);border:1px solid #7c3aed;padding:20px;margin-bottom:20px;text-align:center">
-      <div style="font-size:20px;margin-bottom:8px">🔐</div>
-      <div style="font-size:12px;color:#a855f7;font-weight:bold;letter-spacing:.1em;margin-bottom:6px">UNLOCK AI PRO</div>
-      <div style="font-size:10px;color:var(--text3);margin-bottom:14px">Enter your activation code to access advanced AI analysis and premium notifications</div>
-      <div style="display:flex;gap:8px;justify-content:center;max-width:360px;margin:0 auto">
-        <input id="ai-code-input" type="text" placeholder="Enter activation code..." style="flex:1;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:7px 10px;font-family:inherit;font-size:11px;outline:none;letter-spacing:.05em"/>
-        <button onclick="aiUnlock()" style="padding:7px 16px;background:rgba(168,85,247,.2);border:1px solid #7c3aed;color:#a855f7;font-family:inherit;font-size:10px;cursor:pointer;font-weight:bold;letter-spacing:.08em">UNLOCK</button>
+    <div id="ai-unlock-section" style="background:var(--bg2);border:1px solid #7c3aed;margin-bottom:20px;overflow:hidden">
+
+      <!-- Payment header -->
+      <div style="background:rgba(168,85,247,.08);border-bottom:1px solid #7c3aed;padding:18px 20px;text-align:center">
+        <div style="font-size:22px;margin-bottom:6px">🤖</div>
+        <div style="font-size:14px;color:#a855f7;font-weight:bold;letter-spacing:.15em;margin-bottom:4px">AI PRO DOSTOP</div>
+        <div style="font-size:10px;color:var(--text3);line-height:1.7">Avtomatizirani AI signali · Stop Loss &amp; Take Profit · Real-time sinhronizacija</div>
       </div>
-      <div id="ai-code-err" style="font-size:9px;color:var(--red);margin-top:6px;display:none">Invalid code. Contact admin for access.</div>
+
+      <!-- What you get -->
+      <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:9px;color:var(--text3)">
+        <div>✅ AI generirani signali s SL/TP</div>
+        <div>✅ Real-time cloud sinhronizacija</div>
+        <div>✅ Crypto + Forex + S&amp;P500</div>
+        <div>✅ Telegram &amp; Email obvestila</div>
+        <div>✅ RSI divergence analiza</div>
+        <div>✅ Ročno dodane analize (admin)</div>
+      </div>
+
+      <!-- Buy button -->
+      <div style="padding:16px 20px;text-align:center;border-bottom:1px solid var(--border)">
+        <div style="font-size:9px;color:var(--text3);letter-spacing:.1em;margin-bottom:10px">MESEČNA NAROČNINA</div>
+        <div id="ai-price-display" style="font-size:24px;font-weight:bold;color:#a855f7;margin-bottom:12px">29 €<span style="font-size:10px;color:var(--text3);font-weight:normal">/mesec</span></div>
+        <a id="stripe-buy-btn" href="#" onclick="openStripePayment()" style="display:inline-block;padding:10px 32px;background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;font-family:'Courier New',monospace;font-size:11px;font-weight:bold;letter-spacing:.1em;cursor:pointer;text-decoration:none;border:none;transition:opacity .2s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+          💳 PLAČAJ Z STRIPE
+        </a>
+        <div style="font-size:9px;color:var(--text3);margin-top:8px">Varna plačila · Po plačilu prejmete aktivacijsko kodo po emailu</div>
+      </div>
+
+      <!-- Code input -->
+      <div style="padding:14px 20px;text-align:center">
+        <div style="font-size:9px;color:var(--text3);letter-spacing:.1em;margin-bottom:8px">ŽE IMATE AKTIVACIJSKO KODO?</div>
+        <div style="display:flex;gap:8px;justify-content:center;max-width:360px;margin:0 auto">
+          <input id="ai-code-input" type="text" placeholder="Vnesite aktivacijsko kodo..." style="flex:1;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:7px 10px;font-family:inherit;font-size:11px;outline:none;letter-spacing:.05em"/>
+          <button onclick="aiUnlock()" style="padding:7px 16px;background:rgba(168,85,247,.2);border:1px solid #7c3aed;color:#a855f7;font-family:inherit;font-size:10px;cursor:pointer;font-weight:bold;letter-spacing:.08em">AKTIVIRAJ</button>
+        </div>
+        <div id="ai-code-err" style="font-size:9px;color:var(--red);margin-top:6px;display:none">Napačna koda. Kontaktirajte admina za dostop.</div>
+      </div>
     </div>
 
     <!-- MAIN AI CONTENT (locked by default) -->
@@ -1012,42 +1041,40 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
           </div>
         </div>
 
-        <!-- Panel: Cloud Sync (owner only) — LAST so no scrolling needed -->
-        <div class="ai-panel" id="aip-cloud" draggable="true" style="display:none;border-color:var(--amber)">
-          <div class="aip-handle" style="border-bottom-color:rgba(240,165,0,.3)">
-            <span class="aip-grip">⠿⠿</span>
-            <span class="aip-title" style="color:var(--amber)">☁ CLOUD SYNC — JSONBin.io</span>
-            <span style="margin-left:auto;font-size:9px;color:var(--text3);cursor:pointer" onclick="this.closest('.ai-panel').querySelector('.aip-body').style.display=this.closest('.ai-panel').querySelector('.aip-body').style.display==='none'?'block':'none'">▲▼</span>
-          </div>
-          <div class="aip-body">
-            <div style="font-size:9px;color:var(--text3);line-height:1.7;margin-bottom:10px;padding:8px;background:rgba(240,165,0,.05);border:1px solid rgba(240,165,0,.15)">
-              1. Pojdi na <span style="color:var(--amber)">jsonbin.io</span> → Brezplačna registracija → Create new BIN<br>
-              2. Vsebina binarja: <span style="color:var(--text2)">{"feed":[]}</span> — nastavi BIN na <b>PUBLIC</b><br>
-              3. Kopiraj <b>BIN ID</b> in <b>X-MASTER-KEY</b> v polja spodaj → SAVE<br>
-              4. Kupci vidijo feed samodejno vsake 60s brez refresha
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-              <div>
-                <div style="font-size:9px;color:var(--amber);margin-bottom:4px;letter-spacing:.1em">BIN ID</div>
-                <input id="cloud-bin-id" type="text" placeholder="64abc123..." style="width:100%;background:var(--bg3);border:1px solid rgba(240,165,0,.3);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none"/>
-              </div>
-              <div>
-                <div style="font-size:9px;color:var(--amber);margin-bottom:4px;letter-spacing:.1em">X-MASTER-KEY</div>
-                <input id="cloud-master-key" type="password" placeholder="$2a$10..." style="width:100%;background:var(--bg3);border:1px solid rgba(240,165,0,.3);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none"/>
-              </div>
-            </div>
-            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-              <button onclick="saveCloudCfg()" style="padding:5px 12px;background:rgba(240,165,0,.12);border:1px solid var(--amber);color:var(--amber);font-family:inherit;font-size:9px;cursor:pointer;font-weight:bold">SAVE &amp; START</button>
-              <button onclick="cloudPush()" style="padding:5px 12px;background:none;border:1px solid var(--border2);color:var(--text2);font-family:inherit;font-size:9px;cursor:pointer">⬆ PUSH NOW</button>
-              <button onclick="cloudPull()" style="padding:5px 12px;background:none;border:1px solid var(--border2);color:var(--text2);font-family:inherit;font-size:9px;cursor:pointer">⬇ PULL NOW</button>
-              <span id="cloud-status" style="font-size:9px;color:var(--text3)"></span>
-            </div>
-          </div>
-        </div>
-
       </div><!-- end ai-panels -->
 
-      <!-- AI Analyses feed — always at bottom -->
+      <!-- ☁ CLOUD SYNC — always visible inline, shown/hidden via JS -->
+      <div id="cloud-section" style="display:none;margin-bottom:16px;border:1px solid rgba(240,165,0,.4);background:rgba(240,165,0,.04)">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 14px;border-bottom:1px solid rgba(240,165,0,.2);cursor:pointer" onclick="document.getElementById('cloud-body').style.display=document.getElementById('cloud-body').style.display==='none'?'block':'none'">
+          <span style="font-size:9px;color:var(--amber);letter-spacing:.15em;font-weight:bold">☁ CLOUD SYNC — JSONBin.io</span>
+          <span style="font-size:9px;color:var(--text3)">▲▼ toggle</span>
+        </div>
+        <div id="cloud-body" style="padding:12px 14px">
+          <div style="font-size:9px;color:var(--text3);line-height:1.7;margin-bottom:10px;padding:8px;background:rgba(240,165,0,.05);border:1px solid rgba(240,165,0,.12)">
+            1. jsonbin.io → brezplačna reg. → Create BIN → vsebina: <span style="color:var(--text2)">{"feed":[]}</span> → nastavi PUBLIC<br>
+            2. Kopiraj BIN ID + X-MASTER-KEY v polja spodaj → SAVE &amp; START<br>
+            3. Kupci vidijo tvoje analize samodejno vsake 60s — brez refresha
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+            <div>
+              <div style="font-size:9px;color:var(--amber);margin-bottom:4px">BIN ID</div>
+              <input id="cloud-bin-id" type="text" placeholder="69d29fb2aaba882197c8eabe" style="width:100%;background:var(--bg3);border:1px solid rgba(240,165,0,.3);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none"/>
+            </div>
+            <div>
+              <div style="font-size:9px;color:var(--amber);margin-bottom:4px">X-MASTER-KEY</div>
+              <input id="cloud-master-key" type="password" placeholder="$2a$10..." style="width:100%;background:var(--bg3);border:1px solid rgba(240,165,0,.3);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none"/>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <button onclick="saveCloudCfg()" style="padding:5px 14px;background:rgba(240,165,0,.15);border:1px solid var(--amber);color:var(--amber);font-family:inherit;font-size:9px;cursor:pointer;font-weight:bold;letter-spacing:.08em">SAVE &amp; START</button>
+            <button onclick="cloudPush()" style="padding:5px 10px;background:none;border:1px solid var(--border2);color:var(--text2);font-family:inherit;font-size:9px;cursor:pointer">⬆ PUSH</button>
+            <button onclick="cloudPull()" style="padding:5px 10px;background:none;border:1px solid var(--border2);color:var(--text2);font-family:inherit;font-size:9px;cursor:pointer">⬇ PULL</button>
+            <span id="cloud-status" style="font-size:9px;color:var(--text3)"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Analyses feed -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
         <div>
           <div style="font-size:9px;color:#a855f7;letter-spacing:.18em;font-weight:bold">🧠 AI GENERATED ANALYSES — by TradeCore</div>
@@ -2625,12 +2652,70 @@ renderHomeForum();
 // ════════════════════════════════════════
 // AI PRO — UNLOCK, OWNER MODE, CLOUD SYNC
 // ════════════════════════════════════════
-const AI_CODES          = ['TRADECORE2024','AIPROMATIC','TC-PRO-2025'];
-const OWNER_CODE        = 'TC-OWNER-MATIC';   // ← owner's private master code (change this)
-const CLOUD_BIN_DEFAULT = '';                   // ← owner pastes JSONBin ID here after setup
-const AI_UNLOCK_KEY     = 'tc_ai_unlocked';
-const OWNER_KEY         = 'tc_owner_v1';
-const CLOUD_CFG_KEY     = 'tc_cloud_v1';
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  OWNER KONFIGURACIJA — samo ti urejaj te vrednosti          ║
+// ╠══════════════════════════════════════════════════════════════╣
+// ║  1. STRIPE_PAYMENT_LINK: prilepi Stripe Payment Link URL    ║
+// ║     (Stripe dashboard → Payment Links → Create link)        ║
+// ║  2. CLOUD_BIN_DEFAULT: prilepi tvoj JSONBin BIN ID          ║
+// ║     (jsonbin.io → brezplačna reg. → Create BIN PUBLIC)      ║
+// ║  3. AI_PRO_PRICE: cena naročnine (samo prikaz)              ║
+// ╚══════════════════════════════════════════════════════════════╝
+const STRIPE_PAYMENT_LINK = '';                 // ← prilepi Stripe Payment Link URL sem
+const CLOUD_BIN_DEFAULT   = '';                 // ← prilepi JSONBin BIN ID (npr. '64abc123...')
+const AI_PRO_PRICE        = '29 €/mesec';       // ← cena za prikaz na strani
+
+// Aktivacijske kode — po Stripe plačilu pošlješ kupcu eno od teh kod
+// Dodaj nove kode po potrebi. OWNER_CODE je samo tvoj.
+const AI_CODES  = ['TRADECORE2024','AIPROMATIC','TC-PRO-2025','TC-PRO-2026','MATIC-AIPRO'];
+const OWNER_CODE= 'TC-OWNER-MATIC';            // ← tvoja lastniška koda (ne deli)
+
+const AI_UNLOCK_KEY = 'tc_ai_unlocked';
+const OWNER_KEY     = 'tc_owner_v1';
+const CLOUD_CFG_KEY = 'tc_cloud_v1';
+
+// ── Stripe Payment Link odpri ──────────────────────────────────
+function openStripePayment() {
+  if(!STRIPE_PAYMENT_LINK) {
+    alert('Stripe plačilo še ni konfigurirano.\nAdmin mora nastaviti STRIPE_PAYMENT_LINK v kodi.');
+    return;
+  }
+  window.open(STRIPE_PAYMENT_LINK, '_blank');
+}
+
+// ── Nastavi ceno na strani ─────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  const priceEl = document.getElementById('ai-price-display');
+  if(priceEl && AI_PRO_PRICE) {
+    const parts = AI_PRO_PRICE.split('/');
+    priceEl.innerHTML = parts[0] + (parts[1] ? `<span style="font-size:10px;color:var(--text3);font-weight:normal">/${parts[1]}</span>` : '');
+  }
+});
+
+// ── URL parameter auto-unlock (po Stripe redirect) ─────────────
+// Stripe success URL nastavi na: https://tvoja-stran.com/index.html?aicode=TC-PRO-2026
+(function checkUrlCode() {
+  const params = new URLSearchParams(window.location.search);
+  const urlCode = (params.get('aicode')||'').trim().toUpperCase();
+  if(!urlCode) return;
+  // Počisti URL brez reloada
+  const cleanUrl = window.location.pathname;
+  window.history.replaceState({}, document.title, cleanUrl);
+  // Avtomatično aktiviraj
+  if(urlCode === OWNER_CODE) {
+    localStorage.setItem(OWNER_KEY,'1'); localStorage.setItem(AI_UNLOCK_KEY,'1');
+  } else if(AI_CODES.includes(urlCode)) {
+    localStorage.setItem(AI_UNLOCK_KEY,'1');
+  }
+  // Pokaži sporočilo
+  setTimeout(()=>{
+    const s = document.getElementById('ai-unlock-section');
+    const toastEl = document.createElement('div');
+    toastEl.innerHTML = `<div style="position:fixed;bottom:20px;right:20px;z-index:9999;background:#0a1a0a;border:1px solid var(--green);border-left:3px solid var(--green);padding:12px 16px;font-family:'Courier New',monospace;font-size:10px;color:var(--green);animation:slideUp .3s ease">✅ Plačilo potrjeno! AI PRO je aktiviran.</div>`;
+    document.body.appendChild(toastEl);
+    setTimeout(()=>toastEl.remove(), 5000);
+  }, 500);
+})();
 
 let aiUnlocked = localStorage.getItem(AI_UNLOCK_KEY) === '1';
 let aiOwner    = localStorage.getItem(OWNER_KEY)     === '1';
@@ -2638,7 +2723,10 @@ if(aiOwner) aiUnlocked = true; // owner is always unlocked
 
 let cloudCfg = {};
 try { cloudCfg = JSON.parse(localStorage.getItem(CLOUD_CFG_KEY)||'{}'); } catch(e){}
+// Naročniki ne konfigurirajo ničesar — BIN ID se prebere iz CLOUD_BIN_DEFAULT
 if(!cloudCfg.binId && CLOUD_BIN_DEFAULT) cloudCfg.binId = CLOUD_BIN_DEFAULT;
+// Lastnik vedno vidi CLOUD_BIN_DEFAULT tudi če ni v localStorage
+if(CLOUD_BIN_DEFAULT && !cloudCfg.binId) cloudCfg.binId = CLOUD_BIN_DEFAULT;
 
 // ── Cloud sync helpers ──────────────────────────────────────────────────────
 let _cloudSyncInterval = null;
@@ -2723,11 +2811,14 @@ function aiApplyUnlock() {
   unlockSection.style.display='none';
   loadTelegramSettings();
 
-  // Owner sees post/filter/cloud panels; viewers see only the feed
-  ['aip-tg','aip-filters','aip-post','aip-cloud'].forEach(id => {
+  // Owner sees post/filter/telegram panels; viewers see only the feed
+  ['aip-tg','aip-filters','aip-post'].forEach(id => {
     const el = document.getElementById(id);
     if(el) el.style.display = aiOwner ? 'block' : 'none';
   });
+  // Cloud section is a plain div — always show for owner
+  const cloudSection = document.getElementById('cloud-section');
+  if(cloudSection) cloudSection.style.display = aiOwner ? 'block' : 'none';
   const clearBtn = document.getElementById('feed-clear-btn');
   if(clearBtn) clearBtn.style.display = aiOwner ? 'inline-block' : 'none';
 
@@ -2736,6 +2827,8 @@ function aiApplyUnlock() {
     loadCloudSettings();
   } else {
     badge.textContent='✓ PREMIUM ACTIVE'; badge.style.background='rgba(0,232,122,.15)'; badge.style.borderColor='var(--green)'; badge.style.color='var(--green)';
+    // Naročniki: avtomatsko povleči oblak z CLOUD_BIN_DEFAULT (lastnik ne rabi nič nastaviti)
+    if(CLOUD_BIN_DEFAULT && !cloudCfg.binId) cloudCfg.binId = CLOUD_BIN_DEFAULT;
   }
   startCloudSync();
 }
