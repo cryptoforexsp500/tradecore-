@@ -2289,22 +2289,36 @@ function refreshHome(){
       const card=document.createElement('div');
       const affUrl=getAffLink(s.market, s.market==='CRYPTO'?s.id:(s.sector||'default'));
       const signalTime=signalTimes[key]||'—';
-      // For bearish: show nearest 5m resistance (liq.bear[0]) as primary SHORT entry
+      // For bearish: show both 5m resistance levels (liq.bear[0] + liq.bear[1]) as SHORT entries
       // For bullish: show swing low (div.lowPrice) as LONG entry
-      const bearRes = isBearCard ? (s.liq?.bear?.[0] || null) : null;
-      const limitPrice = bearRes ? bearRes.price : (isBearCard ? s.div?.highPrice : (isBullDiv(s)?s.div?.lowPrice:null));
-      const limitDist = limitPrice&&s.price?((limitPrice-s.price)/s.price*100).toFixed(2):null;
-      const limitLabel = isBearCard
-        ? (bearRes ? 'SHORT ENTRY ('+bearRes.reason+')' : 'DIV HIGH')
-        : 'LIMIT LONG';
-      const limitBit=limitPrice?
-        '<div style="margin-top:5px;padding:4px 6px;background:'+(isBearCard?'rgba(255,68,85,0.12)':'rgba(0,232,122,0.10)')+
-          ';border:1px solid '+(isBearCard?'#7a1020':'#0a5a2a')+'">'+
-          '<span style="font-size:8px;color:var(--text3);letter-spacing:.06em">'+limitLabel+'</span>'+
-          '<span style="font-size:12px;font-weight:bold;color:'+(isBearCard?'var(--red)':'var(--green)')+';margin-left:6px;font-family:monospace">$'+fp(limitPrice)+'</span>'+
-          (limitDist?'<span style="font-size:9px;color:var(--text3);margin-left:4px">'+(parseFloat(limitDist)>0?'+':'')+limitDist+'%</span>':'')+
-        '</div>':
-        '';
+      const bearRes0 = isBearCard ? (s.liq?.bear?.[0] || null) : null;
+      const bearRes1 = isBearCard ? (s.liq?.bear?.[1] || null) : null;
+      // Build multi-entry block for bears
+      const makeBearEntry = (res, label) => {
+        if(!res) return '';
+        const d = res.price&&s.price?((res.price-s.price)/s.price*100).toFixed(2):null;
+        return '<div style="margin-top:4px;padding:4px 7px;background:rgba(255,68,85,0.10);border:1px solid #6a1020">'+
+          '<div style="display:flex;justify-content:space-between;align-items:center">'+
+            '<span style="font-size:8px;color:var(--text3);letter-spacing:.05em">'+label+' <span style="color:var(--text3);font-size:7px">('+res.reason+')</span></span>'+
+            (d?'<span style="font-size:9px;color:#ff8866">+'+(d)+'%</span>':'')+
+          '</div>'+
+          '<span style="font-size:12px;font-weight:bold;color:var(--red);font-family:monospace">$'+fp(res.price)+'</span>'+
+        '</div>';
+      };
+      const limitBit = isBearCard
+        ? (bearRes0||bearRes1
+            ? '<div style="margin-top:5px">'+
+                '<div style="font-size:8px;color:var(--red);letter-spacing:.1em;margin-bottom:3px">🎯 SHORT ENTRIES (5m)</div>'+
+                makeBearEntry(bearRes0,'SHORT 1')+
+                makeBearEntry(bearRes1,'SHORT 2')+
+              '</div>'
+            : '')
+        : (isBullDiv(s)&&s.div?.lowPrice
+            ? '<div style="margin-top:5px;padding:4px 6px;background:rgba(0,232,122,0.10);border:1px solid #0a5a2a">'+
+                '<span style="font-size:8px;color:var(--text3);letter-spacing:.06em">LIMIT LONG</span>'+
+                '<span style="font-size:12px;font-weight:bold;color:var(--green);margin-left:6px;font-family:monospace">$'+fp(s.div.lowPrice)+'</span>'+
+              '</div>'
+            : '');
       card.className='signal-card';
       card.dataset.key=key;
       card.style.cssText='animation:fadeIn .4s ease forwards;opacity:0;cursor:default;border-left-color:'+(isBearCard?'var(--red)':'var(--green)');
