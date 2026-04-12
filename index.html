@@ -939,7 +939,14 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
         <div style="font-size:16px;font-weight:bold;color:#a855f7;letter-spacing:.2em">🤖 AI PRO ANALYSIS</div>
         <div style="font-size:10px;color:var(--text3);margin-top:3px">Advanced multi-factor signal analysis · Email & Telegram alerts</div>
       </div>
-      <div id="ai-lock-badge" onclick="aiOwnerPrompt()" style="font-size:9px;padding:4px 12px;background:rgba(168,85,247,.15);border:1px solid #7c3aed;color:#a855f7;letter-spacing:.1em;cursor:pointer" title="Click to enter owner code">🔒 PREMIUM</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div id="ai-account-info" style="display:none;text-align:right">
+          <div id="ai-account-email" style="font-size:9px;color:var(--text3);letter-spacing:.05em"></div>
+          <div id="ai-account-type" style="font-size:8px;color:var(--text3);margin-top:1px"></div>
+        </div>
+        <button id="ai-logout-btn" onclick="aiLogout()" style="display:none;font-size:9px;padding:4px 10px;background:rgba(255,60,60,.1);border:1px solid rgba(255,60,60,.4);color:#ff6b6b;font-family:inherit;cursor:pointer;letter-spacing:.08em" title="Odjava">⏏ ODJAVA</button>
+        <div id="ai-lock-badge" onclick="aiOwnerPrompt()" style="font-size:9px;padding:4px 12px;background:rgba(168,85,247,.15);border:1px solid #7c3aed;color:#a855f7;letter-spacing:.1em;cursor:pointer" title="Click to enter owner code">🔒 PREMIUM</div>
+      </div>
     </div>
 
     <!-- Unlock section -->
@@ -970,6 +977,16 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
           💳 PLAČAJ Z STRIPE
         </a>
         <div style="font-size:9px;color:var(--text3);margin-top:8px">Varna plačila · Po plačilu prejmete aktivacijsko kodo po emailu</div>
+      </div>
+
+      <!-- Email registration -->
+      <div style="padding:10px 20px 0;text-align:center">
+        <div style="font-size:9px;color:var(--text3);letter-spacing:.1em;margin-bottom:6px">VAŠ EMAIL (za obvestila o aktivaciji)</div>
+        <div style="display:flex;gap:8px;justify-content:center;max-width:360px;margin:0 auto">
+          <input id="ai-email-input" type="email" placeholder="vas@email.com" style="flex:1;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:7px 10px;font-family:inherit;font-size:11px;outline:none;letter-spacing:.05em"/>
+          <button onclick="aiSaveEmail()" style="padding:7px 14px;background:rgba(168,85,247,.15);border:1px solid #7c3aed;color:#a855f7;font-family:inherit;font-size:10px;cursor:pointer;letter-spacing:.06em">SHRANI</button>
+        </div>
+        <div id="ai-email-ok" style="font-size:9px;color:var(--green);margin-top:5px;display:none">✓ Email shranjen</div>
       </div>
 
       <!-- Code input -->
@@ -3044,6 +3061,17 @@ function aiApplyUnlock() {
   unlockSection.style.display='none';
   loadTelegramSettings();
 
+  // Show logout button + account info
+  const logoutBtn = document.getElementById('ai-logout-btn');
+  const accountInfo = document.getElementById('ai-account-info');
+  const accountEmail = document.getElementById('ai-account-email');
+  const accountType = document.getElementById('ai-account-type');
+  if(logoutBtn) logoutBtn.style.display='inline-block';
+  if(accountInfo) accountInfo.style.display='block';
+  const savedEmail = localStorage.getItem('tc_ai_email')||'';
+  if(accountEmail) accountEmail.textContent = savedEmail || '(brez emaila)';
+  if(accountType) accountType.textContent = aiOwner ? '👑 ADMIN / OWNER' : '✓ PREMIUM';
+
   // Owner sees post/filter/telegram panels; viewers see only the feed
   ['aip-tg','aip-filters','aip-post'].forEach(id => {
     const el = document.getElementById(id);
@@ -3057,14 +3085,25 @@ function aiApplyUnlock() {
 
   if(aiOwner) {
     badge.textContent='👑 OWNER MODE'; badge.style.background='rgba(240,165,0,.15)'; badge.style.borderColor='var(--amber)'; badge.style.color='var(--amber)';
+    badge.style.cursor='default'; badge.onclick=null;
     loadCloudSettings();
   } else {
     badge.textContent='✓ PREMIUM ACTIVE'; badge.style.background='rgba(0,232,122,.15)'; badge.style.borderColor='var(--green)'; badge.style.color='var(--green)';
+    badge.style.cursor='default'; badge.onclick=null;
     // Naročniki: avtomatsko povleči oblak z CLOUD_BIN_DEFAULT (lastnik ne rabi nič nastaviti)
     if(CLOUD_BIN_DEFAULT && !cloudCfg.binId) cloudCfg.binId = CLOUD_BIN_DEFAULT;
   }
   startCloudSync();
 }
+// Pre-fill saved email in registration field
+(function(){
+  const saved = localStorage.getItem('tc_ai_email')||'';
+  if(saved) {
+    const inp = document.getElementById('ai-email-input');
+    if(inp) inp.value = saved;
+  }
+})();
+
 aiApplyUnlock();
 
 function aiOwnerPrompt() {
@@ -3079,6 +3118,31 @@ function aiOwnerPrompt() {
   } else {
     alert('Invalid owner code.');
   }
+}
+
+// ── Email save ───────────────────────────────────────────────────────────────
+function aiSaveEmail() {
+  const input = document.getElementById('ai-email-input');
+  const email = (input?.value||'').trim().toLowerCase();
+  if(!email || !email.includes('@')) {
+    if(input) { input.style.borderColor='var(--red)'; setTimeout(()=>input.style.borderColor='var(--border2)',1500); }
+    return;
+  }
+  localStorage.setItem('tc_ai_email', email);
+  const ok = document.getElementById('ai-email-ok');
+  if(ok) { ok.style.display='block'; setTimeout(()=>ok.style.display='none',2500); }
+  // Update header if already unlocked
+  const accountEmail = document.getElementById('ai-account-email');
+  if(accountEmail && aiUnlocked) accountEmail.textContent = email;
+}
+
+// ── Logout ───────────────────────────────────────────────────────────────────
+function aiLogout() {
+  if(!confirm('Res se želite odjaviti iz AI Pro?')) return;
+  localStorage.removeItem('tc_ai_unlocked');
+  localStorage.removeItem('tc_owner_v1');
+  // keep email saved so user doesn't have to re-enter it
+  location.reload();
 }
 
 function aiUnlock() {
