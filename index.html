@@ -626,7 +626,7 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
       <div style="margin-left:auto;display:flex;gap:5px;align-items:center">
         <input type="text" id="cr-search" placeholder="BTC..." oninput="crGo()" style="width:65px"/>
         <select id="cr-filter" onchange="crGo()"><option value="all">All</option><option value="bull">▲ Bullish</option><option value="bear">▼ Bearish</option><option value="any">↕ Div</option><option value="rsi10">★ RSI&lt;10 or Bull div</option></select>
-        <select id="cr-srt" onchange="crGo()"><option value="div">Divergenca</option><option value="rsi">RSI ↑ (lowest)</option><option value="rsi_desc">RSI ↓ (highest)</option><option value="str">Strength ↓</option><option value="chg">Sprememba % ↓</option><option value="chg_desc">Sprememba % ↑</option><option value="price_asc">Cena ↑</option><option value="price_desc">Cena ↓</option><option value="ma_asc">MA ↑</option><option value="ma_desc">MA ↓</option><option value="sym">Symbol A→Z</option></select>
+        <select id="cr-srt" onchange="crGo()"><option value="div">Divergenca</option><option value="rsi">RSI ↑ (lowest)</option><option value="rsi_desc">RSI ↓ (highest)</option><option value="str">Strength ↓</option><option value="chg">Sprememba % ↓</option><option value="chg_desc">Sprememba % ↑</option><option value="price_asc">Cena ↑</option><option value="price_desc">Cena ↓</option><option value="ma_asc">MA ↑</option><option value="ma_desc">MA ↓</option><option value="sym">Symbol A→Z</option><option value="rvgi_asc" style="display:none">RVGI ↑</option><option value="rvgi_desc" style="display:none">RVGI ↓</option><option value="ema100_asc" style="display:none">EMA100 ↑</option><option value="ema100_desc" style="display:none">EMA100 ↓</option></select>
         <button class="btn" id="cr-snd" onclick="crTglSnd()" style="color:var(--green)">♪</button>
         <button class="btn btn-primary" id="cr-rb" onclick="crFetchAll()">↻ <span id="cr-cd">60s</span></button>
       </div>
@@ -646,7 +646,7 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
           <th class="th-sort r" data-col="price" onclick="crThSort('price')">PRICE</th>
           <th class="th-sort r" data-col="chg" onclick="crThSort('chg')">5M%</th>
           <th class="th-sort r" data-col="str" onclick="crThSort('str')">STRENGTH</th>
-          <th style="color:var(--amber);white-space:nowrap" title="Hours price has been above or below 100 EMA">EMA100</th>
+          <th class="th-sort r" data-col="ema100" onclick="crThSort('ema100')" style="color:var(--amber);white-space:nowrap" title="Hours price has been above or below 100 EMA — click to sort">EMA100</th>
           <th class="th-sort r" data-col="fvg" onclick="crThSort('fvg')" style="color:#7b68ee;white-space:nowrap" title="Fair Value Gap — click to sort by proximity">FVG</th>
           <th class="th-sort r" data-col="liq" onclick="crThSort('liq')" style="color:var(--green);white-space:nowrap" title="Nearest support level — click to sort by proximity">SUPPORT</th>
           <th class="th-sort r" data-col="rvgi" onclick="crThSort('rvgi')" style="color:#e879f9;white-space:nowrap" title="RVGI: Relative Vigor Index (12-period). &lt;0.30 = LONG zone 🟢, &gt;0.70 = SHORT zone 🔴">RVGI</th>
@@ -681,7 +681,7 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
         <input type="text" id="sp-search" placeholder="AAPL..." oninput="spGo()" style="width:65px"/>
         <select id="sp-filter" onchange="spGo()"><option value="all">All</option><option value="bull">▲ Bullish</option><option value="bear">▼ Bearish</option><option value="any">↕ Div</option><option value="rsi10">★ RSI&lt;10 or Bull div</option></select>
         <select id="sp-sec" onchange="spGo()"><option value="all">All sectors</option><option value="Tech">Tech</option><option value="Health">Health</option><option value="Finance">Finance</option><option value="Energy">Energy</option><option value="Consumer">Consumer</option><option value="Indust">Indust</option></select>
-        <select id="sp-srt" onchange="spGo()"><option value="div">Divergenca</option><option value="rsi">RSI ↑ (lowest)</option><option value="rsi_desc">RSI ↓ (highest)</option><option value="str">Strength ↓</option><option value="chg">Sprememba % ↓</option><option value="chg_desc">Sprememba % ↑</option><option value="price_asc">Cena ↑</option><option value="price_desc">Cena ↓</option><option value="ma_asc">MA ↑</option><option value="ma_desc">MA ↓</option><option value="sym">Symbol A→Z</option></select>
+        <select id="sp-srt" onchange="spGo()"><option value="div">Divergenca</option><option value="rsi">RSI ↑ (lowest)</option><option value="rsi_desc">RSI ↓ (highest)</option><option value="str">Strength ↓</option><option value="chg">Sprememba % ↓</option><option value="chg_desc">Sprememba % ↑</option><option value="price_asc">Cena ↑</option><option value="price_desc">Cena ↓</option><option value="ma_asc">MA ↑</option><option value="ma_desc">MA ↓</option><option value="sym">Symbol A→Z</option><option value="rvgi_asc" style="display:none">RVGI ↑</option><option value="rvgi_desc" style="display:none">RVGI ↓</option><option value="ema100_asc" style="display:none">EMA100 ↑</option><option value="ema100_desc" style="display:none">EMA100 ↓</option></select>
         <button class="btn" id="sp-snd" onclick="spTglSnd()" style="color:var(--green)">♪</button>
         <button class="btn" style="color:var(--amber);border-color:var(--amber)" id="sp-rb" onclick="spFetchAll()">↻ <span id="sp-cd">5m0s</span></button>
       </div>
@@ -703,7 +703,7 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
           <th class="th-sort r" data-col="price" onclick="spThSort('price')">PRICE</th>
           <th class="th-sort r" data-col="chg" onclick="spThSort('chg')">5M%</th>
           <th class="th-sort r" data-col="str" onclick="spThSort('str')">STRENGTH</th>
-          <th style="color:var(--amber);white-space:nowrap" title="Hours price has been above or below 100 EMA">EMA100</th>
+          <th class="th-sort r" data-col="ema100" onclick="spThSort('ema100')" style="color:var(--amber);white-space:nowrap" title="Hours price has been above or below 100 EMA — click to sort">EMA100</th>
           <th class="th-sort r" data-col="fvg" onclick="spThSort('fvg')" style="color:#7b68ee;white-space:nowrap" title="Fair Value Gap — click to sort by proximity">FVG</th>
           <th class="th-sort r" data-col="liq" onclick="spThSort('liq')" style="color:var(--green);white-space:nowrap" title="Nearest support level — click to sort by proximity">SUPPORT</th>
           <th class="th-sort r" data-col="rvgi" onclick="spThSort('rvgi')" style="color:#e879f9;white-space:nowrap" title="RVGI: Relative Vigor Index (12-period). &lt;0.30 = LONG zone 🟢, &gt;0.70 = SHORT zone 🔴">RVGI</th>
@@ -936,7 +936,7 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
 <div class="page" id="page-ai" style="overflow-y:auto;background:var(--bg);position:relative">
 
   <!-- ── AI PRO SESSION GATE ─────────────────────────────────────────────── -->
-  <div id="login-gate" style="position:absolute;top:0;left:0;width:100%;height:100%;min-height:100vh;background:rgba(2,5,16,.97);z-index:999;display:flex;align-items:center;justify-content:center;font-family:'Courier New',monospace">
+  <div id="login-gate" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(2,5,16,.97);z-index:9999;display:flex;align-items:center;justify-content:center;font-family:'Courier New',monospace">
     <div style="background:#0a0f1e;border:1px solid #1a2a4a;max-width:380px;width:92%;padding:36px 32px;text-align:center">
       <div style="font-size:28px;margin-bottom:14px">🔐</div>
       <div style="font-size:16px;font-weight:bold;color:#a855f7;letter-spacing:.25em;margin-bottom:6px">AI PRO</div>
@@ -1812,6 +1812,8 @@ function crGo(){
   });
   if(srt==='rvgi_asc')rows.sort((a,b)=>(crData[a.id]?.rvgi??999)-(crData[b.id]?.rvgi??999));
   if(srt==='rvgi_desc')rows.sort((a,b)=>(crData[b.id]?.rvgi??-999)-(crData[a.id]?.rvgi??-999));
+  if(srt==='ema100_asc')rows.sort((a,b)=>(crData[a.id]?.ema100?.hours??999)-(crData[b.id]?.ema100?.hours??999));
+  if(srt==='ema100_desc')rows.sort((a,b)=>(crData[b.id]?.ema100?.hours??0)-(crData[a.id]?.ema100?.hours??0));
   // Key signals always on top
   rows.sort((a,b)=>isKeySignal(crData[b.id])?1:isKeySignal(crData[a.id])?-1:0);
   document.getElementById('cr-tb').innerHTML=rows.map((s,i)=>crRow(s,i)).join('');
@@ -1875,8 +1877,8 @@ async function crFetchAll(){
     res.forEach((r,idx)=>{
       const sym=batch[idx];
       if(r.status==='fulfilled'){
-        const{id,rsi,ma,price,chg,div,ema100,liq,fvg}=r.value;
-        crData[id]={rsi,ma,price,chg,div,ema100,liq,fvg,st:'ok'};
+        const{id,rsi,ma,price,chg,div,ema100,liq,fvg,rvgi}=r.value;
+        crData[id]={rsi,ma,price,chg,div,ema100,liq,fvg,rvgi,st:'ok'};
         // KEY SIGNAL: RSI<10 ALI bullish divergence
         const crKS={rsiLow:rsi!==null&&rsi<=10, bullDiv:div?.type==='bull'};
         if(crKS.rsiLow||crKS.bullDiv){
@@ -2066,6 +2068,8 @@ function spGo(){
   });
   if(srt==='rvgi_asc')rows.sort((a,b)=>(spData[a.id]?.rvgi??999)-(spData[b.id]?.rvgi??999));
   if(srt==='rvgi_desc')rows.sort((a,b)=>(spData[b.id]?.rvgi??-999)-(spData[a.id]?.rvgi??-999));
+  if(srt==='ema100_asc')rows.sort((a,b)=>(spData[a.id]?.ema100?.hours??999)-(spData[b.id]?.ema100?.hours??999));
+  if(srt==='ema100_desc')rows.sort((a,b)=>(spData[b.id]?.ema100?.hours??0)-(spData[a.id]?.ema100?.hours??0));
   rows.sort((a,b)=>isKeySignal(spData[b.id])?1:isKeySignal(spData[a.id])?-1:0);
   document.getElementById('sp-tb').innerHTML=rows.map((s,i)=>spRow(s,i)).join('');
   spStats();
@@ -2113,8 +2117,8 @@ async function spFetchAll(){
     res.forEach((r,idx)=>{
       const sym=batch[idx];
       if(r.status==='fulfilled'){
-        const{id,rsi,ma,price,chg,div,ema100,liq,fvg}=r.value;
-        spData[id]={rsi,ma,price,chg,div,ema100,liq,fvg,st:'ok'};
+        const{id,rsi,ma,price,chg,div,ema100,liq,fvg,rvgi}=r.value;
+        spData[id]={rsi,ma,price,chg,div,ema100,liq,fvg,rvgi,st:'ok'};
         const spKS={rsiLow:rsi!==null&&rsi<=10, bullDiv:div?.type==='bull'};
         if(spKS.rsiLow||spKS.bullDiv){
           const pd=spPrev[id];
@@ -3633,7 +3637,8 @@ const CR_TH_MAP={
   'str':['str','str'],
   'fvg':['fvg_asc','fvg_asc'],
   'liq':['liq_asc','liq_asc'],
-  'rvgi':['rvgi_asc','rvgi_desc']
+  'rvgi':['rvgi_asc','rvgi_desc'],
+  'ema100':['ema100_asc','ema100_desc']
 };
 let crThState={col:null,dir:0};
 let spThState={col:null,dir:0};
