@@ -75,6 +75,37 @@ button,select,input{font-family:inherit;outline:none;cursor:pointer}
 .aip-grip{color:var(--text3);font-size:14px;letter-spacing:2px;line-height:1}
 .aip-title{font-size:9px;color:#a855f7;letter-spacing:.18em;font-weight:bold}
 .aip-body{padding:14px}
+
+/* ── USER NOTIFY PANEL ── */
+#aip-notify-user{background:var(--bg2);border:1px solid #1a3a2a;margin-bottom:14px;overflow:hidden;display:none}
+.nup-head{background:rgba(0,232,122,.04);border-bottom:1px solid var(--border);padding:10px 14px;display:flex;align-items:center;gap:8px}
+.nup-title{font-size:9px;color:var(--green);letter-spacing:.18em;font-weight:bold}
+.nup-body{padding:14px}
+.nup-field{margin-bottom:10px}
+.nup-label{font-size:9px;color:var(--text3);letter-spacing:.12em;margin-bottom:4px;display:block}
+.nup-input{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:7px 10px;font-family:inherit;font-size:11px;outline:none;box-sizing:border-box}
+.nup-input:focus{border-color:var(--green)}
+.nup-hint{font-size:9px;color:var(--text3);margin-top:3px;line-height:1.5}
+.nup-status-ok{font-size:9px;color:var(--green);display:none;margin-top:6px}
+
+/* ── CHALLENGE / IZZIV ── */
+#ai-challenge-wrap{margin-bottom:16px;display:none}
+.challenge-card{background:linear-gradient(135deg,rgba(168,85,247,.06),rgba(74,122,255,.04));border:1px solid #7c3aed;overflow:hidden}
+.ch-header{background:rgba(168,85,247,.1);border-bottom:1px solid rgba(120,58,237,.4);padding:10px 14px;display:flex;align-items:center;gap:10px}
+.ch-badge{font-size:8px;padding:2px 8px;background:rgba(168,85,247,.25);border:1px solid #7c3aed;color:#a855f7;letter-spacing:.15em;font-weight:bold}
+.ch-live-dot{width:6px;height:6px;border-radius:50%;background:#a855f7;animation:pulse 1.5s infinite;display:inline-block;margin-right:4px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.ch-body{padding:14px}
+.ch-trade-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:rgba(120,58,237,.2);margin-top:10px}
+.ch-trade-cell{background:var(--bg2);padding:8px 12px;text-align:center}
+.ch-trade-lbl{font-size:8px;color:var(--text3);letter-spacing:.1em;margin-bottom:3px}
+.ch-trade-val{font-size:14px;font-weight:bold}
+.ch-text{font-size:10px;color:var(--text2);line-height:1.8;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.ch-admin-bar{padding:8px 14px;border-top:1px solid var(--border);display:flex;gap:8px;align-items:center}
+
+/* ── SUBSCRIBER COUNT (admin) ── */
+.sub-count-badge{font-size:9px;padding:2px 8px;background:rgba(0,232,122,.08);border:1px solid #0a4a2a;color:var(--green);letter-spacing:.08em}
+
 /* Analysis feed cards */
 .aif-card{background:var(--bg2);border:1px solid var(--border2);margin-bottom:12px;overflow:hidden}
 .aif-head{display:flex;align-items:center;gap:8px;padding:12px 14px 8px;border-bottom:1px solid var(--border)}
@@ -1027,6 +1058,40 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
       <!-- Draggable settings panels -->
       <div id="ai-panels">
 
+        <!-- Panel: EmailJS Config (for bulk notify) -->
+        <div class="ai-panel" id="aip-emailjs" draggable="true" style="display:none">
+          <div class="aip-handle">
+            <span class="aip-grip">⠿⠿</span>
+            <span class="aip-title">📧 EMAILJS — BATCH NOTIFIKACIJE</span>
+            <span style="margin-left:auto;font-size:9px;color:var(--text3);cursor:pointer" onclick="this.closest('.ai-panel').querySelector('.aip-body').style.display=this.closest('.ai-panel').querySelector('.aip-body').style.display==='none'?'block':'none'">▲▼</span>
+          </div>
+          <div class="aip-body">
+            <div style="font-size:9px;color:var(--text3);line-height:1.7;margin-bottom:10px;padding:8px;background:rgba(74,122,255,.04);border:1px solid var(--border2)">
+              emailjs.com → Account → Email Services → Service ID<br>
+              Email Templates → Template ID (spremenljivke: <span style="color:var(--blue)">to_email, subject, message, sym, dir, entry, sl, tp</span>)
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+              <div>
+                <div style="font-size:9px;color:var(--text3);margin-bottom:4px">PUBLIC KEY</div>
+                <input id="ejs-pub" type="text" placeholder="user_XXXXX" style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none"/>
+              </div>
+              <div>
+                <div style="font-size:9px;color:var(--text3);margin-bottom:4px">SERVICE ID</div>
+                <input id="ejs-svc" type="text" placeholder="service_XXXXX" style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none"/>
+              </div>
+              <div>
+                <div style="font-size:9px;color:var(--text3);margin-bottom:4px">TEMPLATE ID</div>
+                <input id="ejs-tpl" type="text" placeholder="template_XXXXX" style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none"/>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <button onclick="saveEmailJsCfg()" style="padding:5px 12px;background:rgba(74,122,255,.1);border:1px solid var(--border2);color:var(--blue);font-family:inherit;font-size:9px;cursor:pointer;font-weight:bold">SAVE</button>
+              <button onclick="testEmailJsCfg()" style="padding:5px 10px;background:none;border:1px solid var(--border2);color:var(--text2);font-family:inherit;font-size:9px;cursor:pointer">TEST SEND</button>
+              <span id="ejs-status" style="font-size:9px;color:var(--text3)"></span>
+            </div>
+          </div>
+        </div>
+
         <!-- Panel: Telegram -->
         <div class="ai-panel" id="aip-tg" draggable="true" style="display:none">
           <div class="aip-handle">
@@ -1128,14 +1193,59 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
               <div style="font-size:9px;color:var(--text3);margin-bottom:4px">ANALYSIS TEXT</div>
               <textarea id="ai-man-text" placeholder="Your analysis... e.g. TSLA broke below 100 EMA after 3 weeks above. RSI showing bearish divergence. Watching $350 support." style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:8px;font-family:inherit;font-size:10px;outline:none;resize:vertical;min-height:65px;box-sizing:border-box"></textarea>
             </div>
+            <div style="margin-bottom:8px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+              <label style="display:flex;align-items:center;gap:5px;font-size:9px;color:var(--text3);cursor:pointer">
+                <input id="ai-man-challenge" type="checkbox" style="cursor:pointer"/>
+                <span style="color:#a855f7;font-weight:bold">★ Označi kot IZZIV</span>
+              </label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:9px;color:var(--text3);cursor:pointer">
+                <input id="ai-man-notify" type="checkbox" checked style="cursor:pointer"/> Pošlji notifikacijo naročnikom
+              </label>
+              <span id="ai-sub-count" class="sub-count-badge" style="display:none"></span>
+            </div>
             <div style="display:flex;gap:8px;align-items:center">
-              <button onclick="aiPostManual()" style="padding:6px 16px;background:rgba(168,85,247,.2);border:1px solid #7c3aed;color:#a855f7;font-family:inherit;font-size:10px;cursor:pointer;font-weight:bold;letter-spacing:.08em">POST ANALYSIS</button>
+              <button onclick="aiPublishAndNotify()" style="padding:6px 16px;background:linear-gradient(135deg,rgba(168,85,247,.25),rgba(74,122,255,.15));border:1px solid #7c3aed;color:#a855f7;font-family:inherit;font-size:10px;cursor:pointer;font-weight:bold;letter-spacing:.08em">⚡ PUBLISH & NOTIFY</button>
               <span id="ai-man-status" style="font-size:9px;color:var(--text3)"></span>
             </div>
           </div>
         </div>
 
       </div><!-- end ai-panels -->
+
+      <!-- ── USER NOTIFICATION REGISTRATION (shown for non-owner subscribers) ── -->
+      <div id="aip-notify-user">
+        <div class="nup-head">
+          <span style="font-size:14px">🔔</span>
+          <span class="nup-title">NOTIFIKACIJE — Nastavi obvestila</span>
+          <span style="margin-left:auto;font-size:9px;color:var(--text3);cursor:pointer" onclick="document.getElementById('nup-body-inner').style.display=document.getElementById('nup-body-inner').style.display==='none'?'block':'none'">▲▼</span>
+        </div>
+        <div class="nup-body" id="nup-body-inner">
+          <div style="font-size:9px;color:var(--text3);margin-bottom:12px;line-height:1.7;padding:8px;background:rgba(0,232,122,.04);border:1px solid #0a3a2a">
+            Ko admin objavi nov trejd ali izziv, boš prejel/a obvestilo na email in/ali Telegram. Vnesi vsaj en kontakt.
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div class="nup-field">
+              <label class="nup-label">📧 EMAIL</label>
+              <input id="nup-email" type="email" class="nup-input" placeholder="tvoj@email.com"/>
+            </div>
+            <div class="nup-field">
+              <label class="nup-label">📱 TELEGRAM CHAT ID</label>
+              <input id="nup-tgid" type="text" class="nup-input" placeholder="npr. 123456789"/>
+              <div class="nup-hint">Dobite ga z <span style="color:var(--blue)">@userinfobot</span> v Telegramu → /start</div>
+            </div>
+          </div>
+          <div class="nup-field" style="margin-top:4px">
+            <label class="nup-label">📞 TELEFON (WhatsApp / opcijsko)</label>
+            <input id="nup-phone" type="tel" class="nup-input" placeholder="+38641XXXXXX"/>
+            <div class="nup-hint">Opcijsko — za WhatsApp obvestila (potrebna ročna aktivacija pri adminu)</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;margin-top:12px">
+            <button onclick="saveUserNotifyPrefs()" style="padding:6px 16px;background:rgba(0,232,122,.12);border:1px solid #0a5a2a;color:var(--green);font-family:inherit;font-size:10px;cursor:pointer;font-weight:bold;letter-spacing:.08em">✓ SHRANI &amp; REGISTRIRAJ</button>
+            <span id="nup-status" style="font-size:9px;color:var(--text3)"></span>
+          </div>
+          <div id="nup-ok" class="nup-status-ok">✅ Registracija uspešna! Prejeli boste obvestila ob naslednjem objavljenem trejdu.</div>
+        </div>
+      </div>
 
       <!-- ☁ CLOUD SYNC — always visible inline, shown/hidden via JS -->
       <div id="cloud-section" style="display:none;margin-bottom:16px;border:1px solid rgba(240,165,0,.4);background:rgba(240,165,0,.04)">
@@ -1145,13 +1255,15 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
         </div>
         <div id="cloud-body" style="padding:12px 14px">
           <div style="font-size:9px;color:var(--text3);line-height:1.7;margin-bottom:10px;padding:8px;background:rgba(240,165,0,.05);border:1px solid rgba(240,165,0,.12)">
-            1. jsonbin.io → brezplačna reg. → Create BIN → vsebina: <span style="color:var(--text2)">{"feed":[]}</span> → nastavi PUBLIC<br>
-            2. Kopiraj BIN ID + X-MASTER-KEY v polja spodaj → SAVE &amp; START<br>
-            3. Kupci vidijo tvoje analize samodejno vsake 60s — brez refresha
+            1. jsonbin.io → brezplačna reg. → Create <b>2 BIN-a</b>:<br>
+            &nbsp;&nbsp;– <b>FEED BIN</b>: vsebina <span style="color:var(--text2)">{"feed":[],"subscribers":[],"challenge":null}</span> → PUBLIC<br>
+            &nbsp;&nbsp;– <b>SUB BIN</b>: vsebina <span style="color:var(--text2)">{"subscribers":[]}</span> → PUBLIC (za registracije)<br>
+            2. Kopiraj BIN ID-je + X-MASTER-KEY v polja spodaj → SAVE &amp; START<br>
+            3. Kupci vidijo tvoje analize samodejno vsake 60s + dobijo notifikacije
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
             <div>
-              <div style="font-size:9px;color:var(--amber);margin-bottom:4px">BIN ID</div>
+              <div style="font-size:9px;color:var(--amber);margin-bottom:4px">FEED BIN ID</div>
               <input id="cloud-bin-id" type="text" placeholder="69d29fb2aaba882197c8eabe" style="width:100%;background:var(--bg3);border:1px solid rgba(240,165,0,.3);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none"/>
             </div>
             <div>
@@ -1159,11 +1271,61 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
               <input id="cloud-master-key" type="password" placeholder="$2a$10..." style="width:100%;background:var(--bg3);border:1px solid rgba(240,165,0,.3);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none"/>
             </div>
           </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+            <div>
+              <div style="font-size:9px;color:var(--green);margin-bottom:4px">SUB BIN ID <span style="color:var(--text3)">(za registracije)</span></div>
+              <input id="sub-bin-id" type="text" placeholder="BIN ID za naročnike..." style="width:100%;background:var(--bg3);border:1px solid #0a4a2a;color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none"/>
+            </div>
+            <div>
+              <div style="font-size:9px;color:var(--green);margin-bottom:4px">SUB MASTER-KEY</div>
+              <input id="sub-master-key" type="password" placeholder="$2a$10..." style="width:100%;background:var(--bg3);border:1px solid #0a4a2a;color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none"/>
+            </div>
+          </div>
           <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
             <button onclick="saveCloudCfg()" style="padding:5px 14px;background:rgba(240,165,0,.15);border:1px solid var(--amber);color:var(--amber);font-family:inherit;font-size:9px;cursor:pointer;font-weight:bold;letter-spacing:.08em">SAVE &amp; START</button>
             <button onclick="cloudPush()" style="padding:5px 10px;background:none;border:1px solid var(--border2);color:var(--text2);font-family:inherit;font-size:9px;cursor:pointer">⬆ PUSH</button>
             <button onclick="cloudPull()" style="padding:5px 10px;background:none;border:1px solid var(--border2);color:var(--text2);font-family:inherit;font-size:9px;cursor:pointer">⬇ PULL</button>
+            <button onclick="adminLoadSubscribers()" style="padding:5px 10px;background:rgba(0,232,122,.08);border:1px solid #0a4a2a;color:var(--green);font-family:inherit;font-size:9px;cursor:pointer">👥 NAROČNIKI</button>
             <span id="cloud-status" style="font-size:9px;color:var(--text3)"></span>
+          </div>
+          <!-- Subscriber list for admin -->
+          <div id="admin-sub-list" style="display:none;margin-top:12px;border-top:1px solid var(--border);padding-top:10px">
+            <div style="font-size:9px;color:var(--green);letter-spacing:.12em;margin-bottom:8px">REGISTRIRANI NAROČNIKI</div>
+            <div id="admin-sub-table" style="font-size:9px;color:var(--text3)">Nalaganje...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── CHALLENGE / IZZIV SEKCIJA ── -->
+      <div id="ai-challenge-wrap">
+        <div style="font-size:9px;color:#a855f7;letter-spacing:.18em;font-weight:bold;margin-bottom:8px;display:flex;align-items:center;gap:8px">
+          ★ AKTIVNI IZZIV <span style="flex:1;height:1px;background:rgba(120,58,237,.3);display:inline-block"></span>
+        </div>
+        <div class="challenge-card" id="challenge-card-inner">
+          <div class="ch-header">
+            <span class="ch-live-dot"></span>
+            <span class="ch-badge">IZZIV LIVE</span>
+            <span id="ch-sym" style="font-size:15px;font-weight:bold;color:#a855f7;margin-left:4px"></span>
+            <span id="ch-dir-badge" style="font-size:9px;padding:1px 8px;font-weight:bold;margin-left:4px"></span>
+            <span style="margin-left:auto;font-size:9px;color:var(--text3)" id="ch-time"></span>
+            <button id="ch-close-btn" onclick="clearChallenge()" style="display:none;margin-left:8px;font-size:9px;padding:2px 8px;background:rgba(255,68,85,.1);border:1px solid rgba(255,68,85,.3);color:var(--red);font-family:inherit;cursor:pointer">× ZAPRI IZZIV</button>
+          </div>
+          <div class="ch-body">
+            <div class="ch-trade-grid">
+              <div class="ch-trade-cell">
+                <div class="ch-trade-lbl">ENTRY</div>
+                <div class="ch-trade-val" id="ch-entry" style="color:var(--text2)">—</div>
+              </div>
+              <div class="ch-trade-cell">
+                <div class="ch-trade-lbl" style="color:var(--red)">STOP LOSS</div>
+                <div class="ch-trade-val" id="ch-sl" style="color:var(--red)">—</div>
+              </div>
+              <div class="ch-trade-cell">
+                <div class="ch-trade-lbl" style="color:var(--green)">TAKE PROFIT</div>
+                <div class="ch-trade-val" id="ch-tp" style="color:var(--green)">—</div>
+              </div>
+            </div>
+            <div class="ch-text" id="ch-text"></div>
           </div>
         </div>
       </div>
@@ -2975,7 +3137,8 @@ renderHomeForum();
 // ║  3. AI_PRO_PRICE: cena naročnine (samo prikaz)              ║
 // ╚══════════════════════════════════════════════════════════════╝
 const STRIPE_PAYMENT_LINK = '';                 // ← prilepi Stripe Payment Link URL sem
-const CLOUD_BIN_DEFAULT   = '';                 // ← prilepi JSONBin BIN ID (npr. '64abc123...')
+const CLOUD_BIN_DEFAULT   = '';                 // ← prilepi JSONBin FEED BIN ID
+const SUB_BIN_DEFAULT     = '';                 // ← prilepi JSONBin SUBSCRIBER BIN ID (za registracije)
 const AI_PRO_PRICE        = '29 €/mesec';       // ← cena za prikaz na strani
 
 // Aktivacijske kode — po Stripe plačilu pošlješ kupcu eno od teh kod
@@ -3048,15 +3211,19 @@ function applyGateAccess(isOwner) {
   }
   // 5. Owner-only panels — show for owner, hide for regular
   const ownerShow = isOwner ? 'block' : 'none';
-  ['aip-tg','aip-filters','aip-post'].forEach(id=>{
+  ['aip-emailjs','aip-tg','aip-filters','aip-post'].forEach(id=>{
     const el=document.getElementById(id); if(el) el.style.display=ownerShow;
   });
   const cs=document.getElementById('cloud-section'); if(cs) cs.style.display=ownerShow;
   const cb=document.getElementById('feed-clear-btn'); if(cb) cb.style.display=isOwner?'inline-block':'none';
   const np=document.getElementById('home-new-post-btn'); if(np) np.style.display=isOwner?'inline-block':'none';
-  // 6. Telegram + cloud settings
+  // Show user notification panel for non-owner subscribers
+  const nup=document.getElementById('aip-notify-user'); if(nup) nup.style.display=isOwner?'none':'block';
+  // Load user's saved notification prefs
+  if(!isOwner) loadUserNotifyPrefs();
+  // 6. Telegram + cloud + emailjs settings
   loadTelegramSettings();
-  if(isOwner) loadCloudSettings();
+  if(isOwner) { loadCloudSettings(); loadEmailJsCfg(); }
   startCloudSync();
 }
 
@@ -3127,6 +3294,9 @@ try { cloudCfg = JSON.parse(localStorage.getItem(CLOUD_CFG_KEY)||'{}'); } catch(
 if(!cloudCfg.binId && CLOUD_BIN_DEFAULT) cloudCfg.binId = CLOUD_BIN_DEFAULT;
 // Lastnik vedno vidi CLOUD_BIN_DEFAULT tudi če ni v localStorage
 if(CLOUD_BIN_DEFAULT && !cloudCfg.binId) cloudCfg.binId = CLOUD_BIN_DEFAULT;
+// Sub bin default — za registracije naročnikov
+if(!cloudCfg.subBinId && SUB_BIN_DEFAULT) cloudCfg.subBinId = SUB_BIN_DEFAULT;
+if(SUB_BIN_DEFAULT) localStorage.setItem('tc_sub_bin', SUB_BIN_DEFAULT);
 
 // ── Cloud sync helpers ──────────────────────────────────────────────────────
 let _cloudSyncInterval = null;
@@ -3154,28 +3324,50 @@ async function cloudPull() {
       aiFeedSave();
       renderAiAnalyses();
     }
+    // Load challenge for all users
+    const remoteChallenge = data.record?.challenge || null;
+    if(remoteChallenge !== undefined) {
+      window._tcChallenge = remoteChallenge;
+      renderChallenge();
+    }
+    // Admin: cache subscriber count from feed bin
+    if(aiOwner) {
+      const subs = data.record?.subscribers || [];
+      if(subs.length) { window._tcFeedSubs = subs; updateSubCountBadge(subs.length); }
+    }
+    // All users: read subBinId from feed bin so they can register
+    const remoteSubBin = data.record?.subBinId || '';
+    if(remoteSubBin && !cloudCfg.subBinId) {
+      localStorage.setItem('tc_sub_bin', remoteSubBin);
+    }
     updateCloudIndicator('ok');
   } catch(e) { updateCloudIndicator('error'); }
 }
 
-async function cloudPush() {
+async function cloudPush(extraPayload) {
   if(!cloudCfg.binId || !cloudCfg.masterKey) {
     const s = document.getElementById('cloud-status');
     if(s) { s.textContent='⚠ Set BIN ID and Master Key first'; s.style.color='var(--red)'; setTimeout(()=>s.textContent='',4000); }
-    return;
+    return false;
   }
   try {
+    const payload = { feed: aiAnalysesFeed };
+    if(window._tcChallenge !== undefined) payload.challenge = window._tcChallenge;
+    if(window._tcFeedSubs) payload.subscribers = window._tcFeedSubs;
+    if(cloudCfg.subBinId) payload.subBinId = cloudCfg.subBinId;
+    if(extraPayload) Object.assign(payload, extraPayload);
     const res = await fetch(`https://api.jsonbin.io/v3/b/${cloudCfg.binId}`, {
       method: 'PUT',
       headers: { 'Content-Type':'application/json', 'X-Master-Key':cloudCfg.masterKey, 'X-Bin-Versioning':'false' },
-      body: JSON.stringify({ feed: aiAnalysesFeed })
+      body: JSON.stringify(payload)
     });
     if(res.ok) {
       updateCloudIndicator('ok');
       const s = document.getElementById('cloud-status');
       if(s) { s.textContent='✓ Pushed to cloud'; s.style.color='var(--green)'; setTimeout(()=>s.textContent='',3000); }
-    } else { updateCloudIndicator('error'); }
-  } catch(e) { updateCloudIndicator('error'); }
+      return true;
+    } else { updateCloudIndicator('error'); return false; }
+  } catch(e) { updateCloudIndicator('error'); return false; }
 }
 
 function startCloudSync() {
@@ -3188,14 +3380,22 @@ function startCloudSync() {
 function loadCloudSettings() {
   const bi = document.getElementById('cloud-bin-id');
   const mk = document.getElementById('cloud-master-key');
+  const sb = document.getElementById('sub-bin-id');
+  const sk = document.getElementById('sub-master-key');
   if(bi && cloudCfg.binId)     bi.value = cloudCfg.binId;
   if(mk && cloudCfg.masterKey) mk.value = cloudCfg.masterKey;
+  if(sb && cloudCfg.subBinId)  sb.value = cloudCfg.subBinId;
+  if(sk && cloudCfg.subKey)    sk.value = cloudCfg.subKey;
 }
 
 function saveCloudCfg() {
-  cloudCfg.binId      = (document.getElementById('cloud-bin-id')?.value||'').trim();
-  cloudCfg.masterKey  = (document.getElementById('cloud-master-key')?.value||'').trim();
+  cloudCfg.binId     = (document.getElementById('cloud-bin-id')?.value||'').trim();
+  cloudCfg.masterKey = (document.getElementById('cloud-master-key')?.value||'').trim();
+  cloudCfg.subBinId  = (document.getElementById('sub-bin-id')?.value||'').trim();
+  cloudCfg.subKey    = (document.getElementById('sub-master-key')?.value||'').trim();
   localStorage.setItem(CLOUD_CFG_KEY, JSON.stringify(cloudCfg));
+  // Broadcast sub bin ID so non-owner users can register
+  if(cloudCfg.subBinId) localStorage.setItem('tc_sub_bin', cloudCfg.subBinId);
   const s = document.getElementById('cloud-status');
   if(s) { s.textContent='✓ Saved'; s.style.color='var(--green)'; setTimeout(()=>s.textContent='',3000); }
   startCloudSync();
@@ -3283,6 +3483,42 @@ function aiUnlock() {
     document.getElementById('ai-code-err').style.display='block';
     setTimeout(()=>{ const e=document.getElementById('ai-code-err'); if(e) e.style.display='none'; },3000);
   }
+}
+
+// ── EmailJS bulk config ───────────────────────────────────────────────────────
+const EJS_KEY = 'tc_emailjs';
+function loadEmailJsCfg() {
+  const cfg = JSON.parse(localStorage.getItem(EJS_KEY)||'{}');
+  if(cfg.pubKey)     { const el=document.getElementById('ejs-pub'); if(el) el.value=cfg.pubKey; }
+  if(cfg.serviceId)  { const el=document.getElementById('ejs-svc'); if(el) el.value=cfg.serviceId; }
+  if(cfg.templateId) { const el=document.getElementById('ejs-tpl'); if(el) el.value=cfg.templateId; }
+  if(cfg.pubKey && typeof emailjs!=='undefined') emailjs.init(cfg.pubKey);
+}
+function saveEmailJsCfg() {
+  const cfg = {
+    pubKey:     (document.getElementById('ejs-pub')?.value||'').trim(),
+    serviceId:  (document.getElementById('ejs-svc')?.value||'').trim(),
+    templateId: (document.getElementById('ejs-tpl')?.value||'').trim(),
+  };
+  localStorage.setItem(EJS_KEY, JSON.stringify(cfg));
+  if(cfg.pubKey && typeof emailjs!=='undefined') emailjs.init(cfg.pubKey);
+  const s=document.getElementById('ejs-status');
+  if(s){s.textContent='✓ Saved';s.style.color='var(--green)';setTimeout(()=>s.textContent='',2500);}
+}
+async function testEmailJsCfg() {
+  const cfg = JSON.parse(localStorage.getItem(EJS_KEY)||'{}');
+  const s=document.getElementById('ejs-status');
+  if(!cfg.serviceId||!cfg.templateId){if(s){s.textContent='⚠ Najprej shrani konfig';s.style.color='var(--red)';}return;}
+  const adminEmail=localStorage.getItem('tc_ai_email')||'';
+  if(!adminEmail){if(s){s.textContent='⚠ Nastavi email v profilu';s.style.color='var(--red)';}return;}
+  if(s){s.textContent='Sending...';s.style.color='var(--amber)';}
+  try {
+    await emailjs.send(cfg.serviceId, cfg.templateId, {
+      to_email:adminEmail, subject:'TradeCore — EmailJS test', message:'Test uspešen! Batch notifikacije delujejo.',
+      sym:'TEST', dir:'▲ BULLISH', entry:'$1.00', sl:'$0.90', tp:'$1.20'
+    });
+    if(s){s.textContent='✓ Poslano! Preveri email.';s.style.color='var(--green)';setTimeout(()=>s.textContent='',4000);}
+  } catch(e){if(s){s.textContent='⚠ Napaka: '+e.text;s.style.color='var(--red)';}}
 }
 
 // Telegram
@@ -3590,38 +3826,282 @@ function renderAiAnalyses() {
   }).join('');
 }
 
-function aiPostManual() {
-  if(!aiOwner) return; // only owner can post
-  try {
-    const g = id => document.getElementById(id); // safe getter helper
-    const sym = (g('ai-man-sym')?.value||'').trim().toUpperCase();
-    const dir = g('ai-man-dir')?.value || 'bull';
-    const mkt = g('ai-man-mkt')?.value || 'CRYPTO';
-    const txt = (g('ai-man-text')?.value||'').trim();
-    const entry = parseFloat(g('ai-man-entry')?.value)||null;
-    const sl    = parseFloat(g('ai-man-sl')?.value)||null;
-    const tp    = parseFloat(g('ai-man-tp')?.value)||null;
-    const statusEl = g('ai-man-status');
-    if(!sym) { if(statusEl){statusEl.textContent='⚠ Enter a ticker symbol';statusEl.style.color='var(--red)';} return; }
-    if(!txt) { if(statusEl){statusEl.textContent='⚠ Write your analysis text';statusEl.style.color='var(--red)';} return; }
-    const now = new Date().toLocaleString('en-US',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
-    aiAnalysesFeed.unshift({
-      sym, market:mkt, signal:dir, time:now, manual:true,
-      price:entry, sl, tp,
-      analysis:{ score:null, grade:{g:'M',c:'#a855f7'}, notes:[txt], rec:'' },
-    });
-    if(aiAnalysesFeed.length>200) aiAnalysesFeed=aiAnalysesFeed.slice(0,200);
-    aiFeedSave();
-    renderAiAnalyses();
-    cloudPush(); // broadcast to all users instantly
-    ['ai-man-sym','ai-man-entry','ai-man-sl','ai-man-tp','ai-man-text'].forEach(id=>{const el=g(id);if(el)el.value='';});
-    if(statusEl){statusEl.textContent='✓ Posted & synced to cloud';statusEl.style.color='var(--green)';}
-    setTimeout(()=>{const s=g('ai-man-status');if(s)s.textContent='';},3000);
-  } catch(err) {
-    const s=document.getElementById('ai-man-status');
-    if(s){s.textContent='⚠ Error: '+err.message;s.style.color='var(--red)';}
-    console.error('aiPostManual error:',err);
+function aiPostManual() { aiPublishAndNotify(); } // legacy alias
+
+async function aiPublishAndNotify() {
+  if(!aiOwner) return;
+  const g = id => document.getElementById(id);
+  const sym       = (g('ai-man-sym')?.value||'').trim().toUpperCase();
+  const dir       = g('ai-man-dir')?.value || 'bull';
+  const mkt       = g('ai-man-mkt')?.value || 'CRYPTO';
+  const txt       = (g('ai-man-text')?.value||'').trim();
+  const entry     = parseFloat(g('ai-man-entry')?.value)||null;
+  const sl        = parseFloat(g('ai-man-sl')?.value)||null;
+  const tp        = parseFloat(g('ai-man-tp')?.value)||null;
+  const isChallenge = g('ai-man-challenge')?.checked || false;
+  const doNotify  = g('ai-man-notify')?.checked !== false;
+  const statusEl  = g('ai-man-status');
+
+  if(!sym) { if(statusEl){statusEl.textContent='⚠ Vnesi ticker simbol';statusEl.style.color='var(--red)';} return; }
+  if(!txt) { if(statusEl){statusEl.textContent='⚠ Napiši analizo';statusEl.style.color='var(--red)';} return; }
+
+  if(statusEl){statusEl.textContent='⏳ Objavljam...';statusEl.style.color='var(--amber)';}
+
+  const now = new Date().toLocaleString('sl-SI',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+  const tradeObj = { sym, market:mkt, signal:dir, time:now, manual:true, price:entry, sl, tp,
+    analysis:{ score:null, grade:{g:'M',c:'#a855f7'}, notes:[txt], rec:'' } };
+
+  aiAnalysesFeed.unshift(tradeObj);
+  if(aiAnalysesFeed.length>200) aiAnalysesFeed=aiAnalysesFeed.slice(0,200);
+  aiFeedSave();
+  renderAiAnalyses();
+
+  // If marked as challenge, update challenge
+  if(isChallenge) {
+    window._tcChallenge = { sym, dir, entry, sl, tp, text:txt, time:now, active:true };
+    renderChallenge();
   }
+
+  // Push to cloud (includes challenge if set)
+  await cloudPush();
+
+  // Send notifications to all subscribers
+  if(doNotify) {
+    const notifyCount = await notifyAllSubscribers(tradeObj);
+    if(statusEl){statusEl.textContent=`✓ Objavljeno${notifyCount>0?' · '+notifyCount+' notifikacij poslanih':''}`;statusEl.style.color='var(--green)';}
+  } else {
+    if(statusEl){statusEl.textContent='✓ Objavljeno in sinhronizirano';statusEl.style.color='var(--green)';}
+  }
+
+  // Reset form
+  ['ai-man-sym','ai-man-entry','ai-man-sl','ai-man-tp','ai-man-text'].forEach(id=>{const el=g(id);if(el)el.value='';});
+  const chkEl=g('ai-man-challenge'); if(chkEl) chkEl.checked=false;
+  setTimeout(()=>{const s=g('ai-man-status');if(s)s.textContent='';},5000);
+}
+
+// ── CHALLENGE / IZZIV ─────────────────────────────────────────────────────────
+function renderChallenge() {
+  const wrap = document.getElementById('ai-challenge-wrap');
+  const ch   = window._tcChallenge;
+  if(!wrap) return;
+  if(!ch || !ch.active) { wrap.style.display='none'; return; }
+  wrap.style.display='block';
+  const isBull = ch.dir !== 'bear';
+  const dirCol = isBull ? 'var(--green)' : 'var(--red)';
+  const dirTxt = isBull ? '▲ BULLISH' : '▼ BEARISH';
+  const symEl  = document.getElementById('ch-sym');
+  const dirEl  = document.getElementById('ch-dir-badge');
+  const entEl  = document.getElementById('ch-entry');
+  const slEl   = document.getElementById('ch-sl');
+  const tpEl   = document.getElementById('ch-tp');
+  const txtEl  = document.getElementById('ch-text');
+  const timeEl = document.getElementById('ch-time');
+  const closeBtn = document.getElementById('ch-close-btn');
+  if(symEl) symEl.textContent = ch.sym || '—';
+  if(dirEl) { dirEl.textContent=dirTxt; dirEl.style.cssText=`font-size:9px;padding:1px 8px;font-weight:bold;background:${isBull?'rgba(0,232,122,.12)':'rgba(255,68,85,.12)'};border:1px solid ${isBull?'#0a5a2a':'#5a0a1a'};color:${dirCol}`; }
+  if(entEl) { entEl.textContent = ch.entry ? '$'+parseFloat(ch.entry).toLocaleString('en',{minimumFractionDigits:2,maximumFractionDigits:5}) : '—'; }
+  if(slEl)  { slEl.textContent  = ch.sl    ? '$'+parseFloat(ch.sl).toLocaleString('en',{minimumFractionDigits:2,maximumFractionDigits:5}) : '—'; }
+  if(tpEl)  { tpEl.textContent  = ch.tp    ? '$'+parseFloat(ch.tp).toLocaleString('en',{minimumFractionDigits:2,maximumFractionDigits:5}) : '—'; }
+  if(txtEl) txtEl.innerHTML = ch.text ? ch.text.replace(/\n/g,'<br>') : '';
+  if(timeEl) timeEl.textContent = ch.time || '';
+  if(closeBtn) closeBtn.style.display = aiOwner ? 'inline-block' : 'none';
+}
+
+function clearChallenge() {
+  if(!aiOwner) return;
+  if(!confirm('Zapri aktivni izziv?')) return;
+  window._tcChallenge = null;
+  renderChallenge();
+  cloudPush();
+}
+
+// ── SUBSCRIBER REGISTRATION (user side) ──────────────────────────────────────
+const SUB_BIN_KEY = 'tc_sub_bin';
+
+function loadUserNotifyPrefs() {
+  const saved = JSON.parse(localStorage.getItem('tc_notify_prefs')||'{}');
+  const eEl = document.getElementById('nup-email');
+  const tEl = document.getElementById('nup-tgid');
+  const pEl = document.getElementById('nup-phone');
+  if(eEl && saved.email)  eEl.value = saved.email;
+  if(tEl && saved.tgId)   tEl.value = saved.tgId;
+  if(pEl && saved.phone)  pEl.value = saved.phone;
+  if(saved.email || saved.tgId) {
+    const ok = document.getElementById('nup-ok');
+    if(ok) { ok.style.display='block'; ok.textContent='✅ Že registrirani — kontakti shranjeni.'; }
+  }
+}
+
+async function saveUserNotifyPrefs() {
+  const email = (document.getElementById('nup-email')?.value||'').trim().toLowerCase();
+  const tgId  = (document.getElementById('nup-tgid')?.value||'').trim();
+  const phone = (document.getElementById('nup-phone')?.value||'').trim();
+  const statusEl = document.getElementById('nup-status');
+  const okEl     = document.getElementById('nup-ok');
+
+  if(!email && !tgId) {
+    if(statusEl){statusEl.textContent='⚠ Vnesi email ali Telegram Chat ID';statusEl.style.color='var(--red)';setTimeout(()=>statusEl.textContent='',3000);}
+    return;
+  }
+  if(email && !email.includes('@')) {
+    if(statusEl){statusEl.textContent='⚠ Neveljaven email';statusEl.style.color='var(--red)';setTimeout(()=>statusEl.textContent='',3000);}
+    return;
+  }
+
+  // Save locally
+  const prefs = {email, tgId, phone, ts: new Date().toISOString()};
+  localStorage.setItem('tc_notify_prefs', JSON.stringify(prefs));
+
+  if(statusEl){statusEl.textContent='⏳ Registriranje...';statusEl.style.color='var(--amber)';}
+
+  // Try to register to sub bin
+  const subBinId = localStorage.getItem(SUB_BIN_KEY) || cloudCfg.subBinId || '';
+  const subKey   = cloudCfg.subKey || '';
+
+  if(subBinId && subKey) {
+    try {
+      // Read current subscribers
+      const rRes = await fetch(`https://api.jsonbin.io/v3/b/${subBinId}/latest`, {
+        headers: subKey ? {'X-Master-Key':subKey} : {}
+      });
+      let subs = [];
+      if(rRes.ok) { const d=await rRes.json(); subs=d.record?.subscribers||[]; }
+      // Remove old entry from same email/tgId, add new
+      subs = subs.filter(s=>s.email!==email && s.tgId!==tgId);
+      subs.push(prefs);
+      // Write back
+      await fetch(`https://api.jsonbin.io/v3/b/${subBinId}`, {
+        method:'PUT',
+        headers:{'Content-Type':'application/json','X-Master-Key':subKey,'X-Bin-Versioning':'false'},
+        body:JSON.stringify({subscribers:subs})
+      });
+    } catch(e){}
+  }
+
+  if(statusEl) statusEl.textContent='';
+  if(okEl) { okEl.style.display='block'; okEl.textContent='✅ Registracija uspešna! Prejeli boste obvestila ob naslednjem objavljenem trejdu.'; }
+}
+
+// ── NOTIFY ALL SUBSCRIBERS (admin side) ──────────────────────────────────────
+async function notifyAllSubscribers(trade) {
+  const subBinId = cloudCfg.subBinId || '';
+  const subKey   = cloudCfg.subKey   || '';
+  let subs = [];
+
+  // Load from sub bin
+  if(subBinId) {
+    try {
+      const headers = subKey ? {'X-Master-Key':subKey} : {};
+      const res = await fetch(`https://api.jsonbin.io/v3/b/${subBinId}/latest`, {headers});
+      if(res.ok) { const d=await res.json(); subs=d.record?.subscribers||[]; }
+    } catch(e){}
+  }
+  // Also check cached subscribers from feed bin
+  if(!subs.length && window._tcFeedSubs) subs = window._tcFeedSubs;
+  if(!subs.length) return 0;
+
+  const isBull = trade.signal !== 'bear';
+  const dirTxt = isBull ? '▲ BULLISH' : '▼ BEARISH';
+  const fp = v => v ? parseFloat(v).toLocaleString('en',{minimumFractionDigits:2,maximumFractionDigits:6}) : '—';
+
+  const tgMsg =
+    `🤖 <b>TradeCore — Nov trejd objavljen!</b>\n\n`+
+    `<b>${trade.sym}</b> [${trade.market}] ${dirTxt}\n\n`+
+    (trade.price ? `📍 Entry: $${fp(trade.price)}\n` : '')+
+    (trade.sl    ? `🛑 Stop Loss: $${fp(trade.sl)}\n` : '')+
+    (trade.tp    ? `🎯 Take Profit: $${fp(trade.tp)}\n` : '')+
+    `\n📝 ${(trade.analysis?.notes||[''])[0]?.substring(0,200)||''}\n\n`+
+    `⏰ ${trade.time}`;
+
+  const emailSubj = `TradeCore — Nov signal: ${trade.sym} ${dirTxt}`;
+  const emailBody =
+    `Nov trejd je bil objavljen!\n\n`+
+    `${trade.sym} [${trade.market}] ${dirTxt}\n\n`+
+    (trade.price ? `Entry: $${fp(trade.price)}\n` : '')+
+    (trade.sl    ? `Stop Loss: $${fp(trade.sl)}\n` : '')+
+    (trade.tp    ? `Take Profit: $${fp(trade.tp)}\n` : '')+
+    `\nAnaliza:\n${(trade.analysis?.notes||[''])[0]||''}\n\n`+
+    `Čas: ${trade.time}\n\n— TradeCore`;
+
+  const tgCfg = JSON.parse(localStorage.getItem('tc_telegram')||'{}');
+  let sent = 0;
+
+  for(const sub of subs) {
+    // Telegram
+    if(sub.tgId && tgCfg.token) {
+      try {
+        await fetch(`https://api.telegram.org/bot${tgCfg.token}/sendMessage`, {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({chat_id:sub.tgId, text:tgMsg, parse_mode:'HTML'})
+        });
+        sent++;
+      } catch(e){}
+    }
+    // Email via EmailJS
+    if(sub.email && typeof emailjs !== 'undefined') {
+      try {
+        const ejsCfg = JSON.parse(localStorage.getItem('tc_emailjs')||'{}');
+        if(ejsCfg.serviceId && ejsCfg.templateId) {
+          await emailjs.send(ejsCfg.serviceId, ejsCfg.templateId, {
+            to_email: sub.email,
+            subject:  emailSubj,
+            message:  emailBody,
+            sym:      trade.sym,
+            dir:      dirTxt,
+            entry:    trade.price ? '$'+fp(trade.price) : '—',
+            sl:       trade.sl    ? '$'+fp(trade.sl)    : '—',
+            tp:       trade.tp    ? '$'+fp(trade.tp)    : '—',
+          });
+          sent++;
+        }
+      } catch(e){}
+    }
+    await new Promise(r=>setTimeout(r,120)); // throttle: 120ms between sends
+  }
+  return sent;
+}
+
+// ── ADMIN: view subscriber list ───────────────────────────────────────────────
+async function adminLoadSubscribers() {
+  const listEl  = document.getElementById('admin-sub-list');
+  const tableEl = document.getElementById('admin-sub-table');
+  if(!listEl||!tableEl) return;
+  listEl.style.display='block';
+  tableEl.innerHTML='<span style="color:var(--text3)">Nalaganje...</span>';
+  const subBinId = cloudCfg.subBinId||'';
+  const subKey   = cloudCfg.subKey||'';
+  if(!subBinId) { tableEl.innerHTML='<span style="color:var(--red)">⚠ SUB BIN ID ni nastavljen</span>'; return; }
+  try {
+    const headers = subKey ? {'X-Master-Key':subKey} : {};
+    const res = await fetch(`https://api.jsonbin.io/v3/b/${subBinId}/latest`,{headers});
+    if(!res.ok) { tableEl.innerHTML='<span style="color:var(--red)">⚠ Napaka pri nalaganju</span>'; return; }
+    const d = await res.json();
+    const subs = d.record?.subscribers||[];
+    window._tcFeedSubs = subs;
+    updateSubCountBadge(subs.length);
+    if(!subs.length) { tableEl.innerHTML='<span style="color:var(--text3)">Še ni registriranih naročnikov.</span>'; return; }
+    tableEl.innerHTML = `<table style="width:100%;border-collapse:collapse">
+      <tr style="border-bottom:1px solid var(--border)">
+        <th style="text-align:left;padding:3px 6px;color:var(--text3);font-weight:normal">#</th>
+        <th style="text-align:left;padding:3px 6px;color:var(--text3);font-weight:normal">EMAIL</th>
+        <th style="text-align:left;padding:3px 6px;color:var(--text3);font-weight:normal">TG CHAT ID</th>
+        <th style="text-align:left;padding:3px 6px;color:var(--text3);font-weight:normal">TELEFON</th>
+        <th style="text-align:left;padding:3px 6px;color:var(--text3);font-weight:normal">DATUM</th>
+      </tr>
+      ${subs.map((s,i)=>`<tr style="border-bottom:1px solid #060910">
+        <td style="padding:3px 6px;color:var(--text3)">${i+1}</td>
+        <td style="padding:3px 6px;color:var(--text2)">${s.email||'—'}</td>
+        <td style="padding:3px 6px;color:var(--blue)">${s.tgId||'—'}</td>
+        <td style="padding:3px 6px;color:var(--text3)">${s.phone||'—'}</td>
+        <td style="padding:3px 6px;color:var(--text3)">${s.ts?new Date(s.ts).toLocaleDateString('sl-SI'):'—'}</td>
+      </tr>`).join('')}
+    </table>`;
+  } catch(e) { tableEl.innerHTML=`<span style="color:var(--red)">⚠ Napaka: ${e.message}</span>`; }
+}
+
+function updateSubCountBadge(count) {
+  const el = document.getElementById('ai-sub-count');
+  if(el) { el.textContent=`👥 ${count} naročnikov`; el.style.display='inline'; }
 }
 
 // ══════════════════════════════════════
