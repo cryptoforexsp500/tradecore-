@@ -433,6 +433,7 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
 </style>
 </head>
 <body>
+
 <div id="app">
 
 <div id="topbar">
@@ -553,7 +554,7 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
       <div class="feed-section">
         <div class="fs-hdr" style="display:flex;align-items:center;justify-content:space-between">
           <span>📝 MY ANALYSES & POSTS</span>
-          <button onclick="openOwnerPostModal()" style="padding:3px 10px;background:rgba(168,85,247,.15);border:1px solid #7c3aed;color:#a855f7;font-size:9px;cursor:pointer;font-family:inherit;letter-spacing:.08em;font-weight:bold">✍ NEW POST</button>
+          <button id="home-new-post-btn" onclick="openOwnerPostModal()" style="display:none;padding:3px 10px;background:rgba(168,85,247,.15);border:1px solid #7c3aed;color:#a855f7;font-size:9px;cursor:pointer;font-family:inherit;letter-spacing:.08em;font-weight:bold">✍ NEW POST</button>
         </div>
         <div id="my-posts-feed"></div>
         <div id="owner-posts-feed"></div>
@@ -648,6 +649,7 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
           <th style="color:var(--amber);white-space:nowrap" title="Hours price has been above or below 100 EMA">EMA100</th>
           <th class="th-sort r" data-col="fvg" onclick="crThSort('fvg')" style="color:#7b68ee;white-space:nowrap" title="Fair Value Gap — click to sort by proximity">FVG</th>
           <th class="th-sort r" data-col="liq" onclick="crThSort('liq')" style="color:var(--green);white-space:nowrap" title="Nearest support level — click to sort by proximity">SUPPORT</th>
+          <th class="th-sort r" data-col="rvgi" onclick="crThSort('rvgi')" style="color:#e879f9;white-space:nowrap" title="RVGI: Relative Vigor Index (12-period). &lt;0.30 = LONG zone 🟢, &gt;0.70 = SHORT zone 🔴">RVGI</th>
         </tr></thead>
         <tbody id="cr-tb"></tbody>
       </table></div>
@@ -704,6 +706,7 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
           <th style="color:var(--amber);white-space:nowrap" title="Hours price has been above or below 100 EMA">EMA100</th>
           <th class="th-sort r" data-col="fvg" onclick="spThSort('fvg')" style="color:#7b68ee;white-space:nowrap" title="Fair Value Gap — click to sort by proximity">FVG</th>
           <th class="th-sort r" data-col="liq" onclick="spThSort('liq')" style="color:var(--green);white-space:nowrap" title="Nearest support level — click to sort by proximity">SUPPORT</th>
+          <th class="th-sort r" data-col="rvgi" onclick="spThSort('rvgi')" style="color:#e879f9;white-space:nowrap" title="RVGI: Relative Vigor Index (12-period). &lt;0.30 = LONG zone 🟢, &gt;0.70 = SHORT zone 🔴">RVGI</th>
         </tr></thead>
         <tbody id="sp-tb"></tbody>
       </table></div>
@@ -930,7 +933,25 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
 </div>
 
 <!-- AI PRO PAGE -->
-<div class="page" id="page-ai" style="overflow-y:auto;background:var(--bg)">
+<div class="page" id="page-ai" style="overflow-y:auto;background:var(--bg);position:relative">
+
+  <!-- ── AI PRO SESSION GATE ─────────────────────────────────────────────── -->
+  <div id="login-gate" style="position:absolute;top:0;left:0;width:100%;height:100%;min-height:100vh;background:rgba(2,5,16,.97);z-index:999;display:flex;align-items:center;justify-content:center;font-family:'Courier New',monospace">
+    <div style="background:#0a0f1e;border:1px solid #1a2a4a;max-width:380px;width:92%;padding:36px 32px;text-align:center">
+      <div style="font-size:28px;margin-bottom:14px">🔐</div>
+      <div style="font-size:16px;font-weight:bold;color:#a855f7;letter-spacing:.25em;margin-bottom:6px">AI PRO</div>
+      <div style="font-size:9px;color:#4a5a7a;letter-spacing:.15em;margin-bottom:28px">VNESITE AKTIVACIJSKO KODO ZA DOSTOP</div>
+      <input id="gate-code" type="password" placeholder="Aktivacijska koda..." autocomplete="off"
+        style="width:100%;box-sizing:border-box;background:#060b18;border:1px solid #1a2a4a;color:#c0d0f0;padding:11px 14px;font-family:inherit;font-size:12px;outline:none;letter-spacing:.08em;margin-bottom:12px"
+        onkeydown="if(event.key==='Enter')gateLogin()"/>
+      <button onclick="gateLogin()" style="width:100%;padding:11px;background:rgba(168,85,247,.2);border:1px solid #7c3aed;color:#a855f7;font-family:inherit;font-size:11px;cursor:pointer;font-weight:bold;letter-spacing:.15em">
+        VSTOPI →
+      </button>
+      <div id="gate-err" style="font-size:9px;color:#ff4444;margin-top:10px;display:none;letter-spacing:.05em">Napačna koda. Poskusite znova.</div>
+      <div style="margin-top:24px;font-size:8px;color:#2a3a5a;letter-spacing:.08em">TradeCore Pro · Samo za avtorizirane uporabnike</div>
+    </div>
+  </div>
+
   <div style="max-width:900px;margin:0 auto;padding:20px">
 
     <!-- Header -->
@@ -1007,7 +1028,7 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
       <div id="ai-panels">
 
         <!-- Panel: Telegram -->
-        <div class="ai-panel" id="aip-tg" draggable="true">
+        <div class="ai-panel" id="aip-tg" draggable="true" style="display:none">
           <div class="aip-handle">
             <span class="aip-grip">⠿⠿</span>
             <span class="aip-title">📱 TELEGRAM NOTIFICATIONS</span>
@@ -1039,7 +1060,7 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
         </div>
 
         <!-- Panel: Alert filters -->
-        <div class="ai-panel" id="aip-filters" draggable="true">
+        <div class="ai-panel" id="aip-filters" draggable="true" style="display:none">
           <div class="aip-handle">
             <span class="aip-grip">⠿⠿</span>
             <span class="aip-title">⚙ AI ALERT FILTERS</span>
@@ -1062,7 +1083,7 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
         </div>
 
         <!-- Panel: Post Analysis -->
-        <div class="ai-panel" id="aip-post" draggable="true" style="border-color:#7c3aed">
+        <div class="ai-panel" id="aip-post" draggable="true" style="display:none;border-color:#7c3aed">
           <div class="aip-handle" style="border-bottom-color:#7c3aed">
             <span class="aip-grip">⠿⠿</span>
             <span class="aip-title">🤖 POST AI GENERATED ANALYSIS</span>
@@ -1640,6 +1661,22 @@ function detectNearFVG(highs, lows, currentPrice) {
   return { bull: bullPrice !== null, bear: bearPrice !== null, bullPrice, bearPrice };
 }
 
+// ── RVGI (Relative Vigor Index) ──────────────────────────────────────────────
+// Raw: (Close-Open)/(High-Low) per candle, smoothed with SMA over `period`
+// <0.3 → bullish/long zone  |  >0.7 → bearish/short zone
+function calcRVGI(opens, closes, highs, lows, period=12) {
+  const n = Math.min(opens.length, closes.length, highs.length, lows.length);
+  if(n < period) return null;
+  let sum = 0;
+  for(let i = n - period; i < n; i++) {
+    const hl = highs[i] - lows[i];
+    sum += hl > 1e-12 ? (closes[i] - opens[i]) / hl : 0;
+  }
+  // Clamp to [-1, 1] then normalize to [0, 1] for easier display
+  const raw = sum / period;
+  return Math.max(-1, Math.min(1, raw)) * 0.5 + 0.5;
+}
+
 function calcHoursAboveBelow(closes, intervalMin) {
   if(!closes || closes.length < 102) return null;
   const n = closes.length;
@@ -1673,7 +1710,8 @@ async function crFetchOne(id){
   const price=closes[closes.length-1];
   const liq=findLiquidityLevels(opens,closes,highs,lows,price);
   const fvg=detectNearFVG(highs,lows,price);
-  return{rsi:rs[rs.length-1]??null,ma:sma(rs,MA_LEN),price,chg:((price-closes[closes.length-2])/closes[closes.length-2])*100,div:detectDiv(lows,highs,rs),ema100,liq,fvg};
+  const rvgi=calcRVGI(opens,closes,highs,lows);
+  return{rsi:rs[rs.length-1]??null,ma:sma(rs,MA_LEN),price,chg:((price-closes[closes.length-2])/closes[closes.length-2])*100,div:detectDiv(lows,highs,rs),ema100,liq,fvg,rvgi};
 }
 
 // Fetch liquidity levels from 15m, 30m, 1h charts for bearish signals
@@ -1720,6 +1758,12 @@ function crRow(s,i){
   const liqDist=liqLvl?parseFloat(liqLvl.dist):null;
   const liqDc=liqDist!==null?(Math.abs(liqDist)<1?'var(--green)':Math.abs(liqDist)<2?'var(--amber)':'#ff6644'):'var(--text3)';
   const liqHtml=liqLvl?`<span style="color:var(--green);font-size:9px;font-weight:bold;line-height:1.4" title="Support: ${liqLvl.reason} · ${liqLvl.score} pts">${fp(liqLvl.price)}<br><span style="font-size:8px;font-weight:normal;color:${liqDc}">${liqDist}%</span></span>`:`<span style="color:var(--text3);font-size:9px">—</span>`;
+  const rv=d?.rvgi;
+  const rvLong=rv!=null&&rv<0.30,rvShort=rv!=null&&rv>0.70;
+  const rvC=rv==null?'var(--text3)':rvLong?'var(--green)':rvShort?'var(--red)':'var(--text2)';
+  const rvBg=rv==null?'transparent':rvLong?'rgba(0,232,122,.08)':rvShort?'rgba(220,50,50,.1)':'transparent';
+  const rvLabel=rvLong?' 🟢 LONG':rvShort?' 🔴 SHORT':'';
+  const rvHtml=rv!=null?`<span style="color:${rvC};font-size:9px;font-weight:bold;background:${rvBg};padding:1px 4px;border-radius:2px" title="RVGI ${rv.toFixed(3)}${rvLabel}">${rv.toFixed(2)}${rvLabel}</span>`:`<span style="color:var(--text3);font-size:9px">—</span>`;
   return`<tr style="background:${bg};border-left:${bl};border-bottom:1px solid #090d18">
     <td style="color:var(--text3);font-size:9px">${ks?'★':i+1}</td>
     <td style="font-weight:bold;color:${nc}">${s.id.replace('USDT','')}</td>
@@ -1731,7 +1775,8 @@ function crRow(s,i){
     <td class="r">${stH}</td>
     <td class="r">${emHtml}</td>
     <td class="r">${fvHtml}</td>
-    <td class="r">${liqHtml}</td></tr>`;
+    <td class="r">${liqHtml}</td>
+    <td class="r">${rvHtml}</td></tr>`;
 }
 function crGo(){
   const q=document.getElementById('cr-search').value.toLowerCase();
@@ -1765,6 +1810,8 @@ function crGo(){
     const lb=Math.abs(parseFloat(crData[b.id]?.liq?.bull?.[0]?.dist??999));
     return la-lb;
   });
+  if(srt==='rvgi_asc')rows.sort((a,b)=>(crData[a.id]?.rvgi??999)-(crData[b.id]?.rvgi??999));
+  if(srt==='rvgi_desc')rows.sort((a,b)=>(crData[b.id]?.rvgi??-999)-(crData[a.id]?.rvgi??-999));
   // Key signals always on top
   rows.sort((a,b)=>isKeySignal(crData[b.id])?1:isKeySignal(crData[a.id])?-1:0);
   document.getElementById('cr-tb').innerHTML=rows.map((s,i)=>crRow(s,i)).join('');
@@ -1931,7 +1978,8 @@ async function spFetchOne(sym){
       const price=vc[vc.length-1];
       const liq=findLiquidityLevels(vo,vc,vh,vl,price);
       const fvg=detectNearFVG(vh,vl,price);
-      return{rsi:rs[rs.length-1]??null,ma:sma(rs,MA_LEN),price,chg:((price-vc[vc.length-2])/vc[vc.length-2])*100,div:detectDiv(vl,vh,rs),ema100,liq,fvg};
+      const rvgi=calcRVGI(vo,vc,vh,vl);
+      return{rsi:rs[rs.length-1]??null,ma:sma(rs,MA_LEN),price,chg:((price-vc[vc.length-2])/vc[vc.length-2])*100,div:detectDiv(vl,vh,rs),ema100,liq,fvg,rvgi};
     }catch(e){lastE=e;}
   }throw lastE;
 }
@@ -1961,6 +2009,12 @@ function spRow(s,i){
   const liqDist=liqLvl?parseFloat(liqLvl.dist):null;
   const liqDc=liqDist!==null?(Math.abs(liqDist)<1?'var(--green)':Math.abs(liqDist)<2?'var(--amber)':'#ff6644'):'var(--text3)';
   const liqHtml=liqLvl?`<span style="color:var(--green);font-size:9px;font-weight:bold;line-height:1.4" title="Support: ${liqLvl.reason} · ${liqLvl.score} pts">${fp(liqLvl.price)}<br><span style="font-size:8px;font-weight:normal;color:${liqDc}">${liqDist}%</span></span>`:`<span style="color:var(--text3);font-size:9px">—</span>`;
+  const rv=d?.rvgi;
+  const rvLong=rv!=null&&rv<0.30,rvShort=rv!=null&&rv>0.70;
+  const rvC=rv==null?'var(--text3)':rvLong?'var(--green)':rvShort?'var(--red)':'var(--text2)';
+  const rvBg=rv==null?'transparent':rvLong?'rgba(0,232,122,.08)':rvShort?'rgba(220,50,50,.1)':'transparent';
+  const rvLabel=rvLong?' 🟢 LONG':rvShort?' 🔴 SHORT':'';
+  const rvHtml=rv!=null?`<span style="color:${rvC};font-size:9px;font-weight:bold;background:${rvBg};padding:1px 4px;border-radius:2px" title="RVGI ${rv.toFixed(3)}${rvLabel}">${rv.toFixed(2)}${rvLabel}</span>`:`<span style="color:var(--text3);font-size:9px">—</span>`;
   return`<tr style="background:${bg};border-left:${bl};border-bottom:1px solid #090d18">
     <td style="color:var(--text3);font-size:9px">${ks?'★':i+1}</td>
     <td><div style="font-weight:bold;color:${nc}">${s.id}</div></td>
@@ -1973,7 +2027,8 @@ function spRow(s,i){
     <td class="r">${stH}</td>
     <td class="r">${emHtml}</td>
     <td class="r">${fvHtml}</td>
-    <td class="r">${liqHtml}</td></tr>`;
+    <td class="r">${liqHtml}</td>
+    <td class="r">${rvHtml}</td></tr>`;
 }
 function spGo(){
   const q=document.getElementById('sp-search').value.toLowerCase();
@@ -2009,6 +2064,8 @@ function spGo(){
     const lb=Math.abs(parseFloat(spData[b.id]?.liq?.bull?.[0]?.dist??999));
     return la-lb;
   });
+  if(srt==='rvgi_asc')rows.sort((a,b)=>(spData[a.id]?.rvgi??999)-(spData[b.id]?.rvgi??999));
+  if(srt==='rvgi_desc')rows.sort((a,b)=>(spData[b.id]?.rvgi??-999)-(spData[a.id]?.rvgi??-999));
   rows.sort((a,b)=>isKeySignal(spData[b.id])?1:isKeySignal(spData[a.id])?-1:0);
   document.getElementById('sp-tb').innerHTML=rows.map((s,i)=>spRow(s,i)).join('');
   spStats();
@@ -2593,6 +2650,8 @@ function deleteOwnerPost(idx) {
 }
 
 function openOwnerPostModal() {
+  // Only admin/owner can add posts
+  if(!aiOwner) return;
   document.getElementById('owner-post-modal').style.display='flex';
   if(ownerUnlocked) {
     document.getElementById('opm-lock').style.display='none';
@@ -2920,6 +2979,93 @@ const AI_PRO_PRICE        = '29 €/mesec';       // ← cena za prikaz na stran
 const AI_CODES  = ['TRADECORE2024','AIPROMATIC','TC-PRO-2025','TC-PRO-2026','MATIC-AIPRO'];
 const OWNER_CODE= 'TC-OWNER-MATIC';            // ← tvoja lastniška koda (ne deli)
 
+// ── Session gate ─────────────────────────────────────────────────────────────
+// gateLogin() stores access level in sessionStorage. On reload, gate hides
+// automatically and applyGateAccess() restores the right panels.
+
+function gateLogin() {
+  const code = (document.getElementById('gate-code')?.value||'').trim().toUpperCase();
+  if(!code) return;
+  const isOwner = (code === OWNER_CODE);
+  const isValid = isOwner || AI_CODES.includes(code);
+  if(!isValid) {
+    const err = document.getElementById('gate-err');
+    if(err){ err.style.display='block'; setTimeout(()=>err.style.display='none',2500); }
+    const inp = document.getElementById('gate-code');
+    if(inp){ inp.style.borderColor='#ff4444'; setTimeout(()=>inp.style.borderColor='#1a2a4a',1500); inp.value=''; }
+    return;
+  }
+  // Store session
+  sessionStorage.setItem('tc_session','1');
+  sessionStorage.setItem('tc_session_owner', isOwner ? '1' : '0');
+  // Update localStorage so aiApplyUnlock() reads the right values
+  if(isOwner) {
+    localStorage.setItem(OWNER_KEY,'1');
+    localStorage.setItem(AI_UNLOCK_KEY,'1');
+  } else {
+    localStorage.removeItem(OWNER_KEY);
+    localStorage.setItem(AI_UNLOCK_KEY,'1');
+  }
+  // Hide gate with fade
+  const gate = document.getElementById('login-gate');
+  if(gate){ gate.style.transition='opacity .25s'; gate.style.opacity='0'; setTimeout(()=>gate.style.display='none',260); }
+  // Apply access directly — don't rely on global variables yet
+  applyGateAccess(isOwner);
+}
+
+// Called both after gateLogin AND on page reload when gate auto-hides
+function applyGateAccess(isOwner) {
+  // 1. Unlock the blurred content
+  const content = document.getElementById('ai-content');
+  if(content){ content.style.opacity='1'; content.style.pointerEvents='auto'; content.style.filter='none'; }
+  // 2. Hide the unlock-section (code entry box)
+  const us = document.getElementById('ai-unlock-section');
+  if(us) us.style.display='none';
+  // 3. Show logout button + account info
+  const lb = document.getElementById('ai-logout-btn');
+  const ai = document.getElementById('ai-account-info');
+  if(lb) lb.style.display='inline-block';
+  if(ai) ai.style.display='block';
+  const ae = document.getElementById('ai-account-email');
+  if(ae) ae.textContent = localStorage.getItem('tc_ai_email')||'(brez emaila)';
+  const at = document.getElementById('ai-account-type');
+  if(at) at.textContent = isOwner ? '👑 ADMIN / OWNER' : '✓ PREMIUM';
+  // 4. Badge
+  const badge = document.getElementById('ai-lock-badge');
+  if(badge){
+    if(isOwner){
+      badge.textContent='👑 OWNER MODE'; badge.style.background='rgba(240,165,0,.15)';
+      badge.style.borderColor='var(--amber)'; badge.style.color='var(--amber)';
+    } else {
+      badge.textContent='✓ PREMIUM ACTIVE'; badge.style.background='rgba(0,232,122,.15)';
+      badge.style.borderColor='var(--green)'; badge.style.color='var(--green)';
+    }
+    badge.style.cursor='default'; badge.onclick=null;
+  }
+  // 5. Owner-only panels — show for owner, hide for regular
+  const ownerShow = isOwner ? 'block' : 'none';
+  ['aip-tg','aip-filters','aip-post'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.style.display=ownerShow;
+  });
+  const cs=document.getElementById('cloud-section'); if(cs) cs.style.display=ownerShow;
+  const cb=document.getElementById('feed-clear-btn'); if(cb) cb.style.display=isOwner?'inline-block':'none';
+  const np=document.getElementById('home-new-post-btn'); if(np) np.style.display=isOwner?'inline-block':'none';
+  // 6. Telegram + cloud settings
+  loadTelegramSettings();
+  if(isOwner) loadCloudSettings();
+  startCloudSync();
+}
+
+/// On page load: if session exists, hide gate and restore access
+(function(){
+  const gate = document.getElementById('login-gate');
+  if(!gate) return;
+  if(sessionStorage.getItem('tc_session') === '1') {
+    gate.style.display = 'none';
+    // applyGateAccess will be called below after all functions/vars are declared
+  }
+})();
+
 const AI_UNLOCK_KEY = 'tc_ai_unlocked';
 const OWNER_KEY     = 'tc_owner_v1';
 const CLOUD_CFG_KEY = 'tc_cloud_v1';
@@ -3051,49 +3197,15 @@ function saveCloudCfg() {
   startCloudSync();
 }
 
-// ── Apply unlock state ──────────────────────────────────────────────────────
+// ── Apply unlock state (delegates to applyGateAccess) ───────────────────────
 function aiApplyUnlock() {
-  const content       = document.getElementById('ai-content');
-  const badge         = document.getElementById('ai-lock-badge');
-  const unlockSection = document.getElementById('ai-unlock-section');
   if(!aiUnlocked) return;
-  content.style.opacity='1'; content.style.pointerEvents='auto'; content.style.filter='none';
-  unlockSection.style.display='none';
-  loadTelegramSettings();
-
-  // Show logout button + account info
-  const logoutBtn = document.getElementById('ai-logout-btn');
-  const accountInfo = document.getElementById('ai-account-info');
-  const accountEmail = document.getElementById('ai-account-email');
-  const accountType = document.getElementById('ai-account-type');
-  if(logoutBtn) logoutBtn.style.display='inline-block';
-  if(accountInfo) accountInfo.style.display='block';
-  const savedEmail = localStorage.getItem('tc_ai_email')||'';
-  if(accountEmail) accountEmail.textContent = savedEmail || '(brez emaila)';
-  if(accountType) accountType.textContent = aiOwner ? '👑 ADMIN / OWNER' : '✓ PREMIUM';
-
-  // Owner sees post/filter/telegram panels; viewers see only the feed
-  ['aip-tg','aip-filters','aip-post'].forEach(id => {
-    const el = document.getElementById(id);
-    if(el) el.style.display = aiOwner ? 'block' : 'none';
-  });
-  // Cloud section is a plain div — always show for owner
-  const cloudSection = document.getElementById('cloud-section');
-  if(cloudSection) cloudSection.style.display = aiOwner ? 'block' : 'none';
-  const clearBtn = document.getElementById('feed-clear-btn');
-  if(clearBtn) clearBtn.style.display = aiOwner ? 'inline-block' : 'none';
-
-  if(aiOwner) {
-    badge.textContent='👑 OWNER MODE'; badge.style.background='rgba(240,165,0,.15)'; badge.style.borderColor='var(--amber)'; badge.style.color='var(--amber)';
-    badge.style.cursor='default'; badge.onclick=null;
-    loadCloudSettings();
-  } else {
-    badge.textContent='✓ PREMIUM ACTIVE'; badge.style.background='rgba(0,232,122,.15)'; badge.style.borderColor='var(--green)'; badge.style.color='var(--green)';
-    badge.style.cursor='default'; badge.onclick=null;
-    // Naročniki: avtomatsko povleči oblak z CLOUD_BIN_DEFAULT (lastnik ne rabi nič nastaviti)
-    if(CLOUD_BIN_DEFAULT && !cloudCfg.binId) cloudCfg.binId = CLOUD_BIN_DEFAULT;
-  }
-  startCloudSync();
+  sessionStorage.setItem('tc_session','1');
+  sessionStorage.setItem('tc_session_owner', aiOwner ? '1' : '0');
+  const gate = document.getElementById('login-gate');
+  if(gate) gate.style.display='none';
+  applyGateAccess(aiOwner);
+  if(!aiOwner && CLOUD_BIN_DEFAULT && !cloudCfg.binId) cloudCfg.binId = CLOUD_BIN_DEFAULT;
 }
 // Pre-fill saved email in registration field
 (function(){
@@ -3104,7 +3216,14 @@ function aiApplyUnlock() {
   }
 })();
 
-aiApplyUnlock();
+// Restore access on page load (covers both: session reload AND first-time localStorage unlock)
+if(sessionStorage.getItem('tc_session') === '1') {
+  const isOwner = sessionStorage.getItem('tc_session_owner') === '1';
+  applyGateAccess(isOwner);
+} else if(aiUnlocked) {
+  // Fallback: had localStorage unlock but no session (e.g. old user before gate was added)
+  applyGateAccess(aiOwner);
+}
 
 function aiOwnerPrompt() {
   // If already owner, do nothing special
@@ -3141,6 +3260,7 @@ function aiLogout() {
   if(!confirm('Res se želite odjaviti iz AI Pro?')) return;
   localStorage.removeItem('tc_ai_unlocked');
   localStorage.removeItem('tc_owner_v1');
+  sessionStorage.removeItem('tc_session');
   // keep email saved so user doesn't have to re-enter it
   location.reload();
 }
@@ -3512,7 +3632,8 @@ const CR_TH_MAP={
   'price':['price_asc','price_desc'],'chg':['chg_desc','chg'],
   'str':['str','str'],
   'fvg':['fvg_asc','fvg_asc'],
-  'liq':['liq_asc','liq_asc']
+  'liq':['liq_asc','liq_asc'],
+  'rvgi':['rvgi_asc','rvgi_desc']
 };
 let crThState={col:null,dir:0};
 let spThState={col:null,dir:0};
