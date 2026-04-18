@@ -75,6 +75,8 @@ button,select,input{font-family:inherit;outline:none;cursor:pointer}
 .aip-grip{color:var(--text3);font-size:14px;letter-spacing:2px;line-height:1}
 .aip-title{font-size:9px;color:#a855f7;letter-spacing:.18em;font-weight:bold}
 .aip-body{padding:14px}
+/* Prevent drag interference on interactive elements inside panels */
+.aip-body button,.aip-body input,.aip-body select,.aip-body textarea,.aip-body label{-webkit-user-drag:none;user-select:auto}
 
 /* ── USER NOTIFY PANEL ── */
 #aip-notify-user{background:var(--bg2);border:1px solid #1a3a2a;margin-bottom:14px;overflow:hidden;display:none}
@@ -1058,36 +1060,42 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
       <!-- Draggable settings panels -->
       <div id="ai-panels">
 
-        <!-- Panel: EmailJS Config (for bulk notify) -->
+        <!-- Panel: Email status (uses existing emailCfg from topbar modal) -->
         <div class="ai-panel" id="aip-emailjs" draggable="true" style="display:none">
           <div class="aip-handle">
             <span class="aip-grip">⠿⠿</span>
-            <span class="aip-title">📧 EMAILJS — BATCH NOTIFIKACIJE</span>
+            <span class="aip-title">📧 EMAIL NASTAVITVE</span>
             <span style="margin-left:auto;font-size:9px;color:var(--text3);cursor:pointer" onclick="this.closest('.ai-panel').querySelector('.aip-body').style.display=this.closest('.ai-panel').querySelector('.aip-body').style.display==='none'?'block':'none'">▲▼</span>
           </div>
           <div class="aip-body">
-            <div style="font-size:9px;color:var(--text3);line-height:1.7;margin-bottom:10px;padding:8px;background:rgba(74,122,255,.04);border:1px solid var(--border2)">
-              emailjs.com → Account → Email Services → Service ID<br>
-              Email Templates → Template ID (spremenljivke: <span style="color:var(--blue)">to_email, subject, message, sym, dir, entry, sl, tp</span>)
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
               <div>
-                <div style="font-size:9px;color:var(--text3);margin-bottom:4px">PUBLIC KEY</div>
-                <input id="ejs-pub" type="text" placeholder="user_XXXXX" style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none"/>
+                <div style="font-size:9px;color:var(--text3);margin-bottom:4px">TVOJ EMAIL (prejemnik alarmov)</div>
+                <input id="aip-em-to" type="email" placeholder="cryptoforexsp500@gmail.com" style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none;box-sizing:border-box"/>
               </div>
               <div>
+                <div style="font-size:9px;color:var(--text3);margin-bottom:4px">PUBLIC KEY</div>
+                <input id="aip-em-key" type="text" placeholder="H7G-NfQfQ-BDPdIVw" style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none;box-sizing:border-box"/>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+              <div>
                 <div style="font-size:9px;color:var(--text3);margin-bottom:4px">SERVICE ID</div>
-                <input id="ejs-svc" type="text" placeholder="service_XXXXX" style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none"/>
+                <input id="aip-em-svc" type="text" placeholder="service_8ycasvq" style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none;box-sizing:border-box"/>
               </div>
               <div>
                 <div style="font-size:9px;color:var(--text3);margin-bottom:4px">TEMPLATE ID</div>
-                <input id="ejs-tpl" type="text" placeholder="template_XXXXX" style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none"/>
+                <input id="aip-em-tpl" type="text" placeholder="template_4h7i4fw" style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:6px 8px;font-family:inherit;font-size:10px;outline:none;box-sizing:border-box"/>
               </div>
             </div>
             <div style="display:flex;gap:8px;align-items:center">
-              <button onclick="saveEmailJsCfg()" style="padding:5px 12px;background:rgba(74,122,255,.1);border:1px solid var(--border2);color:var(--blue);font-family:inherit;font-size:9px;cursor:pointer;font-weight:bold">SAVE</button>
-              <button onclick="testEmailJsCfg()" style="padding:5px 10px;background:none;border:1px solid var(--border2);color:var(--text2);font-family:inherit;font-size:9px;cursor:pointer">TEST SEND</button>
-              <span id="ejs-status" style="font-size:9px;color:var(--text3)"></span>
+              <button draggable="false" onclick="saveAipEmail()" style="padding:5px 14px;background:rgba(74,122,255,.15);border:1px solid var(--blue);color:var(--blue);font-family:inherit;font-size:9px;cursor:pointer;font-weight:bold;letter-spacing:.08em">✓ SHRANI</button>
+              <button draggable="false" onclick="testAipEmail()" style="padding:5px 12px;background:none;border:1px solid var(--border2);color:var(--text2);font-family:inherit;font-size:9px;cursor:pointer">📤 TEST POŠLJI</button>
+              <span id="aip-em-status" style="font-size:9px;color:var(--text3)"></span>
+            </div>
+            <div id="aip-email-status-info" style="margin-top:8px;font-size:9px;color:var(--text3);line-height:1.7;padding:7px;background:rgba(74,122,255,.04);border:1px solid var(--border)">
+              Email nastavitve (EmailJS) se delijo med signal alarmi in subscriber notifikacijami.<br>
+              Template spremenljivke: <span style="color:var(--blue)">to_email, signal, details</span>
             </div>
           </div>
         </div>
@@ -1111,8 +1119,8 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
               </div>
             </div>
             <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-              <button onclick="saveTelegramSettings()" style="padding:5px 12px;background:rgba(0,232,122,.1);border:1px solid #0a5a2a;color:var(--green);font-family:inherit;font-size:9px;cursor:pointer;font-weight:bold">SAVE</button>
-              <button onclick="testTelegram()" style="padding:5px 12px;background:rgba(74,122,255,.1);border:1px solid var(--border2);color:var(--blue);font-family:inherit;font-size:9px;cursor:pointer">TEST MESSAGE</button>
+              <button draggable="false" onclick="saveTelegramSettings()" style="padding:5px 12px;background:rgba(0,232,122,.1);border:1px solid #0a5a2a;color:var(--green);font-family:inherit;font-size:9px;cursor:pointer;font-weight:bold">SAVE</button>
+              <button draggable="false" onclick="testTelegram()" style="padding:5px 12px;background:rgba(74,122,255,.1);border:1px solid var(--border2);color:var(--blue);font-family:inherit;font-size:9px;cursor:pointer">TEST MESSAGE</button>
               <span id="tg-status" style="font-size:9px;color:var(--text3)"></span>
               <label style="margin-left:auto;display:flex;align-items:center;gap:6px;font-size:9px;color:var(--text3);cursor:pointer">
                 <input id="tg-enabled" type="checkbox" style="cursor:pointer"/> Enable Telegram alerts
@@ -1132,16 +1140,20 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
             <span style="margin-left:auto;font-size:9px;color:var(--text3);cursor:pointer" onclick="this.closest('.ai-panel').querySelector('.aip-body').style.display=this.closest('.ai-panel').querySelector('.aip-body').style.display==='none'?'block':'none'">▲▼</span>
           </div>
           <div class="aip-body">
+            <div style="font-size:9px;color:var(--text3);margin-bottom:10px;padding:7px 9px;background:rgba(168,85,247,.04);border:1px solid var(--border);line-height:1.7">
+              <b style="color:#a855f7">Kaj je to?</b> — Ko scanner (Crypto/S&amp;P/Forex) zazna signal, ti filtri določijo kateri se <b>samodejno</b> dodajo v AI feed in pošljejo naročnikom. Ročno objavljeni trejdi (PUBLISH) gredo vedno skozi, ne glede na filtre.
+            </div>
             <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:10px">
-              <label style="display:flex;align-items:center;gap:5px;cursor:pointer"><input id="ai-f-crypto" type="checkbox" checked/> Crypto signals</label>
-              <label style="display:flex;align-items:center;gap:5px;cursor:pointer"><input id="ai-f-sp500" type="checkbox" checked/> S&P 500 signals</label>
+              <label style="display:flex;align-items:center;gap:5px;cursor:pointer"><input id="ai-f-crypto" type="checkbox" checked/> Crypto signali</label>
+              <label style="display:flex;align-items:center;gap:5px;cursor:pointer"><input id="ai-f-sp500" type="checkbox" checked/> S&amp;P 500 signali</label>
               <label style="display:flex;align-items:center;gap:5px;cursor:pointer"><input id="ai-f-forex" type="checkbox" checked/> Forex deviation</label>
-              <label style="display:flex;align-items:center;gap:5px;cursor:pointer"><input id="ai-f-bull" type="checkbox" checked/> Bullish only</label>
-              <label style="display:flex;align-items:center;gap:5px;cursor:pointer"><input id="ai-f-bear" type="checkbox" checked/> Bearish only</label>
-              <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
-                Min score: <select id="ai-min-score" style="background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:inherit;font-size:9px;padding:2px 4px">
+              <label style="display:flex;align-items:center;gap:5px;cursor:pointer"><input id="ai-f-bull" type="checkbox" checked/> Bullish</label>
+              <label style="display:flex;align-items:center;gap:5px;cursor:pointer"><input id="ai-f-bear" type="checkbox" checked/> Bearish</label>
+              <div style="margin-left:auto;display:flex;align-items:center;gap:6px;font-size:9px;color:var(--text3)">
+                Min AI score: <select id="ai-min-score" style="background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:inherit;font-size:9px;padding:2px 4px">
                   <option value="50">50+</option><option value="65" selected>65+</option><option value="75">75+</option><option value="85">85+</option>
                 </select>
+                <span style="color:var(--text3)" title="Signal mora doseči ta AI score (0-100) da se avtomatsko objavi">ⓘ</span>
               </div>
             </div>
           </div>
@@ -1204,7 +1216,7 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
               <span id="ai-sub-count" class="sub-count-badge" style="display:none"></span>
             </div>
             <div style="display:flex;gap:8px;align-items:center">
-              <button onclick="aiPublishAndNotify()" style="padding:6px 16px;background:linear-gradient(135deg,rgba(168,85,247,.25),rgba(74,122,255,.15));border:1px solid #7c3aed;color:#a855f7;font-family:inherit;font-size:10px;cursor:pointer;font-weight:bold;letter-spacing:.08em">⚡ PUBLISH & NOTIFY</button>
+              <button draggable="false" onclick="aiPublishAndNotify()" style="padding:6px 16px;background:linear-gradient(135deg,rgba(168,85,247,.25),rgba(74,122,255,.15));border:1px solid #7c3aed;color:#a855f7;font-family:inherit;font-size:10px;cursor:pointer;font-weight:bold;letter-spacing:.08em">⚡ PUBLISH & NOTIFY</button>
               <span id="ai-man-status" style="font-size:9px;color:var(--text3)"></span>
             </div>
           </div>
@@ -1254,12 +1266,18 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
           <span style="font-size:9px;color:var(--text3)">▲▼ toggle</span>
         </div>
         <div id="cloud-body" style="padding:12px 14px">
-          <div style="font-size:9px;color:var(--text3);line-height:1.7;margin-bottom:10px;padding:8px;background:rgba(240,165,0,.05);border:1px solid rgba(240,165,0,.12)">
-            1. jsonbin.io → brezplačna reg. → Create <b>2 BIN-a</b>:<br>
-            &nbsp;&nbsp;– <b>FEED BIN</b>: vsebina <span style="color:var(--text2)">{"feed":[],"subscribers":[],"challenge":null}</span> → PUBLIC<br>
-            &nbsp;&nbsp;– <b>SUB BIN</b>: vsebina <span style="color:var(--text2)">{"subscribers":[]}</span> → PUBLIC (za registracije)<br>
-            2. Kopiraj BIN ID-je + X-MASTER-KEY v polja spodaj → SAVE &amp; START<br>
-            3. Kupci vidijo tvoje analize samodejno vsake 60s + dobijo notifikacije
+          <div style="font-size:9px;color:var(--text3);line-height:1.8;margin-bottom:10px;padding:10px;background:rgba(240,165,0,.05);border:1px solid rgba(240,165,0,.12)">
+            <b style="color:var(--amber)">Kaj je JSONBin.io?</b><br>
+            Brezplačen oblačni shranjevalnik za JSON podatke. Deluje kot "mini baza" — ko ti objaviš trejd, se shrani sem, vsi naročniki ga vidijo samodejno brez refresha.<br><br>
+            <b style="color:var(--amber)">Kako nastaviti (5 minut):</b><br>
+            1. Pojdi na <span style="color:var(--blue)">jsonbin.io</span> → brezplačna registracija<br>
+            2. Ustvari <b>2 BINA</b> (gumb "+ New Bin"):<br>
+            &nbsp;&nbsp;– <b>FEED BIN</b>: vsebina <span style="color:var(--text2)">{"feed":[],"subscribers":[],"challenge":null}</span> → označi kot PUBLIC<br>
+            &nbsp;&nbsp;– <b>SUB BIN</b>: vsebina <span style="color:var(--text2)">{"subscribers":[]}</span> → označi kot PUBLIC<br>
+            3. Pojdi na <b>Account → API Keys</b> → kopiraj <b>X-MASTER-KEY</b><br>
+            4. Za vsak bin kopiraj <b>BIN ID</b> (iz URL-ja ali info panela)<br>
+            5. Prilepi ID-je in ključ spodaj → SAVE &amp; START<br><br>
+            <span style="color:var(--green)">✓ Ko nastaviš: naročniki vidijo trejde samodejno vsake 60s, brez refresha.</span>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
             <div>
@@ -1562,6 +1580,13 @@ function nav(p){
   if(p==='aff')renderAff();
   if(p==='forum')renderForum();
   if(p==='dev'&&Object.values(dvData).every(d=>d.st==='wait'))dvFetchAll();
+  if(p==='ai'){
+    // Vsakič ko odpreš AI zavihek: naloži feed iz localStorage in cloud
+    try { renderAiAnalyses(); } catch(e){}
+    try { renderChallenge(); } catch(e){}
+    // Potegni sveže iz cloud (če je nastavljen)
+    if(cloudCfg.binId) cloudPull();
+  }
 }
 
 // ══════════════════════════════════════
@@ -3097,6 +3122,8 @@ renderHomeForum();
 (function(){
   let dragEl=null, dragOver=null;
   document.addEventListener('dragstart',e=>{
+    // Only allow drag when user grabs the ⠿⠿ handle — NOT buttons, inputs, selects, etc.
+    if(!e.target.closest('.aip-handle')){ e.preventDefault(); return; }
     const p=e.target.closest('.ai-panel');
     if(!p)return;
     dragEl=p; p.classList.add('dragging');
@@ -3175,13 +3202,16 @@ function gateLogin() {
   }
   // Hide gate with fade
   const gate = document.getElementById('login-gate');
-  if(gate){ gate.style.transition='opacity .25s'; gate.style.opacity='0'; setTimeout(()=>gate.style.display='none',260); }
+  if(gate){ gate.style.pointerEvents='none'; gate.style.transition='opacity .25s'; gate.style.opacity='0'; setTimeout(()=>gate.style.display='none',260); }
   // Apply access directly — don't rely on global variables yet
   applyGateAccess(isOwner);
 }
 
 // Called both after gateLogin AND on page reload when gate auto-hides
 function applyGateAccess(isOwner) {
+  // 0. Sync global variables so all functions see the correct state
+  aiOwner    = isOwner;
+  aiUnlocked = true;
   // 1. Unlock the blurred content
   const content = document.getElementById('ai-content');
   if(content){ content.style.opacity='1'; content.style.pointerEvents='auto'; content.style.filter='none'; }
@@ -3207,7 +3237,8 @@ function applyGateAccess(isOwner) {
       badge.textContent='✓ PREMIUM ACTIVE'; badge.style.background='rgba(0,232,122,.15)';
       badge.style.borderColor='var(--green)'; badge.style.color='var(--green)';
     }
-    badge.style.cursor='default'; badge.onclick=null;
+    if(isOwner) { badge.style.cursor='default'; badge.onclick=null; }
+    else { badge.style.cursor='pointer'; badge.title='Klikni za vnos admin kode'; badge.onclick=aiOwnerPrompt; }
   }
   // 5. Owner-only panels — show for owner, hide for regular
   const ownerShow = isOwner ? 'block' : 'none';
@@ -3223,7 +3254,7 @@ function applyGateAccess(isOwner) {
   if(!isOwner) loadUserNotifyPrefs();
   // 6. Telegram + cloud + emailjs settings
   loadTelegramSettings();
-  if(isOwner) { loadCloudSettings(); loadEmailJsCfg(); }
+  if(isOwner) { loadCloudSettings(); refreshEmailStatusPanel(); setTimeout(loadAipEmailFields, 100); }
   startCloudSync();
 }
 
@@ -3423,6 +3454,8 @@ function aiApplyUnlock() {
 // Restore access on page load (covers both: session reload AND first-time localStorage unlock)
 if(sessionStorage.getItem('tc_session') === '1') {
   const isOwner = sessionStorage.getItem('tc_session_owner') === '1';
+  const g2 = document.getElementById('login-gate');
+  if(g2){ g2.style.display='none'; g2.style.pointerEvents='none'; }
   applyGateAccess(isOwner);
 } else if(aiUnlocked) {
   // Fallback: had localStorage unlock but no session (e.g. old user before gate was added)
@@ -3485,40 +3518,81 @@ function aiUnlock() {
   }
 }
 
-// ── EmailJS bulk config ───────────────────────────────────────────────────────
-const EJS_KEY = 'tc_emailjs';
-function loadEmailJsCfg() {
-  const cfg = JSON.parse(localStorage.getItem(EJS_KEY)||'{}');
-  if(cfg.pubKey)     { const el=document.getElementById('ejs-pub'); if(el) el.value=cfg.pubKey; }
-  if(cfg.serviceId)  { const el=document.getElementById('ejs-svc'); if(el) el.value=cfg.serviceId; }
-  if(cfg.templateId) { const el=document.getElementById('ejs-tpl'); if(el) el.value=cfg.templateId; }
-  if(cfg.pubKey && typeof emailjs!=='undefined') emailjs.init(cfg.pubKey);
+// ── Email status panel (uses existing emailCfg from topbar modal) ─────────────
+function loadAipEmailFields() {
+  const f = id => document.getElementById(id);
+  if(f('aip-em-to'))  f('aip-em-to').value  = emailCfg.to  || '';
+  if(f('aip-em-key')) f('aip-em-key').value = emailCfg.key || '';
+  if(f('aip-em-svc')) f('aip-em-svc').value = emailCfg.svc || '';
+  if(f('aip-em-tpl')) f('aip-em-tpl').value = emailCfg.tpl || '';
 }
-function saveEmailJsCfg() {
-  const cfg = {
-    pubKey:     (document.getElementById('ejs-pub')?.value||'').trim(),
-    serviceId:  (document.getElementById('ejs-svc')?.value||'').trim(),
-    templateId: (document.getElementById('ejs-tpl')?.value||'').trim(),
-  };
-  localStorage.setItem(EJS_KEY, JSON.stringify(cfg));
-  if(cfg.pubKey && typeof emailjs!=='undefined') emailjs.init(cfg.pubKey);
-  const s=document.getElementById('ejs-status');
-  if(s){s.textContent='✓ Saved';s.style.color='var(--green)';setTimeout(()=>s.textContent='',2500);}
+
+function saveAipEmail() {
+  const f = id => (document.getElementById(id)?.value||'').trim();
+  emailCfg.to  = f('aip-em-to');
+  emailCfg.svc = f('aip-em-svc');
+  emailCfg.tpl = f('aip-em-tpl');
+  emailCfg.key = f('aip-em-key');
+  emailCfg.enabled = !!(emailCfg.to && emailCfg.svc && emailCfg.tpl && emailCfg.key);
+  localStorage.setItem('em_to',      emailCfg.to);
+  localStorage.setItem('em_svc',     emailCfg.svc);
+  localStorage.setItem('em_tpl',     emailCfg.tpl);
+  localStorage.setItem('em_key',     emailCfg.key);
+  localStorage.setItem('em_enabled', emailCfg.enabled ? '1' : '0');
+  if(emailCfg.key) { try { emailjs.init({publicKey: emailCfg.key}); } catch(e){} }
+  const s = document.getElementById('aip-em-status');
+  if(s){ s.textContent = emailCfg.enabled ? '✓ Shranjeno!' : '⚠ Vnesi vsa polja'; s.style.color = emailCfg.enabled ? 'var(--green)' : 'var(--red)'; setTimeout(()=>s.textContent='',3000); }
+  refreshEmailStatusPanel();
 }
-async function testEmailJsCfg() {
-  const cfg = JSON.parse(localStorage.getItem(EJS_KEY)||'{}');
-  const s=document.getElementById('ejs-status');
-  if(!cfg.serviceId||!cfg.templateId){if(s){s.textContent='⚠ Najprej shrani konfig';s.style.color='var(--red)';}return;}
-  const adminEmail=localStorage.getItem('tc_ai_email')||'';
-  if(!adminEmail){if(s){s.textContent='⚠ Nastavi email v profilu';s.style.color='var(--red)';}return;}
-  if(s){s.textContent='Sending...';s.style.color='var(--amber)';}
+
+async function testAipEmail() {
+  const s = document.getElementById('aip-em-status');
+  if(!emailCfg.enabled){ if(s){s.textContent='⚠ Najprej shrani nastavitve';s.style.color='var(--red)';} return; }
+  if(s){s.textContent='Pošiljam...';s.style.color='var(--amber)';}
   try {
-    await emailjs.send(cfg.serviceId, cfg.templateId, {
-      to_email:adminEmail, subject:'TradeCore — EmailJS test', message:'Test uspešen! Batch notifikacije delujejo.',
-      sym:'TEST', dir:'▲ BULLISH', entry:'$1.00', sl:'$0.90', tp:'$1.20'
+    await emailjs.send(emailCfg.svc, emailCfg.tpl, {
+      to_email: emailCfg.to,
+      signal:   'TradeCore — Test email ✓',
+      details:  'Test uspešen!\n\nEmailJS je pravilno nastavljen.\nPrejeli boste email ob vsakem objavljenem trejdu.\n\n— TradeCore'
     });
-    if(s){s.textContent='✓ Poslano! Preveri email.';s.style.color='var(--green)';setTimeout(()=>s.textContent='',4000);}
-  } catch(e){if(s){s.textContent='⚠ Napaka: '+e.text;s.style.color='var(--red)';}}
+    if(s){s.textContent='✓ Email poslan! Preveri nabiralnik.';s.style.color='var(--green)';setTimeout(()=>s.textContent='',5000);}
+  } catch(e){
+    if(s){s.textContent='⚠ Napaka: '+(e?.text||e?.message||JSON.stringify(e));s.style.color='var(--red)';}
+  }
+}
+
+function refreshEmailStatusPanel() {
+  const el = document.getElementById('aip-email-status-info');
+  if(!el) return;
+  if(emailCfg.enabled && emailCfg.svc && emailCfg.tpl) {
+    el.innerHTML = `<span style="color:var(--green)">✓ Email notifikacije AKTIVNE</span><br>`+
+      `Pošiljanje na: <span style="color:var(--text2)">${emailCfg.to||'—'}</span><br>`+
+      `<span style="color:var(--text3)">Isto nastavitev se uporablja za subscriber notifikacije.</span>`;
+  } else {
+    el.innerHTML = `<span style="color:var(--amber)">⚠ Email ni nastavljen</span><br>`+
+      `<span style="color:var(--text3)">Klikni "NASTAVI EMAIL" in vnesi EmailJS podatke.<br>`+
+      `Enake nastavitve veljajo za signal alarme in subscriber obvestila.</span>`;
+  }
+}
+
+async function sendTestSubscriberEmail() {
+  const s = document.getElementById('aip-email-test-st');
+  if(!emailCfg.enabled) {
+    if(s){s.textContent='⚠ Email ni aktiven';s.style.color='var(--red)';}
+    return;
+  }
+  if(s){s.textContent='Pošiljam...';s.style.color='var(--amber)';}
+  try {
+    await emailjs.send(emailCfg.svc, emailCfg.tpl, {
+      to_email: emailCfg.to,
+      signal:   'TEST — TradeCore Subscriber Notify',
+      details:  'Test subscriber notifikacije.\n\nKo objaviš trejd z ⚡ PUBLISH & NOTIFY,\ndobijo naročniki email s temi podatki:\n\n'
+               +'Simbol: BTC\nSmer: ▲ BULLISH\nEntry: $65,000\nStop Loss: $63,000\nTake Profit: $70,000\n\n— TradeCore'
+    });
+    if(s){s.textContent='✓ Test email poslan!';s.style.color='var(--green)';setTimeout(()=>s.textContent='',4000);}
+  } catch(e){
+    if(s){s.textContent='⚠ Napaka: '+(e?.text||e?.message||'');s.style.color='var(--red)';}
+  }
 }
 
 // Telegram
@@ -3829,8 +3903,23 @@ function renderAiAnalyses() {
 function aiPostManual() { aiPublishAndNotify(); } // legacy alias
 
 async function aiPublishAndNotify() {
-  if(!aiOwner) return;
   const g = id => document.getElementById(id);
+  const statusEl = g('ai-man-status');
+
+  // Clear error if owner mode not active
+  if(!aiOwner) {
+    if(statusEl){
+      statusEl.textContent='⚠ OWNER MODE potreben — prijavi se z lastniško kodo TC-OWNER-MATIC';
+      statusEl.style.color='var(--red)';
+    }
+    // Flash the badge to hint user
+    const badge = document.getElementById('ai-lock-badge');
+    if(badge){ badge.style.background='rgba(255,68,85,.2)'; badge.style.borderColor='var(--red)'; badge.style.color='var(--red)'; badge.textContent='⚠ NI OWNER MODE';
+      setTimeout(()=>{ badge.style.background='rgba(168,85,247,.15)'; badge.style.borderColor='#7c3aed'; badge.style.color='#a855f7'; badge.textContent='🔒 PREMIUM'; }, 3000);
+    }
+    return;
+  }
+
   const sym       = (g('ai-man-sym')?.value||'').trim().toUpperCase();
   const dir       = g('ai-man-dir')?.value || 'bull';
   const mkt       = g('ai-man-mkt')?.value || 'CRYPTO';
@@ -3840,10 +3929,9 @@ async function aiPublishAndNotify() {
   const tp        = parseFloat(g('ai-man-tp')?.value)||null;
   const isChallenge = g('ai-man-challenge')?.checked || false;
   const doNotify  = g('ai-man-notify')?.checked !== false;
-  const statusEl  = g('ai-man-status');
 
-  if(!sym) { if(statusEl){statusEl.textContent='⚠ Vnesi ticker simbol';statusEl.style.color='var(--red)';} return; }
-  if(!txt) { if(statusEl){statusEl.textContent='⚠ Napiši analizo';statusEl.style.color='var(--red)';} return; }
+  if(!sym) { if(statusEl){statusEl.textContent='⚠ Vnesi ticker simbol';statusEl.style.color='var(--red)';setTimeout(()=>statusEl.textContent='',3000);} return; }
+  if(!txt) { if(statusEl){statusEl.textContent='⚠ Napiši analizo';statusEl.style.color='var(--red)';setTimeout(()=>statusEl.textContent='',3000);} return; }
 
   if(statusEl){statusEl.textContent='⏳ Objavljam...';statusEl.style.color='var(--amber)';}
 
@@ -3862,21 +3950,38 @@ async function aiPublishAndNotify() {
     renderChallenge();
   }
 
-  // Push to cloud (includes challenge if set)
-  await cloudPush();
+  // Always notify admin themselves via Telegram (if configured)
+  const tgCfg = JSON.parse(localStorage.getItem('tc_telegram')||'{}');
+  if(tgCfg.enabled && tgCfg.token && tgCfg.chatid) {
+    const isBull = dir !== 'bear';
+    const fp = v => v ? parseFloat(v).toLocaleString('en',{minimumFractionDigits:2,maximumFractionDigits:6}) : '—';
+    const adminTgMsg =
+      `🤖 <b>TradeCore — Alarm objavljen!</b>\n\n`+
+      `<b>${sym}</b> [${mkt}] ${isBull?'▲ BULLISH':'▼ BEARISH'}\n`+
+      (entry ? `📍 Entry: $${fp(entry)}\n` : '')+
+      (sl    ? `🛑 Stop Loss: $${fp(sl)}\n` : '')+
+      (tp    ? `🎯 Take Profit: $${fp(tp)}\n` : '')+
+      `\n📝 ${txt.substring(0,300)}\n⏰ ${now}`;
+    sendTelegram(adminTgMsg).catch(()=>{});
+  }
+
+  // Push to cloud
+  const pushed = await cloudPush();
 
   // Send notifications to all subscribers
+  let notifyCount = 0;
   if(doNotify) {
-    const notifyCount = await notifyAllSubscribers(tradeObj);
-    if(statusEl){statusEl.textContent=`✓ Objavljeno${notifyCount>0?' · '+notifyCount+' notifikacij poslanih':''}`;statusEl.style.color='var(--green)';}
-  } else {
-    if(statusEl){statusEl.textContent='✓ Objavljeno in sinhronizirano';statusEl.style.color='var(--green)';}
+    notifyCount = await notifyAllSubscribers(tradeObj);
   }
+
+  const cloudNote = pushed ? '' : ' (lokalno — cloud ni nastavljen)';
+  const notifyNote = notifyCount > 0 ? ` · ${notifyCount} obvestil poslanih` : '';
+  if(statusEl){statusEl.textContent=`✓ Objavljeno${cloudNote}${notifyNote}`;statusEl.style.color='var(--green)';}
 
   // Reset form
   ['ai-man-sym','ai-man-entry','ai-man-sl','ai-man-tp','ai-man-text'].forEach(id=>{const el=g(id);if(el)el.value='';});
   const chkEl=g('ai-man-challenge'); if(chkEl) chkEl.checked=false;
-  setTimeout(()=>{const s=g('ai-man-status');if(s)s.textContent='';},5000);
+  setTimeout(()=>{const s=g('ai-man-status');if(s)s.textContent='';},6000);
 }
 
 // ── CHALLENGE / IZZIV ─────────────────────────────────────────────────────────
@@ -3980,6 +4085,31 @@ async function saveUserNotifyPrefs() {
 
   if(statusEl) statusEl.textContent='';
   if(okEl) { okEl.style.display='block'; okEl.textContent='✅ Registracija uspešna! Prejeli boste obvestila ob naslednjem objavljenem trejdu.'; }
+
+  // Pošlji welcome email naročniku (če je email nastavljen)
+  if(email && emailCfg.enabled && emailCfg.svc && emailCfg.tpl) {
+    try {
+      await emailjs.send(emailCfg.svc, emailCfg.tpl, {
+        to_email: email,
+        signal:   'Dobrodošli v TradeCore AI PRO! 🎉',
+        details:  'Uspešno ste se registrirali za obvestila.\n\n'
+                 +'Ko admin objavi nov trejd ali izziv, boste prejeli email s podatki:\n'
+                 +'• Simbol in smer (BULLISH/BEARISH)\n'
+                 +'• Entry cena\n'
+                 +'• Stop Loss\n'
+                 +'• Take Profit\n'
+                 +'• Analiza\n\n'
+                 +'— TradeCore AI PRO',
+      });
+    } catch(e){}
+  }
+
+  // Pošlji Telegram welcome (če je Chat ID vnesen in admin ima bota konfiguriranega)
+  if(tgId) {
+    const tgCfg = JSON.parse(localStorage.getItem('tc_telegram')||'{}');
+    // Welcome se pošlje samo ko admin objavi prvi trejd - tu samo shranimo
+    // (ne moremo poslati brez admin bot tokena na user strani)
+  }
 }
 
 // ── NOTIFY ALL SUBSCRIBERS (admin side) ──────────────────────────────────────
@@ -4037,23 +4167,15 @@ async function notifyAllSubscribers(trade) {
         sent++;
       } catch(e){}
     }
-    // Email via EmailJS
-    if(sub.email && typeof emailjs !== 'undefined') {
+    // Email via existing emailCfg (topbar modal nastavitve)
+    if(sub.email && emailCfg.enabled && emailCfg.svc && emailCfg.tpl) {
       try {
-        const ejsCfg = JSON.parse(localStorage.getItem('tc_emailjs')||'{}');
-        if(ejsCfg.serviceId && ejsCfg.templateId) {
-          await emailjs.send(ejsCfg.serviceId, ejsCfg.templateId, {
-            to_email: sub.email,
-            subject:  emailSubj,
-            message:  emailBody,
-            sym:      trade.sym,
-            dir:      dirTxt,
-            entry:    trade.price ? '$'+fp(trade.price) : '—',
-            sl:       trade.sl    ? '$'+fp(trade.sl)    : '—',
-            tp:       trade.tp    ? '$'+fp(trade.tp)    : '—',
-          });
-          sent++;
-        }
+        await emailjs.send(emailCfg.svc, emailCfg.tpl, {
+          to_email: sub.email,
+          signal:   `${trade.sym} — ${dirTxt}`,
+          details:  emailBody,
+        });
+        sent++;
       } catch(e){}
     }
     await new Promise(r=>setTimeout(r,120)); // throttle: 120ms between sends
