@@ -1089,13 +1089,13 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
               </div>
             </div>
             <div style="display:flex;gap:8px;align-items:center">
-              <button draggable="false" onclick="saveAipEmail()" style="padding:5px 14px;background:rgba(74,122,255,.15);border:1px solid var(--blue);color:var(--blue);font-family:inherit;font-size:9px;cursor:pointer;font-weight:bold;letter-spacing:.08em">✓ SHRANI</button>
-              <button draggable="false" onclick="testAipEmail()" style="padding:5px 12px;background:none;border:1px solid var(--border2);color:var(--text2);font-family:inherit;font-size:9px;cursor:pointer">📤 TEST POŠLJI</button>
+              <button id="btn-em-save" type="button" draggable="false" style="padding:5px 14px;background:rgba(74,122,255,.15);border:1px solid var(--blue);color:var(--blue);font-family:inherit;font-size:9px;cursor:pointer;font-weight:bold;letter-spacing:.08em">✓ SHRANI</button>
+              <button id="btn-em-test" type="button" draggable="false" style="padding:5px 12px;background:none;border:1px solid var(--border2);color:var(--text2);font-family:inherit;font-size:9px;cursor:pointer">📤 TEST POŠLJI</button>
               <span id="aip-em-status" style="font-size:9px;color:var(--text3)"></span>
             </div>
             <div id="aip-email-status-info" style="margin-top:8px;font-size:9px;color:var(--text3);line-height:1.7;padding:7px;background:rgba(74,122,255,.04);border:1px solid var(--border)">
               Email nastavitve (EmailJS) se delijo med signal alarmi in subscriber notifikacijami.<br>
-              Template spremenljivke: <span style="color:var(--blue)">to_email, signal, details</span>
+              Template spremenljivke: <span style="color:var(--blue)">email, signal, details</span>
             </div>
           </div>
         </div>
@@ -1119,8 +1119,8 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
               </div>
             </div>
             <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-              <button draggable="false" onclick="saveTelegramSettings()" style="padding:5px 12px;background:rgba(0,232,122,.1);border:1px solid #0a5a2a;color:var(--green);font-family:inherit;font-size:9px;cursor:pointer;font-weight:bold">SAVE</button>
-              <button draggable="false" onclick="testTelegram()" style="padding:5px 12px;background:rgba(74,122,255,.1);border:1px solid var(--border2);color:var(--blue);font-family:inherit;font-size:9px;cursor:pointer">TEST MESSAGE</button>
+              <button id="btn-tg-save" type="button" draggable="false" style="padding:5px 12px;background:rgba(0,232,122,.1);border:1px solid #0a5a2a;color:var(--green);font-family:inherit;font-size:9px;cursor:pointer;font-weight:bold">SAVE</button>
+              <button id="btn-tg-test" type="button" draggable="false" style="padding:5px 12px;background:rgba(74,122,255,.1);border:1px solid var(--border2);color:var(--blue);font-family:inherit;font-size:9px;cursor:pointer">TEST MESSAGE</button>
               <span id="tg-status" style="font-size:9px;color:var(--text3)"></span>
               <label style="margin-left:auto;display:flex;align-items:center;gap:6px;font-size:9px;color:var(--text3);cursor:pointer">
                 <input id="tg-enabled" type="checkbox" style="cursor:pointer"/> Enable Telegram alerts
@@ -1216,7 +1216,7 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
               <span id="ai-sub-count" class="sub-count-badge" style="display:none"></span>
             </div>
             <div style="display:flex;gap:8px;align-items:center">
-              <button draggable="false" onclick="aiPublishAndNotify()" style="padding:6px 16px;background:linear-gradient(135deg,rgba(168,85,247,.25),rgba(74,122,255,.15));border:1px solid #7c3aed;color:#a855f7;font-family:inherit;font-size:10px;cursor:pointer;font-weight:bold;letter-spacing:.08em">⚡ PUBLISH & NOTIFY</button>
+              <button id="btn-publish" type="button" draggable="false" style="padding:6px 16px;background:linear-gradient(135deg,rgba(168,85,247,.25),rgba(74,122,255,.15));border:1px solid #7c3aed;color:#a855f7;font-family:inherit;font-size:10px;cursor:pointer;font-weight:bold;letter-spacing:.08em">⚡ PUBLISH & NOTIFY</button>
               <span id="ai-man-status" style="font-size:9px;color:var(--text3)"></span>
             </div>
           </div>
@@ -3173,6 +3173,18 @@ const AI_PRO_PRICE        = '29 €/mesec';       // ← cena za prikaz na stran
 const AI_CODES  = ['TRADECORE2024','AIPROMATIC','TC-PRO-2025','TC-PRO-2026','MATIC-AIPRO'];
 const OWNER_CODE= 'TC-OWNER-MATIC';            // ← tvoja lastniška koda (ne deli)
 
+// ── Storage keys + emailCfg declared early (used by applyGateAccess before their original position) ──
+const TG_KEY        = 'tc_telegram';
+const AI_UNLOCK_KEY = 'tc_ai_unlocked';
+const OWNER_KEY     = 'tc_owner_v1';
+let emailCfg = {
+  to:      localStorage.getItem('em_to')  || '',
+  svc:     localStorage.getItem('em_svc') || '',
+  tpl:     localStorage.getItem('em_tpl') || '',
+  key:     localStorage.getItem('em_key') || '',
+  enabled: localStorage.getItem('em_enabled') === '1'
+};
+
 // ── Session gate ─────────────────────────────────────────────────────────────
 // gateLogin() stores access level in sessionStorage. On reload, gate hides
 // automatically and applyGateAccess() restores the right panels.
@@ -3268,8 +3280,6 @@ function applyGateAccess(isOwner) {
   }
 })();
 
-const AI_UNLOCK_KEY = 'tc_ai_unlocked';
-const OWNER_KEY     = 'tc_owner_v1';
 const CLOUD_CFG_KEY = 'tc_cloud_v1';
 
 // ── Stripe Payment Link odpri ──────────────────────────────────
@@ -3283,6 +3293,18 @@ function openStripePayment() {
 
 // ── Nastavi ceno na strani ─────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function() {
+  // ── Wire up panel buttons (robust: bypasses any onclick/draggable issues) ──
+  function wire(id, fn) {
+    const el = document.getElementById(id);
+    if(el) el.addEventListener('click', function(e){ e.stopPropagation(); fn(); });
+  }
+  wire('btn-em-save',  ()=> saveAipEmail());
+  wire('btn-em-test',  ()=> testAipEmail());
+  wire('btn-tg-save',  ()=> saveTelegramSettings());
+  wire('btn-tg-test',  ()=> testTelegram());
+  wire('btn-publish',  ()=> aiPublishAndNotify());
+
+  // ── Price display ──
   const priceEl = document.getElementById('ai-price-display');
   if(priceEl && AI_PRO_PRICE) {
     const parts = AI_PRO_PRICE.split('/');
@@ -3551,7 +3573,7 @@ async function testAipEmail() {
   if(s){s.textContent='Pošiljam...';s.style.color='var(--amber)';}
   try {
     await emailjs.send(emailCfg.svc, emailCfg.tpl, {
-      to_email: emailCfg.to,
+      email: emailCfg.to,
       signal:   'TradeCore — Test email ✓',
       details:  'Test uspešen!\n\nEmailJS je pravilno nastavljen.\nPrejeli boste email ob vsakem objavljenem trejdu.\n\n— TradeCore'
     });
@@ -3584,7 +3606,7 @@ async function sendTestSubscriberEmail() {
   if(s){s.textContent='Pošiljam...';s.style.color='var(--amber)';}
   try {
     await emailjs.send(emailCfg.svc, emailCfg.tpl, {
-      to_email: emailCfg.to,
+      email: emailCfg.to,
       signal:   'TEST — TradeCore Subscriber Notify',
       details:  'Test subscriber notifikacije.\n\nKo objaviš trejd z ⚡ PUBLISH & NOTIFY,\ndobijo naročniki email s temi podatki:\n\n'
                +'Simbol: BTC\nSmer: ▲ BULLISH\nEntry: $65,000\nStop Loss: $63,000\nTake Profit: $70,000\n\n— TradeCore'
@@ -3596,7 +3618,6 @@ async function sendTestSubscriberEmail() {
 }
 
 // Telegram
-const TG_KEY = 'tc_telegram';
 function loadTelegramSettings() {
   const cfg = JSON.parse(localStorage.getItem(TG_KEY)||'{}');
   if(cfg.token) document.getElementById('tg-token').value=cfg.token;
@@ -3968,6 +3989,29 @@ async function aiPublishAndNotify() {
   // Push to cloud
   const pushed = await cloudPush();
 
+  // ── Pošlji email ADMINU ob objavi trejda ─────────────────────────
+  if(emailCfg.enabled && emailCfg.to) {
+    const isBull = dir !== 'bear';
+    const fp2 = v => v ? parseFloat(v).toLocaleString('en',{minimumFractionDigits:2,maximumFractionDigits:6}) : '—';
+    const dirTxt = dir==='bull' ? '▲ BULLISH' : dir==='bear' ? '▼ BEARISH' : '◆ NEUTRAL';
+    const adminEmailBody =
+      `🤖 TradeCore — Nov AI trejd objavljen\n\n`+
+      `Simbol: ${sym} [${mkt}]\n`+
+      `Smer: ${dirTxt}\n`+
+      (entry ? `Entry: $${fp2(entry)}\n` : '')+
+      (sl    ? `Stop Loss: $${fp2(sl)}\n` : '')+
+      (tp    ? `Take Profit: $${fp2(tp)}\n` : '')+
+      `\nAnaliza:\n${txt}\n\n`+
+      `Čas: ${now}\n\n— TradeCore Admin`;
+    try {
+      await emailjs.send(emailCfg.svc, emailCfg.tpl, {
+        email:   emailCfg.to,
+        signal:  `${sym} ${dirTxt} — TradeCore Alarm`,
+        details: adminEmailBody
+      });
+    } catch(e) { console.warn('Admin email napaka:', e); }
+  }
+
   // Send notifications to all subscribers
   let notifyCount = 0;
   if(doNotify) {
@@ -4090,7 +4134,7 @@ async function saveUserNotifyPrefs() {
   if(email && emailCfg.enabled && emailCfg.svc && emailCfg.tpl) {
     try {
       await emailjs.send(emailCfg.svc, emailCfg.tpl, {
-        to_email: email,
+        email: email,
         signal:   'Dobrodošli v TradeCore AI PRO! 🎉',
         details:  'Uspešno ste se registrirali za obvestila.\n\n'
                  +'Ko admin objavi nov trejd ali izziv, boste prejeli email s podatki:\n'
@@ -4171,7 +4215,7 @@ async function notifyAllSubscribers(trade) {
     if(sub.email && emailCfg.enabled && emailCfg.svc && emailCfg.tpl) {
       try {
         await emailjs.send(emailCfg.svc, emailCfg.tpl, {
-          to_email: sub.email,
+          email: sub.email,
           signal:   `${trade.sym} — ${dirTxt}`,
           details:  emailBody,
         });
@@ -4866,13 +4910,7 @@ setInterval(()=>{ if(document.getElementById('page-dev').classList.contains('act
 // ════════════════════════════════════════
 // EMAIL NOTIFICATIONS (EmailJS)
 // ════════════════════════════════════════
-let emailCfg = {
-  to: localStorage.getItem('em_to') || '',
-  svc: localStorage.getItem('em_svc') || '',
-  tpl: localStorage.getItem('em_tpl') || '',
-  key: localStorage.getItem('em_key') || '',
-  enabled: localStorage.getItem('em_enabled') === '1'
-};
+// (emailCfg declared early above, near constants)
 
 function initEmailJS() {
   if (emailCfg.key) {
@@ -4926,24 +4964,10 @@ function saveEmailSettings() {
 }
 
 async function sendSignalEmail(signals) {
-  if (!emailCfg.enabled || !signals.length) return;
-  const lines = signals.map(s => {
-    const type = s.rsiLow && s.bullDiv ? 'RSI<10 + BULL DIV' : s.rsiLow ? 'RSI<10' : 'BULL DIV';
-    return `${s.market}: ${s.sym||s.id} | ${type} | RSI: ${s.rsi?.toFixed(2)} | MA: ${s.ma?.toFixed(2)||'—'} | Cena: $${fp(s.price)} | ${s.bullDiv?'ΔRSI: +'+s.div?.rd?.toFixed(1):''}`;
-  }).join('\n');
-  const params = {
-    to_email: emailCfg.to,
-    signal: signals.length === 1
-      ? (signals[0].sym || signals[0].id) + ' — ' + (signals[0].rsiLow && signals[0].bullDiv ? 'RSI<10 + BULL DIV' : signals[0].rsiLow ? 'RSI<10 ALARM' : 'BULL DIV')
-      : signals.length + ' novih signals — TradeCore',
-    details: 'TradeCore Signal Alert\n' + new Date().toLocaleString('sl-SI') + '\n\n' + lines + '\n\nOdpri terminal: https://matichocevar1.github.io/tradecore-'
-  };
-  try {
-    await emailjs.send(emailCfg.svc, emailCfg.tpl, params);
-    showToast('✉ Email poslan → ' + emailCfg.to, 'ok');
-  } catch(e) {
-    showToast('✉ Napaka: ' + (e?.text || e?.message || JSON.stringify(e)), 'err');
-  }
+  // ── Samodejni scanner alarmi NE pošiljajo emailov ──
+  // Email se pošlje SAMO ko admin ročno objavi trejd z ⚡ PUBLISH & NOTIFY
+  // (ki pokliče notifyAllSubscribers)
+  return;
 }
 
 async function testEmail() {
@@ -4957,7 +4981,7 @@ async function testEmail() {
   try {
     emailjs.init({ publicKey: key });
     await emailjs.send(svc, tpl, {
-      to_email: to,
+      email: to,
       signal: 'TEST — TradeCore Signal',
       details: 'To je testni email iz TradeCore terminala.\nČe si ga prejel, so nastavitve pravilne! ✓\n\nDatum: ' + new Date().toLocaleString('sl-SI')
     });
