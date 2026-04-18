@@ -3990,26 +3990,30 @@ async function aiPublishAndNotify() {
   const pushed = await cloudPush();
 
   // ── Pošlji email ADMINU ob objavi trejda ─────────────────────────
-  if(emailCfg.enabled && emailCfg.to) {
-    const isBull = dir !== 'bear';
+  if(emailCfg.enabled && emailCfg.to && emailCfg.key && emailCfg.svc && emailCfg.tpl) {
     const fp2 = v => v ? parseFloat(v).toLocaleString('en',{minimumFractionDigits:2,maximumFractionDigits:6}) : '—';
     const dirTxt = dir==='bull' ? '▲ BULLISH' : dir==='bear' ? '▼ BEARISH' : '◆ NEUTRAL';
     const adminEmailBody =
-      `🤖 TradeCore — Nov AI trejd objavljen\n\n`+
+      `TradeCore — Nov AI trejd objavljen\n\n`+
       `Simbol: ${sym} [${mkt}]\n`+
       `Smer: ${dirTxt}\n`+
       (entry ? `Entry: $${fp2(entry)}\n` : '')+
       (sl    ? `Stop Loss: $${fp2(sl)}\n` : '')+
       (tp    ? `Take Profit: $${fp2(tp)}\n` : '')+
       `\nAnaliza:\n${txt}\n\n`+
-      `Čas: ${now}\n\n— TradeCore Admin`;
+      `Cas: ${now}\n\n-- TradeCore Admin`;
     try {
+      emailjs.init({publicKey: emailCfg.key});
       await emailjs.send(emailCfg.svc, emailCfg.tpl, {
         email:   emailCfg.to,
         signal:  `${sym} ${dirTxt} — TradeCore Alarm`,
         details: adminEmailBody
       });
-    } catch(e) { console.warn('Admin email napaka:', e); }
+      showToast('✉ Email obvestilo poslano!', 'ok');
+    } catch(e) {
+      showToast('✉ Email napaka: '+(e?.text||e?.message||JSON.stringify(e)), 'err');
+      console.warn('Admin email napaka:', e);
+    }
   }
 
   // Send notifications to all subscribers
