@@ -675,11 +675,10 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
           <th class="th-sort" data-col="sym" onclick="crThSort('sym')">PAIR</th>
           <th class="th-sort" data-col="div" onclick="crThSort('div')">DIVERGENCE</th>
           <th class="th-sort" data-col="rsi" onclick="crThSort('rsi')"><span style="color:var(--purple)">RSI</span></th>
-          <th class="th-sort" data-col="ma" onclick="crThSort('ma')"><span style="color:var(--amber)">MA</span></th>
           <th class="th-sort r" data-col="price" onclick="crThSort('price')">PRICE</th>
           <th class="th-sort r" data-col="chg" onclick="crThSort('chg')">5M%</th>
           <th class="th-sort r" data-col="str" onclick="crThSort('str')">STRENGTH</th>
-          <th class="th-sort r" data-col="ema100" onclick="crThSort('ema100')" style="color:var(--amber);white-space:nowrap" title="Hours price has been above or below 100 EMA — click to sort">EMA100</th>
+          <th class="th-sort r" data-col="ema100" onclick="crThSort('ema100')" style="color:var(--amber);white-space:nowrap" title="Čas od zadnjega prečkanja 9 EMA čez 100 EMA — klikni za razvrščanje">9/100 EMA</th>
           <th class="th-sort r" data-col="fvg" onclick="crThSort('fvg')" style="color:#7b68ee;white-space:nowrap" title="Fair Value Gap — click to sort by proximity">FVG</th>
           <th class="th-sort r" data-col="liq" onclick="crThSort('liq')" style="color:var(--green);white-space:nowrap" title="Nearest support level — click to sort by proximity">SUPPORT</th>
           <th class="th-sort r" data-col="rvgi" onclick="crThSort('rvgi')" style="color:#e879f9;white-space:nowrap" title="RVGI: Relative Vigor Index (12-period). &lt;0.30 = LONG zone 🟢, &gt;0.70 = SHORT zone 🔴">RVGI</th>
@@ -732,11 +731,10 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
           <th>SECTOR</th>
           <th class="th-sort" data-col="div" onclick="spThSort('div')">DIVERGENCE</th>
           <th class="th-sort" data-col="rsi" onclick="spThSort('rsi')"><span style="color:var(--purple)">RSI</span></th>
-          <th class="th-sort" data-col="ma" onclick="spThSort('ma')"><span style="color:var(--amber)">MA</span></th>
           <th class="th-sort r" data-col="price" onclick="spThSort('price')">PRICE</th>
           <th class="th-sort r" data-col="chg" onclick="spThSort('chg')">5M%</th>
           <th class="th-sort r" data-col="str" onclick="spThSort('str')">STRENGTH</th>
-          <th class="th-sort r" data-col="ema100" onclick="spThSort('ema100')" style="color:var(--amber);white-space:nowrap" title="Hours price has been above or below 100 EMA — click to sort">EMA100</th>
+          <th class="th-sort r" data-col="ema100" onclick="spThSort('ema100')" style="color:var(--amber);white-space:nowrap" title="Čas od zadnjega prečkanja 9 EMA čez 100 EMA — klikni za razvrščanje">9/100 EMA</th>
           <th class="th-sort r" data-col="fvg" onclick="spThSort('fvg')" style="color:#7b68ee;white-space:nowrap" title="Fair Value Gap — click to sort by proximity">FVG</th>
           <th class="th-sort r" data-col="liq" onclick="spThSort('liq')" style="color:var(--green);white-space:nowrap" title="Nearest support level — click to sort by proximity">SUPPORT</th>
           <th class="th-sort r" data-col="rvgi" onclick="spThSort('rvgi')" style="color:#e879f9;white-space:nowrap" title="RVGI: Relative Vigor Index (12-period). &lt;0.30 = LONG zone 🟢, &gt;0.70 = SHORT zone 🔴">RVGI</th>
@@ -787,6 +785,7 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
       <div style="display:flex;gap:0;margin:0 8px">
         <button id="dv-tab-ma" onclick="dvSetTab('ma')" style="padding:2px 10px;font-size:9px;font-family:inherit;cursor:pointer;background:rgba(240,165,0,.15);border:1px solid var(--amber);color:var(--amber);font-weight:bold;letter-spacing:.08em">MA DEV</button>
         <button id="dv-tab-corr" onclick="dvSetTab('corr')" style="padding:2px 10px;font-size:9px;font-family:inherit;cursor:pointer;background:none;border:1px solid var(--border2);border-left:none;color:var(--text3);letter-spacing:.08em">CORRELATION</button>
+        <button id="dv-tab-matrix" onclick="dvSetTab('matrix')" style="padding:2px 10px;font-size:9px;font-family:inherit;cursor:pointer;background:none;border:1px solid var(--border2);border-left:none;color:var(--text3);letter-spacing:.08em">MATRIX</button>
       </div>
       <span style="color:var(--text3);font-size:9px" id="dv-subtitle">FOREX · YAHOO FINANCE · 100-PERIOD MA</span>
       <div id="dv-ma-badge" style="background:var(--bg3);padding:2px 8px;border:1px solid var(--border2);font-size:10px;color:var(--amber)">
@@ -880,6 +879,41 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
       </div>
     </div>
 
+    <!-- CORRELATION MATRIX body (hidden by default) -->
+    <div id="dv-body-matrix" style="display:none;flex:1;overflow:hidden;flex-direction:column">
+      <!-- Controls -->
+      <div style="background:var(--bg2);border-bottom:1px solid var(--border);padding:6px 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;flex-shrink:0">
+        <span style="font-size:9px;color:#a855f7;letter-spacing:.15em;font-weight:bold">◈ CORRELATION MATRIX</span>
+        <span style="font-size:9px;color:var(--text3)">Live Pearson · Returns-based · Odstopanje od zgodovinskih vrednosti</span>
+        <select id="mx-tf" onchange="mxFetchAll()" style="font-size:9px;margin-left:auto">
+          <option value="5m">5 min</option>
+          <option value="1h" selected>1 ura</option>
+          <option value="1d">1 dan</option>
+        </select>
+        <button id="mx-rb" onclick="mxFetchAll()" style="padding:2px 10px;font-size:9px;font-family:inherit;cursor:pointer;background:rgba(168,85,247,.1);border:1px solid #7c3aed;color:#a855f7;letter-spacing:.06em">↻ REFRESH</button>
+        <span id="mx-status" style="font-size:9px;color:var(--text3)">—</span>
+        <div class="prog-wrap" id="mx-pw" style="display:none">
+          <div class="prog-track"><div class="prog-fill" id="mx-pf" style="width:0%;background:#a855f7"></div></div>
+          <span id="mx-pt" style="color:var(--text3);font-size:9px">0%</span>
+        </div>
+      </div>
+      <!-- Legend + sort info -->
+      <div style="background:var(--bg2);border-bottom:1px solid var(--border);padding:3px 14px;display:flex;align-items:center;gap:14px;font-size:8px;color:var(--text3);flex-shrink:0;flex-wrap:wrap">
+        <span>■ <b style="color:#00b855">zelena</b> = pozitivna korelacija &nbsp; ■ <b style="color:#e05040">rdeča</b> = negativna korelacija</span>
+        <span><b style="color:#ff8c00">oranžna obroba</b> = zdaj bolj korelirano kot zgodovinsko &nbsp; <b style="color:#4a9aff">modra obroba</b> = zdaj manj korelirano</span>
+        <span style="color:var(--text2)">Klikni glavo stolpca ali oznako vrstice → razvrsti</span>
+        <span id="mx-sortlabel" style="margin-left:auto;color:#a855f7;font-size:8px"></span>
+      </div>
+      <!-- Matrix table (scrollable) -->
+      <div id="mx-wrap" style="flex:1;overflow:auto;padding:6px">
+        <div id="mx-loading" style="text-align:center;padding:40px;color:var(--text3);font-size:10px">Kliknite ↻ REFRESH za nalaganje korelacijske matrike.</div>
+        <table id="mx-table" style="border-collapse:separate;border-spacing:2px;display:none">
+          <thead id="mx-thead"></thead>
+          <tbody id="mx-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
     <!-- CORRELATION DEVIATION body (hidden by default) -->
     <div id="dv-body-corr" style="display:none;flex:1;overflow:hidden;display:none;flex-direction:column">
       <div style="background:var(--bg2);border-bottom:1px solid var(--border);padding:6px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0">
@@ -969,19 +1003,67 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
 <div class="page" id="page-ai" style="overflow-y:auto;background:var(--bg);position:relative">
 
   <!-- ── AI PRO SESSION GATE ─────────────────────────────────────────────── -->
-  <div id="login-gate" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(2,5,16,.97);z-index:9999;display:flex;align-items:center;justify-content:center;font-family:'Courier New',monospace">
-    <div style="background:#0a0f1e;border:1px solid #1a2a4a;max-width:380px;width:92%;padding:36px 32px;text-align:center">
-      <div style="font-size:28px;margin-bottom:14px">🔐</div>
-      <div style="font-size:16px;font-weight:bold;color:#a855f7;letter-spacing:.25em;margin-bottom:6px">AI PRO</div>
-      <div style="font-size:9px;color:#4a5a7a;letter-spacing:.15em;margin-bottom:28px">VNESITE AKTIVACIJSKO KODO ZA DOSTOP</div>
-      <input id="gate-code" type="password" placeholder="Aktivacijska koda..." autocomplete="off"
-        style="width:100%;box-sizing:border-box;background:#060b18;border:1px solid #1a2a4a;color:#c0d0f0;padding:11px 14px;font-family:inherit;font-size:12px;outline:none;letter-spacing:.08em;margin-bottom:12px"
-        onkeydown="if(event.key==='Enter')gateLogin()"/>
-      <button onclick="gateLogin()" style="width:100%;padding:11px;background:rgba(168,85,247,.2);border:1px solid #7c3aed;color:#a855f7;font-family:inherit;font-size:11px;cursor:pointer;font-weight:bold;letter-spacing:.15em">
-        VSTOPI →
-      </button>
-      <div id="gate-err" style="font-size:9px;color:#ff4444;margin-top:10px;display:none;letter-spacing:.05em">Napačna koda. Poskusite znova.</div>
-      <div style="margin-top:24px;font-size:8px;color:#2a3a5a;letter-spacing:.08em">TradeCore Pro · Samo za avtorizirane uporabnike</div>
+  <div id="login-gate" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(2,5,16,.97);z-index:9999;display:flex;align-items:center;justify-content:center;font-family:'Courier New',monospace;overflow-y:auto">
+    <div style="background:#0a0f1e;border:1px solid #1a2a4a;max-width:420px;width:92%;margin:20px auto;text-align:center">
+
+      <!-- Header -->
+      <div style="padding:28px 28px 16px">
+        <div style="font-size:30px;margin-bottom:10px">🤖</div>
+        <div style="font-size:15px;font-weight:bold;color:#a855f7;letter-spacing:.25em;margin-bottom:4px">AI PRO</div>
+        <div style="font-size:9px;color:#4a5a7a;letter-spacing:.12em">TradeCore · AI signali · Real-time dostop</div>
+      </div>
+
+      <!-- Tab switcher -->
+      <div style="display:flex;border-top:1px solid #1a2a4a;border-bottom:1px solid #1a2a4a">
+        <button id="gtab-new" onclick="gateTab('new')" style="flex:1;padding:10px 6px;background:rgba(168,85,247,.15);border:none;border-right:1px solid #1a2a4a;color:#a855f7;font-family:'Courier New',monospace;font-size:9px;font-weight:bold;letter-spacing:.1em;cursor:pointer">
+          ✦ NOVA REGISTRACIJA
+        </button>
+        <button id="gtab-code" onclick="gateTab('code')" style="flex:1;padding:10px 6px;background:transparent;border:none;color:#4a5a7a;font-family:'Courier New',monospace;font-size:9px;font-weight:bold;letter-spacing:.1em;cursor:pointer">
+          🔑 ŽE NAROČNIK
+        </button>
+      </div>
+
+      <!-- Panel: New registration -->
+      <div id="gate-panel-new" style="padding:20px 28px 24px">
+        <!-- Features -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;font-size:8.5px;color:#4a6a9a;text-align:left;margin-bottom:16px">
+          <div>✅ AI generirani signali</div>
+          <div>✅ Stop Loss &amp; Take Profit</div>
+          <div>✅ Crypto + Forex + S&amp;P500</div>
+          <div>✅ Email &amp; Telegram alarmi</div>
+          <div>✅ RSI divergence analiza</div>
+          <div>✅ Real-time cloud sinhronizacija</div>
+        </div>
+        <!-- Price -->
+        <div style="font-size:26px;font-weight:bold;color:#a855f7;margin-bottom:4px">29 €<span style="font-size:11px;color:#4a5a7a;font-weight:normal">/mesec</span></div>
+        <div style="font-size:8px;color:#2a3a5a;margin-bottom:14px;letter-spacing:.08em">BREZ VEZAVE · ODPOVESTE KADARKOLI</div>
+        <!-- Email input -->
+        <div style="font-size:8px;color:#4a5a7a;letter-spacing:.1em;text-align:left;margin-bottom:5px">VAS EMAIL NASLOV</div>
+        <input id="gate-reg-email" type="email" placeholder="vas@email.com" autocomplete="email"
+          style="width:100%;box-sizing:border-box;background:#060b18;border:1px solid #1a2a4a;color:#c0d0f0;padding:10px 12px;font-family:inherit;font-size:11px;outline:none;letter-spacing:.05em;margin-bottom:10px"/>
+        <!-- Pay button -->
+        <button onclick="gateRegister()" style="width:100%;padding:12px;background:linear-gradient(135deg,#7c3aed,#a855f7);border:none;color:#fff;font-family:'Courier New',monospace;font-size:11px;font-weight:bold;letter-spacing:.12em;cursor:pointer;margin-bottom:8px;transition:opacity .2s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+          💳 PLAČAJ Z KARTICO — 29 €/mesec
+        </button>
+        <div id="gate-reg-status" style="font-size:8.5px;color:#4a5a7a;line-height:1.6;margin-top:4px">
+          Po potrditvi plačila prejmete aktivacijsko kodo na vaš email.<br>Varno plačilo prek Stripe.
+        </div>
+      </div>
+
+      <!-- Panel: Existing subscriber (activation code) -->
+      <div id="gate-panel-code" style="padding:20px 28px 24px;display:none">
+        <div style="font-size:9px;color:#4a5a7a;letter-spacing:.12em;margin-bottom:14px">VNESITE AKTIVACIJSKO KODO ZA DOSTOP</div>
+        <input id="gate-code" type="password" placeholder="Aktivacijska koda..." autocomplete="off"
+          style="width:100%;box-sizing:border-box;background:#060b18;border:1px solid #1a2a4a;color:#c0d0f0;padding:11px 14px;font-family:inherit;font-size:12px;outline:none;letter-spacing:.08em;margin-bottom:10px"
+          onkeydown="if(event.key==='Enter')gateLogin()"/>
+        <button onclick="gateLogin()" style="width:100%;padding:11px;background:rgba(168,85,247,.2);border:1px solid #7c3aed;color:#a855f7;font-family:'Courier New',monospace;font-size:11px;cursor:pointer;font-weight:bold;letter-spacing:.15em">
+          VSTOPI →
+        </button>
+        <div id="gate-err" style="font-size:9px;color:#ff4444;margin-top:10px;display:none;letter-spacing:.05em">Napačna koda. Kontaktirajte admina.</div>
+        <div style="margin-top:14px;font-size:8px;color:#2a3a5a">Kode nimate? → Registrirajte se z levo zavihko.</div>
+      </div>
+
+      <div style="padding-bottom:16px;font-size:7.5px;color:#1a2a3a;letter-spacing:.08em">TradeCore Pro · Samo za avtorizirane uporabnike</div>
     </div>
   </div>
 
@@ -1956,7 +2038,6 @@ function crRow(s,i){
     <td style="font-weight:bold;color:${nc}">${s.id.replace('USDT','')}</td>
     <td>${badge(dv)}${dv?.type&&ks?`<div style="font-size:9px;color:#004422;margin-top:1px">ΔRSI ${dv.rd?.toFixed(1)}</div>`:''}</td>
     <td>${barHtml(rsi)}</td>
-    <td style="color:#7a5500;font-size:10px">${d?.ma!=null?d.ma.toFixed(1):'—'}</td>
     <td class="r" style="color:var(--text2);font-size:10px">$${fp(d?.price)}</td>
     <td class="r" style="color:${cc};font-size:10px">${d?.chg!=null?(d.chg>0?'+':'')+d.chg.toFixed(2)+'%':'—'}</td>
     <td class="r">${stH}</td>
@@ -1971,10 +2052,13 @@ function crGo(){
   const srt=document.getElementById('cr-srt').value;
   let rows=[...CR_SYMS];
   if(q)rows=rows.filter(s=>s.id.toLowerCase().includes(q));
-  if(f==='bull')rows=rows.filter(s=>crData[s.id]?.div?.type==='bull');
-  if(f==='bear')rows=rows.filter(s=>crData[s.id]?.div?.type==='bear');
-  if(f==='any')rows=rows.filter(s=>crData[s.id]?.div?.type);
-  if(f==='rsi10')rows=rows.filter(s=>isKeySignal(crData[s.id]));
+  // When sorting by support proximity, show ALL rows regardless of divergence filter
+  if(srt!=='liq_asc'){
+    if(f==='bull')rows=rows.filter(s=>crData[s.id]?.div?.type==='bull');
+    if(f==='bear')rows=rows.filter(s=>crData[s.id]?.div?.type==='bear');
+    if(f==='any')rows=rows.filter(s=>crData[s.id]?.div?.type);
+    if(f==='rsi10')rows=rows.filter(s=>isKeySignal(crData[s.id]));
+  }
   if(srt==='div')rows.sort((a,b)=>{const sa=crData[a.id]?.div?.type==='bull'?(crData[a.id].div.st+10):crData[a.id]?.div?.st||0;const sb=crData[b.id]?.div?.type==='bull'?(crData[b.id].div.st+10):crData[b.id]?.div?.st||0;return sb-sa;});
   if(srt==='rsi')rows.sort((a,b)=>(crData[a.id]?.rsi??999)-(crData[b.id]?.rsi??999));
   if(srt==='rsi_desc')rows.sort((a,b)=>(crData[b.id]?.rsi??0)-(crData[a.id]?.rsi??0));
@@ -2210,7 +2294,6 @@ function spRow(s,i){
     <td><span style="font-size:9px;color:${SP_SC[s.s]||'#4a5a7a'}">${s.s}</span></td>
     <td>${badge(dv)}${dv?.type&&ks?`<div style="font-size:9px;color:#004422;margin-top:1px">ΔRSI ${dv.rd?.toFixed(1)}</div>`:''}</td>
     <td>${barHtml(rsi)}</td>
-    <td style="color:#7a5500;font-size:10px">${d?.ma!=null?d.ma.toFixed(1):'—'}</td>
     <td class="r" style="color:var(--text2);font-size:10px">$${fp(d?.price)}</td>
     <td class="r" style="color:${cc};font-size:10px">${d?.chg!=null?(d.chg>0?'+':'')+d.chg.toFixed(2)+'%':'—'}</td>
     <td class="r">${stH}</td>
@@ -2227,10 +2310,13 @@ function spGo(){
   let rows=[...SP_STOCKS];
   if(q)rows=rows.filter(s=>s.id.toLowerCase().includes(q));
   if(sec!=='all')rows=rows.filter(s=>s.s===sec);
-  if(f==='bull')rows=rows.filter(s=>spData[s.id]?.div?.type==='bull');
-  if(f==='bear')rows=rows.filter(s=>spData[s.id]?.div?.type==='bear');
-  if(f==='any')rows=rows.filter(s=>spData[s.id]?.div?.type);
-  if(f==='rsi10')rows=rows.filter(s=>isKeySignal(spData[s.id]));
+  // When sorting by support proximity, show ALL rows regardless of divergence filter
+  if(srt!=='liq_asc'){
+    if(f==='bull')rows=rows.filter(s=>spData[s.id]?.div?.type==='bull');
+    if(f==='bear')rows=rows.filter(s=>spData[s.id]?.div?.type==='bear');
+    if(f==='any')rows=rows.filter(s=>spData[s.id]?.div?.type);
+    if(f==='rsi10')rows=rows.filter(s=>isKeySignal(spData[s.id]));
+  }
   if(srt==='div')rows.sort((a,b)=>{const sa=spData[a.id]?.div?.type==='bull'?(spData[a.id].div.st+10):spData[a.id]?.div?.st||0;const sb=spData[b.id]?.div?.type==='bull'?(spData[b.id].div.st+10):spData[b.id]?.div?.st||0;return sb-sa;});
   if(srt==='rsi')rows.sort((a,b)=>(spData[a.id]?.rsi??999)-(spData[b.id]?.rsi??999));
   if(srt==='rsi_desc')rows.sort((a,b)=>(spData[b.id]?.rsi??0)-(spData[a.id]?.rsi??0));
@@ -3163,10 +3249,17 @@ renderHomeForum();
 // ║     (jsonbin.io → brezplačna reg. → Create BIN PUBLIC)      ║
 // ║  3. AI_PRO_PRICE: cena naročnine (samo prikaz)              ║
 // ╚══════════════════════════════════════════════════════════════╝
-const STRIPE_PAYMENT_LINK = '';                 // ← prilepi Stripe Payment Link URL sem
-const CLOUD_BIN_DEFAULT   = '';                 // ← prilepi JSONBin FEED BIN ID
-const SUB_BIN_DEFAULT     = '';                 // ← prilepi JSONBin SUBSCRIBER BIN ID (za registracije)
+const STRIPE_PAYMENT_LINK = '';                                    // ← prilepi Stripe Payment Link URL sem
+const CLOUD_BIN_DEFAULT   = '69e34b04aaba88219710c97f';            // ← JSONBin FEED BIN ID
+const SUB_BIN_DEFAULT     = '69e34b3d856a682189489065';            // ← JSONBin SUB BIN ID
 const AI_PRO_PRICE        = '29 €/mesec';       // ← cena za prikaz na strani
+
+// ── EmailJS nastavitve — vgrajene v kodo (delujejo na vsakem računalniku) ──────
+// ║  Posodobi ob menjavi EmailJS računa                                          ║
+const EMAILJS_KEY = 'H7G-NfQfQ-BDPdIVw';       // ← Public Key iz emailjs.com/account
+const EMAILJS_SVC = 'service_mhfcbak';          // ← Service ID (Email Services)
+const EMAILJS_TPL = 'template_4h7i4fw';         // ← Template ID (Email Templates)
+const EMAILJS_TO  = 'cryptoforexsp500@gmail.com'; // ← Admin email (prejemnik alarmov)
 
 // Aktivacijske kode — po Stripe plačilu pošlješ kupcu eno od teh kod
 // Dodaj nove kode po potrebi. OWNER_CODE je samo tvoj.
@@ -3178,16 +3271,71 @@ const TG_KEY        = 'tc_telegram';
 const AI_UNLOCK_KEY = 'tc_ai_unlocked';
 const OWNER_KEY     = 'tc_owner_v1';
 let emailCfg = {
-  to:      localStorage.getItem('em_to')  || '',
-  svc:     localStorage.getItem('em_svc') || '',
-  tpl:     localStorage.getItem('em_tpl') || '',
-  key:     localStorage.getItem('em_key') || '',
-  enabled: localStorage.getItem('em_enabled') === '1'
+  to:      localStorage.getItem('em_to')  || EMAILJS_TO,
+  svc:     localStorage.getItem('em_svc') || EMAILJS_SVC,
+  tpl:     localStorage.getItem('em_tpl') || EMAILJS_TPL,
+  key:     localStorage.getItem('em_key') || EMAILJS_KEY,
+  enabled: localStorage.getItem('em_enabled') === '1' || !!(EMAILJS_KEY && EMAILJS_SVC && EMAILJS_TPL && EMAILJS_TO)
 };
 
 // ── Session gate ─────────────────────────────────────────────────────────────
 // gateLogin() stores access level in sessionStorage. On reload, gate hides
 // automatically and applyGateAccess() restores the right panels.
+
+// Switch between registration and code-entry tabs in the gate
+function gateTab(tab) {
+  const panelNew  = document.getElementById('gate-panel-new');
+  const panelCode = document.getElementById('gate-panel-code');
+  const tabNew    = document.getElementById('gtab-new');
+  const tabCode   = document.getElementById('gtab-code');
+  if(tab === 'new') {
+    if(panelNew)  panelNew.style.display  = 'block';
+    if(panelCode) panelCode.style.display = 'none';
+    if(tabNew)  { tabNew.style.background  = 'rgba(168,85,247,.15)'; tabNew.style.color  = '#a855f7'; }
+    if(tabCode) { tabCode.style.background = 'transparent';           tabCode.style.color = '#4a5a7a'; }
+  } else {
+    if(panelNew)  panelNew.style.display  = 'none';
+    if(panelCode) panelCode.style.display = 'block';
+    if(tabNew)  { tabNew.style.background  = 'transparent'; tabNew.style.color  = '#4a5a7a'; }
+    if(tabCode) { tabCode.style.background = 'rgba(168,85,247,.15)'; tabCode.style.color = '#a855f7'; }
+  }
+}
+
+// Called when user fills email and clicks "Pay" in the gate
+async function gateRegister() {
+  const emailEl  = document.getElementById('gate-reg-email');
+  const statusEl = document.getElementById('gate-reg-status');
+  const email    = (emailEl?.value||'').trim().toLowerCase();
+  if(!email || !email.includes('@') || !email.includes('.')) {
+    if(emailEl){ emailEl.style.borderColor='#ff4444'; setTimeout(()=>emailEl.style.borderColor='#1a2a4a',2000); }
+    if(statusEl) statusEl.innerHTML='<span style="color:#ff6b6b">⚠ Vnesite veljaven email naslov.</span>';
+    return;
+  }
+  // Save email locally so it's pre-filled later
+  localStorage.setItem('tc_pending_email', email);
+  if(statusEl) statusEl.innerHTML='<span style="color:#f5a623">⏳ Obveščamo admina...</span>';
+  // Notify admin via email
+  if(EMAILJS_KEY && EMAILJS_SVC && EMAILJS_TPL && EMAILJS_TO) {
+    try {
+      emailjs.init({publicKey: EMAILJS_KEY});
+      await emailjs.send(EMAILJS_SVC, EMAILJS_TPL, {
+        email:   EMAILJS_TO,
+        signal:  '🆕 Nova AI PRO registracija — ' + email,
+        details: 'Nov zainteresiran uporabnik želi dostop do AI PRO.\n\nEmail: ' + email + '\nČas: ' + new Date().toLocaleString('sl-SI') + '\n\nPo potrditvi plačila pošlji aktivacijsko kodo na ta email.'
+      });
+    } catch(e) { console.warn('Admin notify err:', e); }
+  }
+  // Open Stripe or show contact info
+  if(STRIPE_PAYMENT_LINK) {
+    const stripeUrl = STRIPE_PAYMENT_LINK + (STRIPE_PAYMENT_LINK.includes('?') ? '&' : '?') + 'prefilled_email=' + encodeURIComponent(email);
+    window.open(stripeUrl, '_blank');
+    if(statusEl) statusEl.innerHTML = '✅ Preusmerjeni na plačilo Stripe.<br><span style="color:#6a7a9a">Po plačilu prejmete aktivacijsko kodo na email.<br>Nato kliknite zavihek <b style="color:#a855f7">ŽE NAROČNIK</b> in vnesite kodo.</span>';
+    // Auto-switch to code tab after 3s
+    setTimeout(() => gateTab('code'), 3200);
+  } else {
+    if(statusEl) statusEl.innerHTML = '✅ Zahteva poslana!<br><span style="color:#6a7a9a">Admin bo stopil v stik z vami na:<br><b style="color:#a855f7">' + email + '</b><br>Stripe plačilo bo kmalu aktivirano.</span>';
+  }
+}
 
 function gateLogin() {
   const code = (document.getElementById('gate-code')?.value||'').trim().toUpperCase();
@@ -3990,7 +4138,12 @@ async function aiPublishAndNotify() {
   const pushed = await cloudPush();
 
   // ── Pošlji email ADMINU ob objavi trejda ─────────────────────────
-  if(emailCfg.enabled && emailCfg.to && emailCfg.key && emailCfg.svc && emailCfg.tpl) {
+  // Vedno uporabi vgrajene konstante (zanesljivo — ne odvisno od localStorage)
+  const _eKey = EMAILJS_KEY;
+  const _eSvc = EMAILJS_SVC;
+  const _eTpl = EMAILJS_TPL;
+  const _eTo  = EMAILJS_TO;
+  if(_eKey && _eSvc && _eTpl && _eTo) {
     const fp2 = v => v ? parseFloat(v).toLocaleString('en',{minimumFractionDigits:2,maximumFractionDigits:6}) : '—';
     const dirTxt = dir==='bull' ? '▲ BULLISH' : dir==='bear' ? '▼ BEARISH' : '◆ NEUTRAL';
     const adminEmailBody =
@@ -4003,23 +4156,49 @@ async function aiPublishAndNotify() {
       `\nAnaliza:\n${txt}\n\n`+
       `Cas: ${now}\n\n-- TradeCore Admin`;
     try {
-      emailjs.init({publicKey: emailCfg.key});
-      await emailjs.send(emailCfg.svc, emailCfg.tpl, {
-        email:   emailCfg.to,
+      emailjs.init({publicKey: _eKey});
+      await emailjs.send(_eSvc, _eTpl, {
+        email:   _eTo,
         signal:  `${sym} ${dirTxt} — TradeCore Alarm`,
         details: adminEmailBody
       });
-      showToast('✉ Email obvestilo poslano!', 'ok');
+      showToast('✉ Email poslan na ' + _eTo, 'ok');
     } catch(e) {
       showToast('✉ Email napaka: '+(e?.text||e?.message||JSON.stringify(e)), 'err');
       console.warn('Admin email napaka:', e);
     }
   }
 
-  // Send notifications to all subscribers
+  // Send notifications to all subscribers (cloud + lokalni)
   let notifyCount = 0;
   if(doNotify) {
     notifyCount = await notifyAllSubscribers(tradeObj);
+
+    // ── Pošlji tudi lokalno shranjenemu naročniku (ko JSONBin ni nastavljen) ──
+    const localPrefs = JSON.parse(localStorage.getItem('tc_notify_prefs')||'null');
+    if(localPrefs && localPrefs.email && EMAILJS_KEY && EMAILJS_SVC && EMAILJS_TPL) {
+      try {
+        const fp2 = v => v ? parseFloat(v).toLocaleString('en',{minimumFractionDigits:2,maximumFractionDigits:6}) : '—';
+        const dirTxtL = tradeObj.signal==='bull' ? '▲ BULLISH' : tradeObj.signal==='bear' ? '▼ BEARISH' : '◆ NEUTRAL';
+        const body =
+          `TradeCore AI PRO — Nov trejd!\n\n`+
+          `Simbol: ${tradeObj.sym} [${tradeObj.market}]\n`+
+          `Smer: ${dirTxtL}\n`+
+          (tradeObj.price ? `Entry: $${fp2(tradeObj.price)}\n` : '')+
+          (tradeObj.sl    ? `Stop Loss: $${fp2(tradeObj.sl)}\n` : '')+
+          (tradeObj.tp    ? `Take Profit: $${fp2(tradeObj.tp)}\n` : '')+
+          `\nAnaliza:\n${(tradeObj.analysis?.notes||[]).join(' ')}\n\n`+
+          `-- TradeCore AI PRO`;
+        emailjs.init({publicKey: EMAILJS_KEY});
+        await emailjs.send(EMAILJS_SVC, EMAILJS_TPL, {
+          email:   localPrefs.email,
+          signal:  `${tradeObj.sym} ${dirTxtL} — TradeCore Alarm`,
+          details: body
+        });
+        notifyCount++;
+        showToast('✉ Alarm poslan → ' + localPrefs.email, 'ok');
+      } catch(e){ console.warn('Local subscriber email err:', e); }
+    }
   }
 
   const cloudNote = pushed ? '' : ' (lokalno — cloud ni nastavljen)';
@@ -4134,22 +4313,25 @@ async function saveUserNotifyPrefs() {
   if(statusEl) statusEl.textContent='';
   if(okEl) { okEl.style.display='block'; okEl.textContent='✅ Registracija uspešna! Prejeli boste obvestila ob naslednjem objavljenem trejdu.'; }
 
-  // Pošlji welcome email naročniku (če je email nastavljen)
-  if(email && emailCfg.enabled && emailCfg.svc && emailCfg.tpl) {
+  // ── Pošlji welcome email naročniku (vedno konstante) ────────────
+  if(email && EMAILJS_KEY && EMAILJS_SVC && EMAILJS_TPL) {
     try {
-      await emailjs.send(emailCfg.svc, emailCfg.tpl, {
-        email: email,
-        signal:   'Dobrodošli v TradeCore AI PRO! 🎉',
-        details:  'Uspešno ste se registrirali za obvestila.\n\n'
-                 +'Ko admin objavi nov trejd ali izziv, boste prejeli email s podatki:\n'
-                 +'• Simbol in smer (BULLISH/BEARISH)\n'
-                 +'• Entry cena\n'
-                 +'• Stop Loss\n'
-                 +'• Take Profit\n'
-                 +'• Analiza\n\n'
-                 +'— TradeCore AI PRO',
+      emailjs.init({publicKey: EMAILJS_KEY});
+      await emailjs.send(EMAILJS_SVC, EMAILJS_TPL, {
+        email:  email,
+        signal: 'Dobrodošli v TradeCore AI PRO!',
+        details: 'Uspešno ste se registrirali za obvestila TradeCore AI PRO.\n\n'
+                +'Ko admin objavi nov trejd, boste takoj prejeli email z:\n'
+                +'- Simbol in smer (BULLISH / BEARISH)\n'
+                +'- Entry cena, Stop Loss, Take Profit\n'
+                +'- Analiza in razlogi za trejd\n\n'
+                +'Hvala za registracijo!\n\n'
+                +'-- TradeCore AI PRO Team',
       });
-    } catch(e){}
+      showToast('✉ Pozdravni email poslan na ' + email, 'ok');
+    } catch(e){
+      showToast('✉ Email napaka: '+(e?.text||e?.message||''), 'err');
+    }
   }
 
   // Pošlji Telegram welcome (če je Chat ID vnesen in admin ima bota konfiguriranega)
@@ -4648,35 +4830,277 @@ function corrRenderLog() {
 }
 
 function dvSetTab(tab) {
-  const ma=document.getElementById('dv-body-ma');
-  const corr=document.getElementById('dv-body-corr');
-  const tabMa=document.getElementById('dv-tab-ma');
-  const tabCorr=document.getElementById('dv-tab-corr');
-  const sub=document.getElementById('dv-subtitle');
-  const badge=document.getElementById('dv-ma-badge');
-  // MA deviation filter/sort controls
-  const maCtls=['dv-tf','dv-thresh','dv-filter','dv-srt'];
-  if(tab==='ma'){
-    ma.style.display=''; corr.style.display='none';
-    tabMa.style.background='rgba(240,165,0,.15)';tabMa.style.color='var(--amber)';tabMa.style.borderColor='var(--amber)';
-    tabCorr.style.background='none';tabCorr.style.color='var(--text3)';tabCorr.style.borderColor='var(--border2)';
+  const ma     = document.getElementById('dv-body-ma');
+  const corr   = document.getElementById('dv-body-corr');
+  const matrix = document.getElementById('dv-body-matrix');
+  const tabMa   = document.getElementById('dv-tab-ma');
+  const tabCorr = document.getElementById('dv-tab-corr');
+  const tabMx   = document.getElementById('dv-tab-matrix');
+  const sub   = document.getElementById('dv-subtitle');
+  const badge = document.getElementById('dv-ma-badge');
+  const maCtls = ['dv-tf','dv-thresh','dv-filter','dv-srt'];
+  const styleActive   = (el,col) => { if(el){el.style.background=`rgba(${col},.15)`;el.style.color=col.startsWith('240')?'var(--amber)':col.startsWith('168')?'#a855f7':'#a855f7';el.style.borderColor=col.startsWith('240')?'var(--amber)':'#7c3aed';} };
+  const styleInactive = el => { if(el){el.style.background='none';el.style.color='var(--text3)';el.style.borderColor='var(--border2)';} };
+  // Hide all bodies first
+  if(ma)ma.style.display='none';
+  if(corr){corr.style.display='none';}
+  if(matrix)matrix.style.display='none';
+  styleInactive(tabMa); styleInactive(tabCorr); styleInactive(tabMx);
+  maCtls.forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+  if(badge)badge.style.display='none';
+
+  if(tab==='ma') {
+    if(ma)ma.style.display='';
+    if(tabMa){tabMa.style.background='rgba(240,165,0,.15)';tabMa.style.color='var(--amber)';tabMa.style.borderColor='var(--amber)';}
     if(sub)sub.textContent='FOREX · YAHOO FINANCE · 100-PERIOD MA';
     if(badge)badge.style.display='';
     maCtls.forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='';});
-  } else {
-    ma.style.display='none'; corr.style.display='flex';
-    tabCorr.style.background='rgba(168,85,247,.15)';tabCorr.style.color='#a855f7';tabCorr.style.borderColor='#7c3aed';
-    tabMa.style.background='none';tabMa.style.color='var(--text3)';tabMa.style.borderColor='var(--border2)';
+  } else if(tab==='corr') {
+    if(corr)corr.style.display='flex';
+    if(tabCorr){tabCorr.style.background='rgba(168,85,247,.15)';tabCorr.style.color='#a855f7';tabCorr.style.borderColor='#7c3aed';}
     if(sub)sub.textContent='FOREX · 1h · Z-SCORE MEAN REVERSION';
-    if(badge)badge.style.display='none';
-    maCtls.forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
     corrGo();
+  } else if(tab==='matrix') {
+    if(matrix)matrix.style.display='flex';
+    if(tabMx){tabMx.style.background='rgba(168,85,247,.15)';tabMx.style.color='#a855f7';tabMx.style.borderColor='#7c3aed';}
+    if(sub)sub.textContent='FOREX · CORRELATION MATRIX · DEVIATION';
+    // Show existing data immediately; only auto-fetch if nothing loaded AND not already loading
+    mxRender();
+    const anyLoaded = MATRIX_PAIRS.some(p=>mxData[p.id]?.st==='ok');
+    if(!anyLoaded && !mxLoading) mxFetchAll();
   }
 }
 
 function dvCalcMA(arr, period) {
   if(arr.length < period) return null;
   return arr.slice(-period).reduce((s,v)=>s+v,0) / period;
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// CORRELATION MATRIX — Live N×N Pearson correlation with historical baseline
+// ══════════════════════════════════════════════════════════════════════════
+const MATRIX_PAIRS = [
+  {id:'EURUSD=X', label:'EUR/USD', s:'EURUSD'},
+  {id:'GBPUSD=X', label:'GBP/USD', s:'GBPUSD'},
+  {id:'AUDUSD=X', label:'AUD/USD', s:'AUDUSD'},
+  {id:'NZDUSD=X', label:'NZD/USD', s:'NZDUSD'},
+  {id:'USDCAD=X', label:'USD/CAD', s:'USDCAD'},
+  {id:'USDCHF=X', label:'USD/CHF', s:'USDCHF'},
+  {id:'USDJPY=X', label:'USD/JPY', s:'USDJPY'},
+  {id:'EURGBP=X', label:'EUR/GBP', s:'EURGBP'},
+  {id:'EURJPY=X', label:'EUR/JPY', s:'EURJPY'},
+  {id:'GBPJPY=X', label:'GBP/JPY', s:'GBPJPY'},
+  {id:'AUDJPY=X', label:'AUD/JPY', s:'AUDJPY'},
+  {id:'XAUUSD=X', label:'XAU/USD', s:'XAUUSD'},
+];
+
+// Long-term historical Pearson correlation baselines (approximate)
+// Symmetric: MX_HIST['A:B'] == MX_HIST['B:A'] via mxHistCorr()
+const MX_HIST = {
+  'EURUSD:GBPUSD':  0.82, 'EURUSD:AUDUSD':  0.65, 'EURUSD:NZDUSD':  0.60,
+  'EURUSD:USDCAD': -0.65, 'EURUSD:USDCHF': -0.92, 'EURUSD:USDJPY': -0.48,
+  'EURUSD:EURGBP':  0.55, 'EURUSD:EURJPY':  0.70, 'EURUSD:GBPJPY':  0.45,
+  'EURUSD:AUDJPY':  0.35, 'EURUSD:XAUUSD':  0.52,
+  'GBPUSD:AUDUSD':  0.62, 'GBPUSD:NZDUSD':  0.58,
+  'GBPUSD:USDCAD': -0.58, 'GBPUSD:USDCHF': -0.86, 'GBPUSD:USDJPY': -0.42,
+  'GBPUSD:EURGBP': -0.40, 'GBPUSD:EURJPY':  0.42, 'GBPUSD:GBPJPY':  0.72,
+  'GBPUSD:AUDJPY':  0.30, 'GBPUSD:XAUUSD':  0.48,
+  'AUDUSD:NZDUSD':  0.92, 'AUDUSD:USDCAD': -0.76, 'AUDUSD:USDCHF': -0.60,
+  'AUDUSD:USDJPY': -0.35, 'AUDUSD:EURGBP':  0.10, 'AUDUSD:EURJPY':  0.38,
+  'AUDUSD:GBPJPY':  0.30, 'AUDUSD:AUDJPY':  0.72, 'AUDUSD:XAUUSD':  0.55,
+  'NZDUSD:USDCAD': -0.70, 'NZDUSD:USDCHF': -0.55, 'NZDUSD:USDJPY': -0.30,
+  'NZDUSD:EURGBP':  0.08, 'NZDUSD:EURJPY':  0.35, 'NZDUSD:GBPJPY':  0.28,
+  'NZDUSD:AUDJPY':  0.68, 'NZDUSD:XAUUSD':  0.50,
+  'USDCAD:USDCHF':  0.60, 'USDCAD:USDJPY':  0.30, 'USDCAD:EURGBP': -0.08,
+  'USDCAD:EURJPY': -0.32, 'USDCAD:GBPJPY': -0.25, 'USDCAD:AUDJPY': -0.55,
+  'USDCAD:XAUUSD': -0.52,
+  'USDCHF:USDJPY':  0.45, 'USDCHF:EURGBP': -0.35, 'USDCHF:EURJPY': -0.60,
+  'USDCHF:GBPJPY': -0.45, 'USDCHF:AUDJPY': -0.38, 'USDCHF:XAUUSD': -0.62,
+  'USDJPY:EURGBP': -0.05, 'USDJPY:EURJPY':  0.50, 'USDJPY:GBPJPY':  0.55,
+  'USDJPY:AUDJPY':  0.55, 'USDJPY:XAUUSD': -0.25,
+  'EURGBP:EURJPY':  0.35, 'EURGBP:GBPJPY': -0.15, 'EURGBP:AUDJPY':  0.05,
+  'EURGBP:XAUUSD':  0.15,
+  'EURJPY:GBPJPY':  0.87, 'EURJPY:AUDJPY':  0.78, 'EURJPY:XAUUSD':  0.40,
+  'GBPJPY:AUDJPY':  0.72, 'GBPJPY:XAUUSD':  0.32,
+  'AUDJPY:XAUUSD':  0.45,
+};
+
+function mxHistCorr(a, b) {
+  if(a === b) return 1.0;
+  return MX_HIST[a+':'+b] ?? MX_HIST[b+':'+a] ?? null;
+}
+
+// Pearson correlation using percentage returns (more robust than raw prices)
+function mxPearson(closesA, closesB, n=80) {
+  const la = closesA.slice(-n-1), lb = closesB.slice(-n-1);
+  const m = Math.min(la.length, lb.length) - 1;
+  if(m < 15) return null;
+  const ra=[], rb=[];
+  for(let i=0;i<m;i++){ra.push(la[i+1]/la[i]-1);rb.push(lb[i+1]/lb[i]-1);}
+  const mn=ra.length;
+  const mra=ra.reduce((s,v)=>s+v,0)/mn, mrb=rb.reduce((s,v)=>s+v,0)/mn;
+  let cov=0,va=0,vb=0;
+  for(let i=0;i<mn;i++){const da=ra[i]-mra,db=rb[i]-mrb;cov+=da*db;va+=da*da;vb+=db*db;}
+  if(va<1e-15||vb<1e-15) return null;
+  return Math.max(-1,Math.min(1,cov/Math.sqrt(va*vb)));
+}
+
+let mxData={}, mxLoading=false, mxSortCol=null, mxSortDir=1;
+MATRIX_PAIRS.forEach(p=>{ mxData[p.id]={closes:null,spot:null,st:'wait'}; });
+
+const MX_TF_MAP  = {'5m':'5m','1h':'1h','1d':'1d'};
+const MX_RNG_MAP = {'5m':'5d','1h':'30d','1d':'2y'};
+
+async function mxFetchOne(sym) {
+  const tf       = document.getElementById('mx-tf')?.value || '1h';
+  const interval = MX_TF_MAP[tf]  || '1h';
+  const range    = MX_RNG_MAP[tf] || '30d';
+  const target   = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(sym)}?interval=${interval}&range=${range}&includePrePost=false`;
+  // Use same encoding as dvFetchOne — encodeURIComponent for ALL proxies
+  for(let pi=0; pi<DV_PROXIES.length; pi++) {
+    try {
+      const url = DV_PROXIES[pi] + encodeURIComponent(target);
+      const controller = new AbortController();
+      const timer = setTimeout(()=>controller.abort(), 13000);
+      const r = await fetch(url, {headers:{'Accept':'application/json'}, signal:controller.signal});
+      clearTimeout(timer);
+      if(!r.ok) continue;
+      const j = await r.json();
+      const res = j?.chart?.result?.[0];
+      if(!res) continue;
+      const closes=(res.indicators?.quote?.[0]?.close||[]).filter(v=>v!=null&&isFinite(v));
+      if(closes.length<15) continue;
+      return {closes, spot:closes[closes.length-1], st:'ok'};
+    } catch(e){ continue; }
+  }
+  return {closes:null, spot:null, st:'err'};
+}
+
+async function mxFetchAll() {
+  if(mxLoading) return;
+  mxLoading=true;
+  const rb=document.getElementById('mx-rb'); if(rb)rb.style.opacity='.4';
+  const pw=document.getElementById('mx-pw'); if(pw)pw.style.display='flex';
+  const st=document.getElementById('mx-status'); if(st)st.textContent='Nalagam vse pare vzporedno...';
+  const tbl=document.getElementById('mx-table');
+  const lod=document.getElementById('mx-loading');
+  // Show loading message but keep existing table visible if data exists
+  const hasAny = MATRIX_PAIRS.some(p=>mxData[p.id]?.st==='ok');
+  if(!hasAny) { if(lod){lod.style.display='block';lod.textContent='Nalagam 12 valutnih parov...';} if(tbl)tbl.style.display='none'; }
+
+  // Fetch ALL pairs in parallel — no batches, no 800ms delays
+  const results = await Promise.allSettled(MATRIX_PAIRS.map(p => mxFetchOne(p.id)));
+  results.forEach((r,i) => {
+    mxData[MATRIX_PAIRS[i].id] = r.status==='fulfilled' ? r.value : {closes:null, spot:null, st:'err'};
+  });
+
+  if(lod)lod.style.display='none';
+  if(tbl)tbl.style.display='';
+  if(pw)pw.style.display='none';
+  if(rb)rb.style.opacity='1';
+  const loaded = MATRIX_PAIRS.filter(p=>mxData[p.id]?.st==='ok').length;
+  if(st)st.textContent = loaded===0
+    ? '⚠ Ni podatkov — Yahoo blokiran. Počakajte 1 min in poskusite znova.'
+    : `${loaded}/${MATRIX_PAIRS.length} parov · ${new Date().toLocaleTimeString('sl-SI')}`;
+  mxLoading=false;
+  mxRender();
+}
+
+function mxCellStyle(corr) {
+  if(corr >= 0.80) return 'background:rgba(0,180,70,.58);color:#e0ffe8';
+  if(corr >= 0.60) return 'background:rgba(0,160,60,.40);color:#b0e8c0';
+  if(corr >= 0.40) return 'background:rgba(0,140,50,.26);color:#80c898';
+  if(corr >= 0.20) return 'background:rgba(0,120,40,.15);color:#70a880';
+  if(corr >  -0.20) return 'background:rgba(40,50,70,.22);color:var(--text3)';
+  if(corr >  -0.40) return 'background:rgba(180,50,20,.16);color:#c09080';
+  if(corr >  -0.60) return 'background:rgba(200,50,20,.30);color:#d09080';
+  if(corr >  -0.80) return 'background:rgba(210,40,20,.44);color:#e09080';
+  return 'background:rgba(220,20,20,.62);color:#ffe0e0';
+}
+
+function mxDevOutline(dev) {
+  if(dev===null) return '';
+  const a=Math.abs(dev);
+  if(a < 0.08) return '';
+  if(a < 0.18) return `outline:1px solid ${dev>0?'rgba(255,160,0,.55)':'rgba(74,154,255,.55)'}`;
+  return `outline:2px solid ${dev>0?'#ff8c00':'#4a9aff'}`;
+}
+
+function mxSortBy(colId) {
+  if(mxSortCol===colId){ mxSortDir*=-1; }
+  else { mxSortCol=colId; mxSortDir=1; }
+  const p=MATRIX_PAIRS.find(p=>p.id===colId);
+  const lbl=document.getElementById('mx-sortlabel');
+  if(lbl&&p) lbl.textContent=`Razvrščeno po: ${p.label} (${mxSortDir>0?'↓ desc':'↑ asc'})`;
+  mxRender();
+}
+
+function mxRender() {
+  const thead=document.getElementById('mx-thead');
+  const tbody=document.getElementById('mx-tbody');
+  if(!thead||!tbody) return;
+  // Always show the table element once we start rendering
+  const tbl=document.getElementById('mx-table');
+  const lod=document.getElementById('mx-loading');
+  const hasAny=MATRIX_PAIRS.some(p=>mxData[p.id]?.st==='ok');
+  if(tbl)tbl.style.display = hasAny ? '' : 'none';
+  if(lod)lod.style.display = hasAny ? 'none' : 'block';
+  if(!hasAny) return;
+
+  // Compute all correlations for this render pass
+  const C={};
+  for(const A of MATRIX_PAIRS) for(const B of MATRIX_PAIRS) {
+    const k=A.id+':'+B.id;
+    if(C[k]!==undefined) continue;
+    if(A.id===B.id){C[k]=1;continue;}
+    const ca=mxData[A.id]?.closes, cb=mxData[B.id]?.closes;
+    if(!ca||!cb){C[k]=null;C[B.id+':'+A.id]=null;continue;}
+    const v=mxPearson(ca,cb,80);
+    C[k]=v; C[B.id+':'+A.id]=v;
+  }
+
+  // Sort rows
+  let rows=[...MATRIX_PAIRS];
+  if(mxSortCol) {
+    rows.sort((a,b)=>{
+      const va=C[a.id+':'+mxSortCol]??-9, vb=C[b.id+':'+mxSortCol]??-9;
+      return mxSortDir>0?vb-va:va-vb;
+    });
+  }
+
+  // Render header row
+  thead.innerHTML=`<tr>
+    <th style="background:var(--bg2);padding:5px 8px;font-size:8px;color:var(--text3);letter-spacing:.08em;white-space:nowrap;position:sticky;left:0;z-index:3;min-width:72px;border-right:1px solid var(--border)">PAR ↕</th>
+    ${MATRIX_PAIRS.map(c=>`
+    <th onclick="mxSortBy('${c.id}')" style="background:var(--bg2);padding:4px 4px;font-size:8px;color:${mxSortCol===c.id?'#a855f7':'var(--text2)'};letter-spacing:.05em;white-space:nowrap;cursor:pointer;min-width:62px;text-align:center;border-bottom:${mxSortCol===c.id?'2px solid #a855f7':'2px solid transparent'}" title="Razvrsti po ${c.label}">
+      ${c.label}<br><span style="color:var(--text3);font-weight:normal;font-size:7px">${mxSortCol===c.id?(mxSortDir>0?'↓':'↑'):'⇅'}</span>
+    </th>`).join('')}
+  </tr>`;
+
+  // Render body
+  tbody.innerHTML=rows.map(row=>{
+    const ok=mxData[row.id]?.st==='ok';
+    const spotFmt=ok?(mxData[row.id].spot>100?mxData[row.id].spot.toFixed(2):mxData[row.id].spot.toFixed(4)):'⏳';
+    const isActiveRow=row.id===mxSortCol;
+    return `<tr>
+      <td onclick="mxSortBy('${row.id}')" style="background:${isActiveRow?'rgba(168,85,247,.1)':'var(--bg2)'};padding:4px 8px;font-size:9px;font-weight:bold;color:${isActiveRow?'#a855f7':'var(--text)'};white-space:nowrap;cursor:pointer;position:sticky;left:0;z-index:2;border-right:1px solid var(--border);min-width:72px">
+        ${row.label}<br><span style="font-size:7px;color:${ok?'var(--green)':'var(--red)'};font-weight:normal">${spotFmt}</span>
+      </td>
+      ${MATRIX_PAIRS.map(col=>{
+        if(row.id===col.id) return `<td style="background:rgba(168,85,247,.25);text-align:center;padding:4px 3px;font-size:10px;font-weight:bold;color:#c084fc">100%</td>`;
+        const corr=C[row.id+':'+col.id];
+        if(corr===null||corr===undefined) return `<td style="background:var(--bg3);text-align:center;padding:4px 3px;font-size:9px;color:var(--text3)">—</td>`;
+        const hist=mxHistCorr(row.s,col.s);
+        const dev=(hist!==null)?(corr-hist):null;
+        const csty=mxCellStyle(corr);
+        const cout=mxDevOutline(dev);
+        const devStr=dev!==null?`<div style="font-size:7px;margin-top:1px;color:${dev>0.08?'#ff8c00':dev<-0.08?'#4a9aff':'var(--text3)'}">${dev>0?'+':''}${(dev*100).toFixed(0)}%</div>`:'';
+        return `<td style="${csty};${cout?cout+';':''};text-align:center;padding:3px 2px" title="${row.label} vs ${col.label} | Live: ${(corr*100).toFixed(1)}%${hist!==null?' | Hist: '+(hist*100).toFixed(0)+'%':''}${dev!==null?' | Δ: '+(dev*100).toFixed(1)+'%':''}">
+          <div style="font-size:9px;font-weight:bold">${(corr*100).toFixed(0)}%</div>${devStr}
+        </td>`;
+      }).join('')}
+    </tr>`;
+  }).join('');
 }
 
 async function dvFetchOne(sym) {
