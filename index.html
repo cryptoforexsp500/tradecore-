@@ -680,7 +680,7 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
           <th class="th-sort r" data-col="str" onclick="crThSort('str')">STRENGTH</th>
           <th class="th-sort r" data-col="ema100" onclick="crThSort('ema100')" style="color:var(--amber);white-space:nowrap" title="Čas od zadnjega prečkanja 9 EMA čez 100 EMA — klikni za razvrščanje">9/100 EMA</th>
           <th class="th-sort r" data-col="fvg" onclick="crThSort('fvg')" style="color:#7b68ee;white-space:nowrap" title="Fair Value Gap — click to sort by proximity">FVG</th>
-          <th class="th-sort r" data-col="liq" onclick="crThSort('liq')" style="color:var(--green);white-space:nowrap" title="Nearest support level — click to sort by proximity">SUPPORT</th>
+          <th class="th-sort r" data-col="liq" onclick="crThSort('liq')" style="color:var(--green);white-space:nowrap" title="TP / SL based on signal direction — click to sort by proximity">TP / SL</th>
           <th class="th-sort r" data-col="rvgi" onclick="crThSort('rvgi')" style="color:#e879f9;white-space:nowrap" title="RVGI: Relative Vigor Index (12-period). &lt;0.30 = LONG zone 🟢, &gt;0.70 = SHORT zone 🔴">RVGI</th>
         </tr></thead>
         <tbody id="cr-tb"></tbody>
@@ -736,7 +736,7 @@ select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);p
           <th class="th-sort r" data-col="str" onclick="spThSort('str')">STRENGTH</th>
           <th class="th-sort r" data-col="ema100" onclick="spThSort('ema100')" style="color:var(--amber);white-space:nowrap" title="Čas od zadnjega prečkanja 9 EMA čez 100 EMA — klikni za razvrščanje">9/100 EMA</th>
           <th class="th-sort r" data-col="fvg" onclick="spThSort('fvg')" style="color:#7b68ee;white-space:nowrap" title="Fair Value Gap — click to sort by proximity">FVG</th>
-          <th class="th-sort r" data-col="liq" onclick="spThSort('liq')" style="color:var(--green);white-space:nowrap" title="Nearest support level — click to sort by proximity">SUPPORT</th>
+          <th class="th-sort r" data-col="liq" onclick="spThSort('liq')" style="color:var(--green);white-space:nowrap" title="TP / SL based on signal direction — click to sort by proximity">TP / SL</th>
           <th class="th-sort r" data-col="rvgi" onclick="spThSort('rvgi')" style="color:#e879f9;white-space:nowrap" title="RVGI: Relative Vigor Index (12-period). &lt;0.30 = LONG zone 🟢, &gt;0.70 = SHORT zone 🔴">RVGI</th>
         </tr></thead>
         <tbody id="sp-tb"></tbody>
@@ -1774,7 +1774,7 @@ const CR_SYMS=[
   {id:'STXUSDT'},{id:'MINAUSDT'},{id:'APEUSDT'},{id:'GMTUSDT'},{id:'FETUSDT'},
   {id:'AGIXUSDT'},{id:'OCEANUSDT'},{id:'PENDLEUSDT'},{id:'GMXUSDT'},{id:'WLDUSDT'},
   {id:'ORDIUSDT'},{id:'JUPUSDT'},{id:'PYTHUSDT'},{id:'DYMUSDT'},{id:'STRKUSDT'},
-  {id:'PIXELUSDT'},{id:'MANTAUSDT'},{id:'CAKEUSDT'},{id:'ZETAUSDT'},{id:'BEAMXUSDT'},
+  {id:'PIXELUSDT'},{id:'MANTAUSDT'},{id:'CAKEUSDT'},{id:'BEAMXUSDT'},
   {id:'NFPUSDT'},{id:'ACEUSDT'},{id:'AIUSDT'},{id:'YFIUSDT'},{id:'ENJUSDT'},
   {id:'QTUMUSDT'},{id:'ICXUSDT'},{id:'CELOUSDT'},{id:'API3USDT'},{id:'ARKMUSDT'},
   {id:'CYBERUSDT'},{id:'ALTUSDT'},{id:'THETAUSDT'},{id:'XAIUSDT'},{id:'PORTALUSDT'},
@@ -2023,10 +2023,11 @@ function crRow(s,i){
     if(fv.bear){const d=_fvDist(fv.bearPrice);return`<span style="color:var(--red);font-size:9px;font-weight:bold;line-height:1.4" title="Bearish FVG resistance at $${fp(fv.bearPrice)} — place SL above this">▼${fp(fv.bearPrice)}<br><span style="font-size:8px;font-weight:normal">${d}%</span></span>`;}
     return`<span style="color:var(--text3);font-size:9px">—</span>`;
   })():`<span style="color:var(--text3);font-size:9px">—</span>`;
-  const liqLvl=d?.liq?.bull?.[0];
-  const liqDist=liqLvl?parseFloat(liqLvl.dist):null;
-  const liqDc=liqDist!==null?(Math.abs(liqDist)<1?'var(--green)':Math.abs(liqDist)<2?'var(--amber)':'#ff6644'):'var(--text3)';
-  const liqHtml=liqLvl?`<span style="color:var(--green);font-size:9px;font-weight:bold;line-height:1.4" title="Support: ${liqLvl.reason} · ${liqLvl.score} pts">${fp(liqLvl.price)}<br><span style="font-size:8px;font-weight:normal;color:${liqDc}">${liqDist}%</span></span>`:`<span style="color:var(--text3);font-size:9px">—</span>`;
+  const liqBull=d?.liq?.bull?.[0],liqBear=d?.liq?.bear?.[0];
+  let liqHtml;
+  if(ib){const tp=liqBear,sl=liqBull;liqHtml=`<span style="font-size:9px;line-height:1.5;display:inline-block">${tp?`<span style="color:var(--green);font-weight:bold" title="TP resistanca: ${tp.reason} · ${tp.score}pts">▲${fp(tp.price)} <span style="font-size:8px;opacity:.75">${tp.dist}%</span></span>`:'<span style="color:var(--text3)">—</span>'}<br>${sl?`<span style="color:#ff6644;font-size:8px" title="SL support: ${sl.reason} · ${sl.score}pts">▼${fp(sl.price)} <span style="opacity:.75">${sl.dist}%</span></span>`:'<span style="color:var(--text3);font-size:8px">—</span>'}</span>`;}
+  else if(ir){const tp=liqBull,sl=liqBear;liqHtml=`<span style="font-size:9px;line-height:1.5;display:inline-block">${tp?`<span style="color:var(--green);font-weight:bold" title="TP support: ${tp.reason} · ${tp.score}pts">▼${fp(tp.price)} <span style="font-size:8px;opacity:.75">${tp.dist}%</span></span>`:'<span style="color:var(--text3)">—</span>'}<br>${sl?`<span style="color:#ff6644;font-size:8px" title="SL resistanca: ${sl.reason} · ${sl.score}pts">▲${fp(sl.price)} <span style="opacity:.75">${sl.dist}%</span></span>`:'<span style="color:var(--text3);font-size:8px">—</span>'}</span>`;}
+  else{liqHtml=`<span style="font-size:9px;line-height:1.5;display:inline-block">${liqBear?`<span style="color:var(--text2);font-weight:bold" title="Resistanca: ${liqBear.reason}">▲${fp(liqBear.price)} <span style="font-size:8px;opacity:.75">${liqBear.dist}%</span></span>`:'<span style="color:var(--text3)">—</span>'}<br>${liqBull?`<span style="color:var(--text3);font-size:8px" title="Support: ${liqBull.reason}">▼${fp(liqBull.price)} <span style="opacity:.75">${liqBull.dist}%</span></span>`:'<span style="color:var(--text3);font-size:8px">—</span>'}</span>`;}
   const rv=d?.rvgi;
   const rvLong=rv!=null&&rv<0.30,rvShort=rv!=null&&rv>0.70;
   const rvC=rv==null?'var(--text3)':rvLong?'var(--green)':rvShort?'var(--red)':'var(--text2)';
@@ -2221,7 +2222,7 @@ const SP_STOCKS=[
   {id:'FI',s:'Finance'},{id:'MCO',s:'Finance'},{id:'MMC',s:'Finance'},{id:'AON',s:'Finance'},{id:'EQIX',s:'Tech'},
 ];
 const SP_SC={Tech:'#4a7aff',Health:'#00cc66',Finance:'#f0a500',Energy:'#ff8844',Consumer:'#aa88ff',Indust:'#88aabb'};
-const SP_PROXIES=['https://corsproxy.io/?','https://api.allorigins.win/raw?url='];
+const SP_PROXIES=['https://corsproxy.io/?','https://api.codetabs.com/v1/proxy?quest=','https://api.allorigins.win/get?url='];
 // ── Persist spPrev across refresh ──
 const SP_PREV_KEY = 'tc_spPrev_v1';
 function spPrevLoad(){ try{return JSON.parse(localStorage.getItem(SP_PREV_KEY)||'{}');}catch(e){return {};} }
@@ -2240,7 +2241,8 @@ async function spFetchOne(sym){
       const idx=(spProxy+pi)%SP_PROXIES.length;
       const r=await fetch(SP_PROXIES[idx]+encodeURIComponent(target),{signal:AbortSignal.timeout(12000)});
       if(!r.ok)throw new Error(r.status);
-      const j=await r.json();
+      const raw=await r.json();
+      const j=raw?.contents?JSON.parse(raw.contents):raw;
       const res=j?.chart?.result?.[0];if(!res)throw new Error('no result');
       const q=res.indicators?.quote?.[0];if(!q)throw new Error('no quote');
       const valid=[];(q.close||[]).forEach((v,i)=>{if(v!=null&&q.low[i]!=null&&q.high[i]!=null)valid.push({c:v,o:q.open?.[i]??v,l:q.low[i],h:q.high[i]});});
@@ -2278,10 +2280,11 @@ function spRow(s,i){
     if(fv.bear){const d=_fvDist(fv.bearPrice);return`<span style="color:var(--red);font-size:9px;font-weight:bold;line-height:1.4" title="Bearish FVG resistance at $${fp(fv.bearPrice)} — place SL above this">▼${fp(fv.bearPrice)}<br><span style="font-size:8px;font-weight:normal">${d}%</span></span>`;}
     return`<span style="color:var(--text3);font-size:9px">—</span>`;
   })():`<span style="color:var(--text3);font-size:9px">—</span>`;
-  const liqLvl=d?.liq?.bull?.[0];
-  const liqDist=liqLvl?parseFloat(liqLvl.dist):null;
-  const liqDc=liqDist!==null?(Math.abs(liqDist)<1?'var(--green)':Math.abs(liqDist)<2?'var(--amber)':'#ff6644'):'var(--text3)';
-  const liqHtml=liqLvl?`<span style="color:var(--green);font-size:9px;font-weight:bold;line-height:1.4" title="Support: ${liqLvl.reason} · ${liqLvl.score} pts">${fp(liqLvl.price)}<br><span style="font-size:8px;font-weight:normal;color:${liqDc}">${liqDist}%</span></span>`:`<span style="color:var(--text3);font-size:9px">—</span>`;
+  const liqBull=d?.liq?.bull?.[0],liqBear=d?.liq?.bear?.[0];
+  let liqHtml;
+  if(ib){const tp=liqBear,sl=liqBull;liqHtml=`<span style="font-size:9px;line-height:1.5;display:inline-block">${tp?`<span style="color:var(--green);font-weight:bold" title="TP resistanca: ${tp.reason} · ${tp.score}pts">▲${fp(tp.price)} <span style="font-size:8px;opacity:.75">${tp.dist}%</span></span>`:'<span style="color:var(--text3)">—</span>'}<br>${sl?`<span style="color:#ff6644;font-size:8px" title="SL support: ${sl.reason} · ${sl.score}pts">▼${fp(sl.price)} <span style="opacity:.75">${sl.dist}%</span></span>`:'<span style="color:var(--text3);font-size:8px">—</span>'}</span>`;}
+  else if(ir){const tp=liqBull,sl=liqBear;liqHtml=`<span style="font-size:9px;line-height:1.5;display:inline-block">${tp?`<span style="color:var(--green);font-weight:bold" title="TP support: ${tp.reason} · ${tp.score}pts">▼${fp(tp.price)} <span style="font-size:8px;opacity:.75">${tp.dist}%</span></span>`:'<span style="color:var(--text3)">—</span>'}<br>${sl?`<span style="color:#ff6644;font-size:8px" title="SL resistanca: ${sl.reason} · ${sl.score}pts">▲${fp(sl.price)} <span style="opacity:.75">${sl.dist}%</span></span>`:'<span style="color:var(--text3);font-size:8px">—</span>'}</span>`;}
+  else{liqHtml=`<span style="font-size:9px;line-height:1.5;display:inline-block">${liqBear?`<span style="color:var(--text2);font-weight:bold" title="Resistanca: ${liqBear.reason}">▲${fp(liqBear.price)} <span style="font-size:8px;opacity:.75">${liqBear.dist}%</span></span>`:'<span style="color:var(--text3)">—</span>'}<br>${liqBull?`<span style="color:var(--text3);font-size:8px" title="Support: ${liqBull.reason}">▼${fp(liqBull.price)} <span style="opacity:.75">${liqBull.dist}%</span></span>`:'<span style="color:var(--text3);font-size:8px">—</span>'}</span>`;}
   const rv=d?.rvgi;
   const rvLong=rv!=null&&rv<0.30,rvShort=rv!=null&&rv>0.70;
   const rvC=rv==null?'var(--text3)':rvLong?'var(--green)':rvShort?'var(--red)':'var(--text2)';
@@ -2586,30 +2589,52 @@ function buildLiqHtml(s) {
     return html;
 
   } else {
-    // ── BULL SIGNAL: original logic ──
-    const orders = liq?.bull;
-    if(!orders || !orders.length) return '';
+    // ── BULL SIGNAL: TP (resistance above) + SL zone (support below) ──
+    const res = liq?.bear || [];
+    const sup = liq?.bull || [];
+    if(!res.length && !sup.length) return '';
 
-    const orderRows = orders.map((o, idx) => {
-      const d = parseFloat(o.dist);
-      return `<div style="display:flex;align-items:center;gap:0;margin-bottom:6px">
-        <div style="padding:6px 12px;background:rgba(0,232,122,.06);border:1px solid #0a3a1a;border-right:none;min-width:110px">
-          <div style="font-size:8px;color:var(--text3);letter-spacing:.12em;margin-bottom:2px">LIMIT ORDER ${idx+1}</div>
-          <div style="font-size:13px;font-weight:bold;color:var(--green);font-family:monospace;letter-spacing:.04em">${pf(o.price)}</div>
-        </div>
-        <div style="padding:6px 12px;background:var(--bg3);border:1px solid var(--border2);flex:1">
-          <div style="font-size:9px;color:var(--text3)">${o.reason}</div>
-          <div style="font-size:10px;color:${d>=0?'#ff6644':'var(--green)'};margin-top:1px;font-weight:bold">${d>=0?'+':''}${d}%${Math.abs(d)>3?' ⚠ deep':''}</div>
-        </div>
-      </div>`;
-    }).join('');
+    let html = `<div style="border-top:2px solid #1a2040;padding:10px 14px;background:rgba(5,10,30,.6)">`;
 
-    return `<div style="border-top:2px solid #1a2040;padding:10px 14px;background:rgba(5,10,30,.6)">
-      <div style="font-size:8px;color:var(--green);letter-spacing:.2em;margin-bottom:8px;font-weight:bold">
-        💧 SUPPORT — LIMIT LONG
-      </div>
-      ${orderRows}
-    </div>`;
+    // TAKE PROFIT — resistance levels above price
+    if(res.length) {
+      html += `<div style="font-size:8px;color:var(--green);letter-spacing:.18em;margin-bottom:8px;font-weight:bold">🎯 TAKE PROFIT — RESISTANCE</div>`;
+      html += res.map((o, idx) => {
+        const d = parseFloat(o.dist);
+        const isFirst = idx === 0;
+        return `<div style="display:flex;align-items:stretch;gap:0;margin-bottom:5px${isFirst?';box-shadow:0 0 0 1px #0a5a2a':''}">
+          <div style="padding:6px 12px;background:rgba(0,232,122,.08);border:1px solid ${isFirst?'#0a5a2a':'#0a3a1a'};border-right:none;min-width:110px">
+            <div style="font-size:8px;color:var(--text3);letter-spacing:.12em;margin-bottom:2px">TP TARGET ${idx+1}</div>
+            <div style="font-size:13px;font-weight:bold;color:var(--green);font-family:monospace;letter-spacing:.04em">${pf(o.price)}</div>
+          </div>
+          <div style="padding:6px 12px;background:var(--bg3);border:1px solid var(--border2);flex:1">
+            <div style="font-size:9px;color:var(--text3)">${o.reason}</div>
+            <div style="font-size:10px;color:var(--green);margin-top:1px;font-weight:bold">+${d}%${d>5?' 🎯':''}</div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    // SL ZONE — support levels below price (limit entry / stop-loss reference)
+    if(sup.length) {
+      html += `<div style="font-size:8px;color:#ff6644;letter-spacing:.18em;margin:${res.length?'10px':0} 0 6px;font-weight:bold">💧 SL ZONA — SUPPORT / LIMIT LONG</div>`;
+      html += sup.map((o, idx) => {
+        const d = parseFloat(o.dist);
+        return `<div style="display:flex;align-items:center;gap:0;margin-bottom:5px">
+          <div style="padding:6px 12px;background:rgba(255,100,68,.06);border:1px solid #3a1a0a;border-right:none;min-width:110px">
+            <div style="font-size:8px;color:var(--text3);letter-spacing:.12em;margin-bottom:2px">LIMIT ORDER ${idx+1}</div>
+            <div style="font-size:13px;font-weight:bold;color:#ff7744;font-family:monospace;letter-spacing:.04em">${pf(o.price)}</div>
+          </div>
+          <div style="padding:6px 12px;background:var(--bg3);border:1px solid var(--border2);flex:1">
+            <div style="font-size:9px;color:var(--text3)">${o.reason}</div>
+            <div style="font-size:10px;color:${d>=0?'#ff6644':'var(--green)'};margin-top:1px;font-weight:bold">${d>=0?'+':''}${d}%${Math.abs(d)>3?' ⚠ deep':''}</div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    html += '</div>';
+    return html;
   }
 }
 
@@ -3252,6 +3277,7 @@ renderHomeForum();
 const STRIPE_PAYMENT_LINK = '';                                    // ← prilepi Stripe Payment Link URL sem
 const CLOUD_BIN_DEFAULT   = '69e34b04aaba88219710c97f';            // ← JSONBin FEED BIN ID
 const SUB_BIN_DEFAULT     = '69e34b3d856a682189489065';            // ← JSONBin SUB BIN ID
+const MASTER_KEY_DEFAULT  = '$2a$10$kXFHExLQyep9d6VzlLLKyef1lzRNdR1pNr..KgwlGvx1P/AYKyow6'; // JSONBin X-Master-Key
 const AI_PRO_PRICE        = '29 €/mesec';       // ← cena za prikaz na strani
 
 // ── EmailJS nastavitve — vgrajene v kodo (delujejo na vsakem računalniku) ──────
@@ -3498,6 +3524,7 @@ if(CLOUD_BIN_DEFAULT && !cloudCfg.binId) cloudCfg.binId = CLOUD_BIN_DEFAULT;
 // Sub bin default — za registracije naročnikov
 if(!cloudCfg.subBinId && SUB_BIN_DEFAULT) cloudCfg.subBinId = SUB_BIN_DEFAULT;
 if(SUB_BIN_DEFAULT) localStorage.setItem('tc_sub_bin', SUB_BIN_DEFAULT);
+if(!cloudCfg.masterKey && MASTER_KEY_DEFAULT) cloudCfg.masterKey = MASTER_KEY_DEFAULT;
 
 // ── Cloud sync helpers ──────────────────────────────────────────────────────
 let _cloudSyncInterval = null;
@@ -4633,7 +4660,7 @@ const DV_PAIRS = [
 
 const DV_TF_MAP = {'1h':'1h','30m':'30m','1d':'1d'};
 const DV_RANGE_MAP = {'1h':'30d','30m':'7d','1d':'2y'};
-const DV_PROXIES = ['https://corsproxy.io/?','https://api.allorigins.win/raw?url='];
+const DV_PROXIES = ['https://corsproxy.io/?','https://api.codetabs.com/v1/proxy?quest=','https://api.allorigins.win/get?url='];
 let dvData={}, dvAlerts=[], dvLoading=false, dvCd=300, dvPrevDev={}, dvProxy=0;
 DV_PAIRS.forEach(p=>{ dvData[p.id]={spot:null,ma:null,dev:null,devPct:null,dir:null,st:'wait'}; });
 
@@ -4965,7 +4992,8 @@ async function mxFetchOne(sym) {
       const r = await fetch(url, {headers:{'Accept':'application/json'}, signal:controller.signal});
       clearTimeout(timer);
       if(!r.ok) continue;
-      const j = await r.json();
+      const raw = await r.json();
+      const j = raw?.contents?JSON.parse(raw.contents):raw;
       const res = j?.chart?.result?.[0];
       if(!res) continue;
       const closes=(res.indicators?.quote?.[0]?.close||[]).filter(v=>v!=null&&isFinite(v));
@@ -5114,7 +5142,8 @@ async function dvFetchOne(sym) {
       const idx = (dvProxy+pi) % DV_PROXIES.length;
       const r = await fetch(DV_PROXIES[idx]+encodeURIComponent(target), {signal:AbortSignal.timeout(13000)});
       if(!r.ok) throw new Error(r.status);
-      const j = await r.json();
+      const raw = await r.json();
+      const j = raw?.contents?JSON.parse(raw.contents):raw;
       const res = j?.chart?.result?.[0];
       if(!res) throw new Error('no result');
       const q = res.indicators?.quote?.[0];
