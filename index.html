@@ -934,6 +934,21 @@ body.na-ai #content{display:none}
 .jf-mini:hover{border-color:var(--blue);color:var(--blue)}
 @media (max-width:520px){#df-body{padding:10px}.jf-platno{height:220px}}
 
+/* ── TEST H1 · H4 · D1 (14 Oct 2026): virtual trades on longer candles ── */
+.jf-tf{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin:0 0 10px}
+.jf-tf-n{color:var(--text2);font-size:9px;letter-spacing:.14em}
+.jf-tf-pod{color:var(--text2);font-size:9.5px}
+.jf-test-z{display:inline-block;color:var(--purple);border:1px solid var(--purple);font-size:8.5px;letter-spacing:.1em;
+  line-height:13px;padding:0 4px;white-space:nowrap;vertical-align:1px}
+.b1p-seg button.on .jf-test-z{color:var(--green);border-color:var(--green)}
+.jf-test-uvod{border-left:3px solid var(--purple);padding-left:10px}
+.jf-test-ovoj{margin:0 0 4px;max-width:1000px;background:var(--bg2);border:1px solid var(--border2)}
+.jf-test-tab td{vertical-align:top;line-height:1.55;padding:6px 8px}
+.jf-test-tab th{padding:6px 8px}
+.jf-test-tab tbody tr.on td{background:rgba(123,104,238,.09)}
+.jf-test-tab tbody tr.on td:first-child{box-shadow:inset 2px 0 0 var(--purple)}
+.jf-test-r{font-size:12px}
+.jf-test-pod{color:var(--text2);font-size:9.5px;margin:0 0 12px;max-width:1000px}
 /* AI PRO: subscription */
 .lic-dva{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px}
 @media (max-width:760px){.lic-dva{grid-template-columns:1fr}}
@@ -6384,7 +6399,7 @@ function submitComment(){
 // ══════════════════════════════════════
 // OWNER POSTS
 // ══════════════════════════════════════
-const OWNER_PASS = '1c0c18045d19fc267770699b1cc0adca526e12be649ac4c7';   // javna različica: odstranjeno
+const OWNER_PASS = 'ed76879fecf1c3e75f5f67b9b9e465dbd108e30fdb6012af';   // javna različica: odstranjeno
 const OWNER_POSTS_KEY = 'tc_owner_posts';
 let ownerPosts = JSON.parse(localStorage.getItem(OWNER_POSTS_KEY)||'[]');
 let ownerUnlocked = false;
@@ -6754,7 +6769,7 @@ const EMAILJS_TO  = '';   // javna različica: odstranjeno
 // Aktivacijske kode — po Stripe plačilu pošlješ kupcu eno od teh kod
 // Dodaj nove kode po potrebi. OWNER_CODE je samo tvoj.
 const AI_CODES  = [];   // javna različica: odstranjeno
-const OWNER_CODE= '8eb57a1e8c6fdf7328773c7e14ce11a6ae06dfa82139fcca';   // javna različica: odstranjeno
+const OWNER_CODE= '10a24fcf97712139d7ae628294474b435cc03d7b07529eb8';   // javna različica: odstranjeno
 
 // ── Storage keys + emailCfg declared early (used by applyGateAccess before their original position) ──
 const TG_KEY        = 'tc_telegram';
@@ -12503,9 +12518,17 @@ setInterval(function(){
 //   JAVNO_API/feed/live/pics  pictures for the live feed (fetched again only when pics_v changes)
 // Opened from a file on the robot's computer with JAVNO_API empty: local preview from 127.0.0.1:8792
 // (OBJAVI-SIGNALE.py). On the website (https) nothing ever calls 127.0.0.1.
+//
+// TEST H1 · H4 · D1 (14 Oct 2026, Matic: "add 1h, 4h and 1d divergences the way you do now … symbolic positions
+// to keep statistics … a clear overview in TradeCore and on the live page"). The same scanner rules on 1-hour,
+// 4-hour and daily candles, every signal taken VIRTUALLY by 1B, 1C, 1D and 1E (nothing is sent to the exchange).
+// They come in a separate part of the feed ("test": trades with "tf", stats in R) that older pages ignore; the
+// timeframe switch shows either the robot's 5-minute trades or one TEST timeframe, never mixed.
 // ══════════════════════════════════════
 var JF_LOKALNO = 'http://127.0.0.1:8792';
 var JF_STRAT = ['1B', '1C', '1D', '1E'];
+var JF_TF = ['5M', 'H1', 'H4', 'D1'];
+var JF_TF_NAPIS = {'5M': '5-minute', H1: '1-hour', H4: '4-hour', D1: 'daily'};
 var JF_STANJA = ['all', 'pending', 'open', 'closed', 'unfilled'];
 var JF_STANJE_NAPIS = {pending: 'WAITING FOR ENTRY', open: '● OPEN', closed: 'CLOSED', unfilled: 'NOT FILLED'};
 var JF_IZHOD = {target: 'take profit hit', stop: 'stop loss hit', market: 'closed at market', harvest: 'early take-profit',
@@ -12520,7 +12543,8 @@ var JF = {podatki: null, slike: {}, slikeV: '', nacin: '', prikaz: [], izbrane: 
 
 function jfBeriIzbiro(){
   var z = {}; try{ z = JSON.parse(localStorage.getItem('tc_df') || '{}') || {}; }catch(e){}
-  return {s: (['all'].concat(JF_STRAT).indexOf(z.s) >= 0 ? z.s : 'all'),
+  return {tf: (JF_TF.indexOf(z.tf) >= 0 ? z.tf : '5M'),
+          s: (['all'].concat(JF_STRAT).indexOf(z.s) >= 0 ? z.s : 'all'),
           st: (JF_STANJA.indexOf(z.st) >= 0 ? z.st : 'all'),
           red: (z.red === 'old' ? 'old' : 'new'),
           n: ([20, 50, 100].indexOf(z.n) >= 0 ? z.n : 20)};
@@ -12563,7 +12587,12 @@ function jfPas(){
   var o = -new Date().getTimezoneOffset() / 60;
   return 'UTC' + (o >= 0 ? '+' : '−') + Math.abs(o);
 }
-function jfMinNapis(m){ if(m < 60) return m + ' min'; var h = Math.floor(m / 60), r = m % 60; return h + ' h' + (r ? ' ' + r + ' min' : ''); }
+function jfMinNapis(m){
+  if(m < 60) return m + ' min';
+  if(m < 2880){ var h = Math.floor(m / 60), r = m % 60; return h + ' h' + (r ? ' ' + r + ' min' : ''); }
+  var d = Math.floor(m / 1440), hh = Math.round((m % 1440) / 60); if(hh === 24){ d++; hh = 0; }
+  return d + ' days' + (hh ? ' ' + hh + ' h' : '');
+}
 function jfTrajanje(s){
   var d = s && s.div; if(!d) return null;
   var t = s.t || [], a = t[d.i1], b = t[d.i2], min = null;
@@ -12607,12 +12636,23 @@ function jfStanjeVrstice(r){
     + (r.r === null || r.r === undefined ? '' : '<span class="jf-s-pod">' + jfR(r.r) + '</span>');
 }
 
+// ── timeframe: the robot's 5-minute trades or one TEST timeframe ──
+function jfJeTest(){ return JF.f.tf !== '5M'; }
+function jfTest(){ return (JF.podatki && JF.podatki.test) || null; }
+function jfTrejdiTf(){
+  if(!JF.podatki) return [];
+  if(!jfJeTest()) return JF.podatki.trades || [];
+  var t = jfTest(); return ((t && t.trades) || []).filter(function(x){ return x.tf === JF.f.tf; });
+}
+function jfFilterTf(v){ JF.f.tf = (JF_TF.indexOf(v) >= 0 ? v : '5M'); jfShraniIzbiro(); JF.podpis = ''; jfPrikazi(); }
+
 // ── cards: one per signal ──
 function jfKarte(trades){
   var po = {}, karte = [];
   (trades || []).forEach(function(t){
     var k = t.pic || ('id:' + t.id), c = po[k];
-    if(!c){ c = po[k] = {k: k, sym: t.sym, side: t.side, t: t.t, type: t.type, str: t.str, sig_px: t.sig_px, pic: t.pic, vrstice: []}; karte.push(c); }
+    if(!c){ c = po[k] = {k: k, sym: t.sym, side: t.side, t: t.t, type: t.type, str: t.str, sig_px: t.sig_px, pic: t.pic, tf: t.tf || '5M',
+                         vrstice: []}; karte.push(c); }
     c.vrstice.push(t);
     if(t.t && (!c.t || t.t < c.t)) c.t = t.t;
   });
@@ -12628,7 +12668,7 @@ function jfStanjeKarte(v){
 }
 function jfIzberiKarte(){
   var f = JF.f, zivo = (JF.nacin === 'live' || JF.nacin === 'preview-live');
-  var karte = jfKarte(JF.podatki && JF.podatki.trades).map(function(c){
+  var karte = jfKarte(jfTrejdiTf()).map(function(c){
     var v = c.vrstice.filter(function(r){ return (f.s === 'all' || r.s === f.s) && (!zivo || f.st === 'all' || r.state === f.st); });
     return v.length ? Object.assign({}, c, {v: v}) : null;
   }).filter(Boolean);
@@ -12700,8 +12740,8 @@ function jfNalozi(tiho){
 function jfVir(t){ var v = document.getElementById('df-vir'); if(v) v.textContent = t; }
 function jfVirRender(){
   var o = JF.podatki; if(!o) return;
-  var n = (o.trades || []).length;
-  jfVir((JF.nacin === 'free' || JF.nacin === 'preview-free' ? 'free · last ' + n + ' closed trades' : 'live · ' + n + ' trades')
+  var n = jfTrejdiTf().length, tst = jfJeTest() ? 'TEST ' + JF.f.tf + ' · ' : '';
+  jfVir(tst + (JF.nacin === 'free' || JF.nacin === 'preview-free' ? 'free · last ' + n + ' closed trades' : 'live · ' + n + ' trades')
         + (o.updated ? ' · updated ' + jfPred(o.updated) : ''));
 }
 function jfSporocilo(t){ return '<div class="jf-sporocilo">' + t + '</div>'; }
@@ -12726,41 +12766,43 @@ function jfPredogled(v){ JF.predogled = (v === 'free' ? 'free' : 'live'); try{ l
 
 function jfGlava(){
   var o = JF.podatki, h = '', zivo = (JF.nacin === 'live' || JF.nacin === 'preview-live');
-  var tr = o.trades || [], c = o.counts || {};
+  var T = jfTest(), test = jfJeTest(), tf = JF.f.tf, tr = jfTrejdiTf();
+  var c = test ? ((T && T.counts && T.counts[tf]) || {}) : (o.counts || {});
   if(JF.nacin === 'preview-live' || JF.nacin === 'preview-free'){
     h += '<div class="jf-ban jf-ban-pred"><b>LOCAL PREVIEW</b> · data straight from your robot through OBJAVI-SIGNALE — visible only on this computer. '
       + 'View as ' + jfSeg(JF.predogled, [['free', 'VISITOR (FREE)'], ['live', 'SUBSCRIBER (LIVE)']], 'jfPredogled') + '</div>';
   }
   if(JF.opozorilo && !zivo){ h += '<div class="jf-ban jf-ban-opoz">' + jfEsc(JF.opozorilo) + '</div>'; }
+  if(T) h += jfTfIzbira();
   if(!zivo){
     var akt = (c.open || 0) + (c.pending || 0);
-    h += '<div class="jf-ban jf-ban-free"><div class="jf-ban-t"><b>FREE</b> · the last ' + tr.length + ' closed trades of our four strategies, '
-      + 'each with the divergence it came from. <b>Live signals</b> — new entries, open trades and their stop loss and take profit, '
-      + 'the moment our robot takes them — are part of AI PRO.'
-      + (akt ? '<span class="jf-zdaj">Right now: <b>' + (c.open || 0) + '</b> open trade' + ((c.open || 0) === 1 ? '' : 's')
+    h += '<div class="jf-ban jf-ban-free"><div class="jf-ban-t">' + (test
+        ? '<b>FREE · TEST ' + tf + '</b> · the last ' + tr.length + ' closed test trades on ' + JF_TF_NAPIS[tf] + ' charts, '
+          + 'each with the divergence it came from. Open test trades and new test signals, with stop loss and take profit, '
+          + 'are part of AI PRO.'
+        : '<b>FREE</b> · the last ' + tr.length + ' closed trades of our four strategies, '
+          + 'each with the divergence it came from. <b>Live signals</b> — new entries, open trades and their stop loss and take profit, '
+          + 'the moment our robot takes them — are part of AI PRO.')
+      + (akt ? '<span class="jf-zdaj">Right now: <b>' + (c.open || 0) + '</b> open ' + (test ? 'test ' : '') + 'trade' + ((c.open || 0) === 1 ? '' : 's')
                + ' and <b>' + (c.pending || 0) + '</b> pending entr' + ((c.pending || 0) === 1 ? 'y' : 'ies') + ' — visible to subscribers.</span>' : '')
       + '</div><button class="jf-cta" onclick="nav(\'ai\')">GET LIVE SIGNALS →</button></div>';
   } else if(JF.nacin === 'live'){
-    h += '<div class="jf-ban jf-ban-live"><span class="pt-live">● LIVE</span> AI PRO · all signals of strategies 1B, 1C, 1D and 1E'
+    h += '<div class="jf-ban jf-ban-live"><span class="pt-live">● LIVE</span> AI PRO · '
+      + (test ? '<span class="jf-test-z">TEST</span> ' + tf + ' — virtual trades on ' + JF_TF_NAPIS[tf] + ' charts, not traded by the robot'
+              : 'all signals of strategies 1B, 1C, 1D and 1E')
       + (PORTAL.do ? ' · subscription active until <b>' + jfEsc(jfDatum(PORTAL.do)) + '</b>' : '') + '</div>';
   }
   var star = o.updated ? (Date.now() - o.updated) : 0;
   if(star > 15 * 60000){
     h += '<div class="jf-ban jf-ban-opoz">Last update ' + jfPred(o.updated) + ' — the robot may be offline, so the data shown can be out of date.</div>';
   }
-  h += '<div class="jf-uvod"><b>Our robot trades every one of these signals</b> automatically, on a Binance Futures demo account. '
-    + 'Robot access for users — coming soon. Stop loss and take profit are suggestions calculated automatically for each strategy; '
-    + 'how you trade is up to you.'
-    + '<details class="jf-kako"' + (JF.kako ? ' open' : '') + ' ontoggle="JF.kako=this.open"><summary>How to read a card</summary>'
-    + '<p>One card is one signal. The chart shows the 5-minute candles and the RSI as our scanner saw them when the signal fired. '
-    + '<span style="color:' + JF_BARVE.div + '">Orange</span> marks the divergence: two highs (or lows) of price and RSI on the same candles; '
-    + 'the orange bar between the charts shows how long it lasted. The lighter band is the last 50 closed candles the scanner checks; '
-    + 'the dashed vertical line is the moment of the signal; <span style="color:var(--green)">green</span> is the take profit and '
-    + '<span style="color:var(--red)">red</span> the stop loss of the selected strategy — click a row in the table to switch.</p>'
-    + '<p><b>1B</b> enters at market at the signal. <b>1C, 1D and 1E</b> place a limit entry 0.1% from the signal price, so they can wait '
-    + 'for a fill or stay unfilled; 1C uses the tightest stop, 1D a stop of at least 1%, 1E aims for a target about as far as its stop. '
-    + 'Result is the price move from entry to exit (fees not included); R is the result in units of the risk taken (distance to the stop). '
-    + 'Times are in your time zone (' + jfPas() + ').</p></details></div>';
+  if(test){
+    h += jfTestUvod() + jfTestTabela();
+  } else {
+    h += '<div class="jf-uvod"><b>Our robot trades every one of these signals</b> automatically, on a Binance Futures demo account. '
+      + 'Robot access for users — coming soon. Stop loss and take profit are suggestions calculated automatically for each strategy; '
+      + 'how you trade is up to you.' + jfKako('5M') + '</div>';
+  }
   var tools = '<div class="b1p-orodja">';
   var st = function(x){ return tr.filter(function(t){ return x === 'all' || t.s === x; }).length; };
   tools += jfSeg(JF.f.s, [['all', 'ALL <span class="b1p-st">' + st('all') + '</span>']].concat(JF_STRAT.map(function(s){
@@ -12776,10 +12818,74 @@ function jfGlava(){
   return h + tools + '</div>';
 }
 
+function jfKako(tf){
+  var sveca = JF_TF_NAPIS[tf] || '5-minute';
+  return '<details class="jf-kako"' + (JF.kako ? ' open' : '') + ' ontoggle="JF.kako=this.open"><summary>How to read a card</summary>'
+    + '<p>One card is one signal. The chart shows the ' + sveca + ' candles and the RSI as our scanner saw them when the signal fired. '
+    + '<span style="color:' + JF_BARVE.div + '">Orange</span> marks the divergence: two highs (or lows) of price and RSI on the same candles; '
+    + 'the orange bar between the charts shows how long it lasted. The lighter band is the last 50 closed candles the scanner checks; '
+    + 'the dashed vertical line is the moment of the signal; <span style="color:var(--green)">green</span> is the take profit and '
+    + '<span style="color:var(--red)">red</span> the stop loss of the selected strategy — click a row in the table to switch.</p>'
+    + '<p><b>1B</b> enters at market at the signal. <b>1C, 1D and 1E</b> place a limit entry 0.1% from the signal price, so they can wait '
+    + 'for a fill or stay unfilled; 1C uses the tightest stop, 1D a stop of at least 1%, 1E aims for a target about as far as its stop. '
+    + 'Result is the price move from entry to exit (fees not included); R is the result in units of the risk taken (distance to the stop)'
+    + (tf === '5M' ? '' : ', fees included') + '. Times are in your time zone (' + jfPas() + ').</p></details>';
+}
+
+// ── TEST: timeframe switch, explanation and overview (14 Oct 2026) ──
+function jfTfIzbira(){
+  var T = jfTest(), sez = (T && T.trades) || [];
+  var n = function(x){ return x === '5M' ? (JF.podatki.trades || []).length : sez.filter(function(t){ return t.tf === x; }).length; };
+  return '<div class="jf-tf"><span class="jf-tf-n">TIMEFRAME</span>'
+    + jfSeg(JF.f.tf, [['5M', '5 MIN · ROBOT <span class="b1p-st">' + n('5M') + '</span>']].concat(['H1', 'H4', 'D1'].map(function(x){
+        return [x, x + ' <span class="jf-test-z">TEST</span> <span class="b1p-st">' + n(x) + '</span>']; })), 'jfFilterTf')
+    + '<span class="jf-tf-pod">' + (jfJeTest() ? 'TEST = virtual trades, not traded by the robot' : 'the robot\'s real demo trades on 5-minute charts') + '</span></div>';
+}
+function jfDatumMs(ms){ try{ return new Date(ms).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'}); }catch(e){ return ''; } }
+function jfTestUvod(){
+  var T = jfTest() || {}, tf = JF.f.tf;
+  return '<div class="jf-uvod jf-test-uvod"><span class="jf-test-z">TEST</span> <b>Virtual trades — not traded by the robot.</b> '
+    + 'Our scanner looks for the same RSI divergences on ' + JF_TF_NAPIS[tf] + ' candles, with exactly the rules it uses on the robot\'s '
+    + '5-minute charts, and every signal goes to 1B, 1C, 1D and 1E with their usual entry, stop loss and take profit. Nothing is sent '
+    + 'to the exchange: fills, stops and targets are simulated minute by minute on Binance Futures mark prices, fees included. '
+    + 'We run it to find out which timeframe works best' + (T.since ? ' — running since ' + jfEsc(jfDatumMs(T.since)) : '') + '.'
+    + jfKako(tf) + '</div>';
+}
+function jfTestTabela(){
+  var T = jfTest(), st = T && T.stats;
+  if(!st) return '';
+  var h = '<div class="jf-ovoj jf-test-ovoj"><table class="jf-tab jf-test-tab"><thead><tr><th>TEST OVERVIEW</th>'
+    + JF_STRAT.map(function(s){ return '<th class="st">' + s + ' <span class="jf-s-pod">' + (s === '1B' ? 'market' : 'limit') + '</span></th>'; }).join('')
+    + '</tr></thead><tbody>';
+  ['H1', 'H4', 'D1'].forEach(function(tf){
+    var v = st[tf] || {};
+    h += '<tr class="' + (tf === JF.f.tf ? 'on' : '') + '" onclick="jfFilterTf(\'' + tf + '\')" title="show the ' + JF_TF_NAPIS[tf] + ' test trades">'
+      + '<td><b>' + tf + '</b> <span class="jf-s-pod">' + JF_TF_NAPIS[tf] + '</span><br><span class="jf-s-pod">' + (v.signals || 0) + ' signal'
+      + ((v.signals || 0) === 1 ? '' : 's') + '</span></td>';
+    JF_STRAT.forEach(function(s){
+      var c = v[s] || {};
+      if(!c.closed && !c.open && !c.pending){
+        h += '<td class="st"><span class="jf-s-pod">' + (c.taken ? c.taken + ' taken · no result yet' : 'no trades yet') + '</span></td>';
+        return;
+      }
+      var w = c.closed ? Math.round(c.wins / c.closed * 100) : null;
+      h += '<td class="st"><b class="jf-test-r" style="color:' + jfBarva(c.r_sum) + '">' + (c.closed ? jfR(c.r_sum) : '—') + '</b><br>'
+        + '<span class="jf-s-pod">' + c.closed + ' closed' + (w !== null ? ' · ' + w + '% won' : '') + '</span><br>'
+        + '<span class="jf-s-pod">' + (c.r_avg !== null && c.r_avg !== undefined ? 'avg ' + jfR(c.r_avg) : '')
+        + (c.open ? (c.r_avg !== null && c.r_avg !== undefined ? ' · ' : '') + c.open + ' open' : '')
+        + (c.pending ? ' · ' + c.pending + ' waiting' : '') + '</span></td>';
+    });
+    h += '</tr>';
+  });
+  return h + '</tbody></table></div><div class="jf-test-pod">Total R of all closed test trades (R = result ÷ risk to the stop loss, fees included). '
+    + 'Click a row to see its trades.</div>';
+}
+
 function jfPrikazi(tiho){
   var el = document.getElementById('df-body'); if(!el || !JF.podatki) return;
   var o = JF.podatki;
-  var podpis = JSON.stringify([JF.nacin, JF.f, JF.slikeV, (o.trades || []).map(function(t){ return [t.id, t.state, t.exit, t.exit_px, t.entry, t.sl, t.tp]; })]);
+  var podpis = JSON.stringify([JF.nacin, JF.f, JF.slikeV, jfTrejdiTf().map(function(t){ return [t.id, t.state, t.exit, t.exit_px, t.entry, t.sl, t.tp]; }),
+                              jfJeTest() && jfTest() ? jfTest().stats : null]);
   jfVirRender();
   if(tiho && podpis === JF.podpis){ jfOsveziOdprte(); return; }      // same trades: only current prices of open ones
   JF.podpis = podpis;
@@ -12787,7 +12893,9 @@ function jfPrikazi(tiho){
   JF.prikaz = jfIzberiKarte();
   var h = jfGlava();
   if(!JF.prikaz.length){
-    h += '<div class="b1p-prazno">' + ((o.trades || []).length ? 'No signal matches this filter.' : 'No trades to show yet.') + '</div>';
+    h += '<div class="b1p-prazno">' + (jfTrejdiTf().length ? 'No signal matches this filter.'
+      : (jfJeTest() ? 'No ' + JF_TF_NAPIS[JF.f.tf] + ' test trades to show yet — they appear here as soon as the first ' + JF.f.tf + ' signal is taken.'
+                    : 'No trades to show yet.')) + '</div>';
   } else {
     h += '<div class="jf-mreza">' + JF.prikaz.map(jfKartaHtml).join('') + '</div>';
   }
@@ -12801,12 +12909,15 @@ function jfKartaHtml(c, i){
   var traj = pic ? jfTrajanje(pic) : null, sel = jfIzbrana(c), sym = String(c.sym || '').replace(/USDT$/, '');
   var h = '<div class="jf-k jf-k-' + st + '" id="jf-k-' + i + '">'
     + '<div class="jf-gl"><span class="jf-sym">' + jfEsc(sym) + '</span>'
+    + (c.tf && c.tf !== '5M' ? '<span class="jf-test-z" title="virtual trade on ' + JF_TF_NAPIS[c.tf] + ' candles — not traded by the robot">TEST '
+       + jfEsc(c.tf) + '</span>' : '')
     + '<span style="color:' + (dolga ? 'var(--green)' : 'var(--red)') + '">' + (dolga ? 'LONG' : 'SHORT') + '</span>'
     + '<span class="jf-vrsta">' + jfEsc(jfVrsta(c.type)) + (c.str ? ' · strength ' + jfEsc(c.str) : '') + '</span>'
     + (traj ? '<span class="b1f-traj" title="how long the divergence lasted: from the first to the second price point">lasted ' + traj.napis + '</span>' : '')
     + '<span class="jf-pill jf-pill-' + st + '">' + JF_STANJE_NAPIS[st] + '</span></div>'
     + '<div class="jf-pod">signal ' + jfCas(c.t) + (c.sig_px ? ' · price ' + jfSt(c.sig_px) : '') + '</div>'
-    + (pic ? '<canvas class="jf-platno" id="jf-c-' + i + '" role="img" aria-label="5-minute chart and RSI of ' + jfEsc(sym) + ' at the signal"></canvas>'
+    + (pic ? '<canvas class="jf-platno" id="jf-c-' + i + '" role="img" aria-label="' + (JF_TF_NAPIS[c.tf] || '5-minute') + ' chart and RSI of '
+             + jfEsc(sym) + ' at the signal"></canvas>'
            : '<div class="b1f-brez">no chart was saved for this signal</div>')
     + '<div class="jf-opis">' + jfOpis(pic) + '</div>'
     + '<div class="jf-ovoj"><table class="jf-tab"><thead><tr><th>STRATEGY</th><th class="st">ENTRY</th><th class="st">STOP LOSS</th>'
@@ -12855,7 +12966,7 @@ function jfNarisiVse(){
 // new prices only: status cells of open rows and the NOW marker on their charts
 function jfOsveziOdprte(){
   var po = {};
-  ((JF.podatki && JF.podatki.trades) || []).forEach(function(t){ po[t.id] = t; });
+  jfTrejdiTf().forEach(function(t){ po[t.id] = t; });
   (JF.prikaz || []).forEach(function(c, i){
     var ima = false;
     c.v.forEach(function(r, j){
@@ -12914,10 +13025,17 @@ function jfNarisi(cv, c, r){
   g.fillText('RSI', W - desno + 4, yR0 + hR - 6);
   g.strokeStyle = '#1e2a45'; g.strokeRect(levo + 0.5, yC0 + 0.5, W - desno - levo, hC); g.strokeRect(levo + 0.5, yR0 + 0.5, W - desno - levo, hR);
   g.textAlign = 'center'; g.textBaseline = 'top';
+  var kor = (N > 1 && s.t[1] > s.t[0]) ? (s.t[1] - s.t[0]) : 300000;
+  var MES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   for(var i = 0; i < N; i++){
-    var d0 = new Date(s.t[i]);
-    if(d0.getMinutes() === 0){
-      g.fillStyle = B.besedilo; g.fillText(jfUra(s.t[i]), X(i), H - spodaj + 3);
+    var d0 = new Date(s.t[i]), oz = null;
+    if(kor <= 300000){ if(d0.getMinutes() === 0) oz = jfUra(s.t[i]); }                      // 5 min: every full hour
+    else if(kor <= 3600000){ if(d0.getMinutes() === 0 && d0.getHours() % 6 === 0)          // 1 h: every 6 hours, date at midnight
+      oz = d0.getHours() === 0 ? d0.getDate() + ' ' + MES[d0.getMonth()] : jfUra(s.t[i]); }
+    else if(kor <= 14400000){ if(d0.getHours() < 4) oz = d0.getDate() + ' ' + MES[d0.getMonth()]; }   // 4 h: once a day
+    else if(d0.getDay() === 1){ oz = d0.getDate() + ' ' + MES[d0.getMonth()]; }              // 1 day: Mondays
+    if(oz !== null){
+      g.fillStyle = B.besedilo; g.fillText(oz, X(i), H - spodaj + 3);
       g.strokeStyle = B.mreza; g.beginPath(); g.moveTo(X(i) + 0.5, yC0); g.lineTo(X(i) + 0.5, yC0 + hC); g.moveTo(X(i) + 0.5, yR0); g.lineTo(X(i) + 0.5, yR0 + hR); g.stroke();
     }
   }
