@@ -9,7 +9,7 @@
    Never put a password, an API key or any secret here (see the publishing guide).            */
 var TC_JAVNO = true;
 var JAVNO_API = 'https://tradecore-api.matic-hocevar-1.workers.dev';                 // your Cloudflare Worker, e.g. 'https://tradecore-api.yourname.workers.dev'
-var STRIPE_LINK = '';               // your Stripe Payment Link, e.g. 'https://buy.stripe.com/...'
+var STRIPE_LINK = '';               // Stripe Payment Link — leave empty when STRIPE_LINK is set in Cloudflare (Worker settings)
 var SITE_PRICE = '€29 / month';     // price shown on the site (the real price is set in Stripe)
 var BINANCE_REF_LINK = '';          // your Binance referral link (empty = Binance sign-up page)
 var MEXC_REF_LINK = 'https://promote.mexc.com/r/MA1RGTsxcY';   // your MEXC referral link
@@ -949,6 +949,79 @@ body.na-ai #content{display:none}
 .jf-test-tab tbody tr.on td:first-child{box-shadow:inset 2px 0 0 var(--purple)}
 .jf-test-r{font-size:12px}
 .jf-test-pod{color:var(--text2);font-size:9.5px;margin:0 0 12px;max-width:1000px}
+/* 16 Oct 2026: 1 hour and longer = main signals, 5 minutes = in testing */
+.jf-tf-z,.jf-5m-z{display:inline-block;font-size:8.5px;letter-spacing:.1em;line-height:13px;padding:0 4px;white-space:nowrap;vertical-align:1px;border:1px solid}
+.jf-tf-z{color:var(--blue);border-color:var(--blue)}
+.jf-5m-z{color:var(--amber);border-color:var(--amber)}
+.jf-glavni-uvod{border-left:3px solid var(--green);padding-left:10px}
+.jf-5m-uvod{border-left:3px solid var(--amber);padding-left:10px}
+.jf-ban-live .jf-ban-t{color:var(--text)}
+a.jf-moja{color:var(--green);letter-spacing:.08em;text-decoration:none;border-bottom:1px dotted var(--green);white-space:nowrap}
+a.jf-moja:hover{border-bottom-style:solid}
+/* ── 24 Oct 2026: FREE | LIVE tabs, LIVE ROBOT (1 hour to 1 week, results in R), 5 MIN testing robot (demo) ── */
+.jf-zavi{display:flex;flex-wrap:wrap;align-items:stretch;margin:0 0 10px;border-bottom:1px solid var(--border2)}
+.jf-zav{background:none;border:1px solid transparent;border-bottom:0;color:var(--text2);font-family:inherit;font-size:11px;letter-spacing:.14em;
+  padding:8px 16px 7px;cursor:pointer;margin-bottom:-1px;display:flex;align-items:baseline;gap:7px;white-space:nowrap}
+.jf-zav small{font-size:8.5px;letter-spacing:.08em;color:var(--text3)}
+.jf-zav:hover{color:var(--text)}
+.jf-zav.on{color:var(--text);background:var(--bg2);border-color:var(--border2);box-shadow:inset 0 2px 0 var(--blue)}
+.jf-zav.on small{color:var(--text2)}
+.jf-zav-live.on{box-shadow:inset 0 2px 0 var(--green)}
+.jf-zav-tocka{color:var(--text3);font-size:9px}
+.jf-zav-live.on .jf-zav-tocka{color:var(--green)}
+.jf-zav:focus-visible{outline:1px solid var(--blue);outline-offset:-2px}
+.jf-zavi-opis{flex:1 1 260px;align-self:center;color:var(--text2);font-size:9.5px;line-height:1.5;padding:4px 12px}
+.jf-zaklep{background:var(--bg2);border:1px solid var(--border2);border-left:3px solid var(--green);padding:16px 18px;max-width:760px;
+  font-size:10.5px;line-height:1.65;color:var(--text2)}
+.jf-zaklep-n{font-size:13px;color:var(--text);letter-spacing:.06em;margin-bottom:6px}
+.jf-zaklep-n b{font-weight:normal;color:var(--green)}
+.jf-zaklep-n .pt-live{font-size:12px;margin:0 4px 0 0}
+.jf-zaklep p{margin:0 0 8px}
+.jf-zaklep-s{margin:0 0 10px;padding-left:18px}
+.jf-zaklep-s li{margin:2px 0;color:var(--text)}
+.jf-zaklep-r{margin:8px 0}
+.jf-zaklep-r b{font-weight:normal;font-size:12px}
+.jf-zaklep-g{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin:12px 0 8px}
+a.jf-zaklep-free{color:var(--text2);text-decoration:none;font-size:9.5px;letter-spacing:.06em}
+a.jf-zaklep-free:hover{color:var(--text)}
+.jf-tf-n2{margin-left:10px;padding-left:12px;border-left:1px solid var(--border2)}
+.jf-robot{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 18px;background:var(--bg2);border:1px solid var(--border2);
+  border-left:3px solid var(--green);padding:11px 14px;margin:0 0 10px;max-width:1000px}
+.jf-robot-n{color:var(--text);font-size:10px;letter-spacing:.12em}
+.jf-robot-l p{margin:5px 0 0;color:var(--text2);font-size:10px;line-height:1.6}
+.jf-robot-l p b{color:var(--text);font-weight:normal}
+.jf-robot-z{display:inline-block;color:var(--green);border:1px solid var(--green);font-size:8.5px;letter-spacing:.1em;line-height:13px;
+  padding:0 5px;white-space:nowrap;vertical-align:1px;margin-right:7px}
+.jf-robot-d{text-align:right;align-self:center}
+.jf-robot-r{font-size:24px;letter-spacing:.02em;line-height:1.1;font-variant-numeric:tabular-nums}
+.jf-robot-tf{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:6px}
+.jf-robot-c{background:none;border:1px solid var(--border2);color:var(--text);font-family:inherit;font-size:9.5px;padding:3px 9px;cursor:pointer;
+  letter-spacing:.04em;white-space:nowrap}
+.jf-robot-c b{font-weight:normal;letter-spacing:.1em;margin-right:6px}
+.jf-robot-c.on{border-color:var(--green);background:rgba(0,232,122,.06)}
+.jf-robot-c:hover{border-color:var(--blue)}
+.jf-robot-c:focus-visible{outline:1px solid var(--blue);outline-offset:1px}
+.jf-robot-pod{grid-column:1 / -1;color:var(--text2);font-size:9px;line-height:1.55;opacity:.85}
+.jf-robot-pod b{color:var(--text);font-weight:normal}
+.jf-robot-v,.jf-test5-v{font-size:9.5px;line-height:1.5;color:var(--text2);padding:5px 8px;background:rgba(0,232,122,.05);border-left:2px solid var(--green)}
+.jf-robot-v b{font-weight:normal}
+.jf-test5-v{background:rgba(240,165,0,.05);border-left-color:var(--amber)}
+.jf-test5-v .jf-5m-z{margin-right:5px}
+.jf-test5{background:var(--bg2);border:1px solid var(--border2);border-left:3px solid var(--amber);padding:11px 14px;margin:0 0 10px;max-width:1000px;
+  color:var(--text2);font-size:10px;line-height:1.65}
+.jf-test5 p{margin:6px 0 0}
+.jf-test5 p b{color:var(--text);font-weight:normal}
+.jf-test-tab tfoot td{border-top:1px solid var(--border2);vertical-align:top;padding:6px 8px;line-height:1.55;color:var(--text)}
+@media (max-width:560px){
+  .jf-robot{grid-template-columns:1fr}
+  .jf-robot-d{text-align:left}
+  .jf-zav{padding:8px 11px 7px;letter-spacing:.1em}
+  .jf-tf-n2{margin-left:0;padding-left:0;border-left:0}
+  .jf-zavi-opis{padding:6px 2px}
+}
+.lic-robot-live{border-color:rgba(0,232,122,.4);background:rgba(0,232,122,.04)}
+.lic-robot-live b{color:var(--green)}
+.lic-robot-live .lic-5m{color:var(--text2)}
 /* AI PRO: subscription */
 .lic-dva{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px}
 @media (max-width:760px){.lic-dva{grid-template-columns:1fr}}
@@ -966,6 +1039,30 @@ body.na-ai #content{display:none}
 .lic-free a,.lic-opozorilo a{color:var(--green)}
 .lic>.lic-opozorilo{margin:10px 22px 0;padding-bottom:16px}
 .lic-opozorilo b{color:var(--text);font-weight:normal}
+/* AI PRO: card payment and MY SUBSCRIPTION (16 Oct 2026) */
+.lic-st{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--green);margin:2px 0 6px;line-height:1.5}
+.lic-st.opoz{color:var(--amber)} .lic-st.nap{color:var(--red)} .lic-st.cakam{color:var(--text2)}
+.lic-tocka{width:8px;height:8px;border-radius:50%;background:currentColor;flex:0 0 auto}
+.lic-pod2{color:var(--text2);font-size:10px;line-height:1.6}
+.lic-pod2 b{color:var(--amber);font-weight:normal}
+.lic-moj{border:1px solid var(--border2);background:var(--bg3);padding:10px 12px;margin:0 0 12px}
+.lic-moj label{display:block;color:var(--text2);font-size:9px;letter-spacing:.2em;margin-bottom:6px}
+.lic-moj-vrsta{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.lic-moj-vrsta code{color:var(--text);font-size:13px;letter-spacing:.08em;font-family:inherit;flex:1 1 210px;min-width:0;overflow-wrap:anywhere}
+.lic-moj-vrsta button{font-family:inherit;cursor:pointer;letter-spacing:.12em;font-size:10px;padding:6px 12px;background:none;color:var(--text);border:1px solid var(--border2)}
+.lic-moj-vrsta button:hover{border-color:var(--green);color:var(--green)}
+.lic-moj p{color:var(--text2);font-size:10px;line-height:1.6;margin:8px 0 0}
+.lic-moj p i{font-style:normal;color:var(--text)}
+.lic-opoz-box{background:rgba(240,165,0,.08);border-bottom:1px solid var(--amber);color:var(--text);padding:12px 22px;font-size:11px;line-height:1.6}
+.lic-opoz-box b{color:var(--amber);font-weight:normal;letter-spacing:.12em;font-size:10px}
+.lic-opoz-box a{color:var(--green)}
+.lic-cakaj{display:inline-block;width:12px;height:12px;border:2px solid var(--green);border-right-color:transparent;border-radius:50%;
+  animation:lic-vrti .8s linear infinite;margin-right:10px;vertical-align:-1px}
+@keyframes lic-vrti{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.lic-cakaj{animation:none}}
+.lic-kupi[disabled],.lic-odpri[disabled]{opacity:.6;cursor:wait}
+.lic-moj-vrsta button:focus-visible,.lic-odjava:focus-visible{outline:1px solid var(--blue);outline-offset:2px}
+.lic-stanje a{color:var(--green)}
 
 /* BEST BROKERS */
 body.javno .aff-stats-row{display:none}
@@ -1186,9 +1283,9 @@ body.javno .jv-paper,body.javno #paper-summary-cr{display:none!important}
       </div>
       <div class="sidebar-block portal-promo">
         <div class="sb-hdr">LIVE DIVERGENCE SIGNALS</div>
-        <div class="pp-tekst">Every divergence our scanner finds — chart, entry, stop loss and take profit — traded by our robot. The last 20 closed trades are free.</div>
+        <div class="pp-tekst">Our live robot trades RSI divergences on 1-hour, 4-hour, daily and weekly charts — profitable on our statistics since 14 Oct 2026. Free: every closed trade with its result in R, and the 5-minute testing robot live.</div>
         <button class="pp-gumb" onclick="nav('df')">OPEN DIVERGENCE FEED</button>
-        <div class="pp-pod" onclick="nav('ai')">AI PRO live access · <span id="pp-cena"></span> →</div>
+        <div class="pp-pod" onclick="nav('ai')">LIVE signals + e-mail alerts · <span id="pp-cena"></span> →</div>
       </div>
     </div>
 
@@ -5445,13 +5542,17 @@ async function crFetchAll(){
           const{id,rsi,ma,price,chg,div,ema100,liq,fvg,rvgi,lo,hi,kt,kh,kl,kms}=r.value;
           crData[id]={rsi,ma,price,chg,div,ema100,liq,fvg,rvgi,lo,hi,kt,kh,kl,kms,st:'ok'};
           // KEY SIGNAL: RSI<10 ALI bullish divergence
+          // 15. 10. 2026 (kot SKENER-1C.py SVEZA_SVEC): alarm divergence samo, ko je druga točka sveža — največ PORAVNAVA
+          // zaprtih sveč stara. Stara divergenca, ki se vrne, ko nepotrjeno dno izgine, je prisotna, alarma pa ne da.
+          const crSveza=!div||div.zamik===undefined||div.zamik===null||div.zamik<=PORAVNAVA;
           const crKS={rsiLow:rsi!==null&&rsi<=10, bullDiv:div?.type==='bull'};
           if(crKS.rsiLow||crKS.bullDiv){
             const pd=crPrev[id];
             const wasKS=pd&&(pd.rsiLow||pd.bullDiv);
-            if(!wasKS){
+            if(!wasKS&&(crKS.rsiLow||crSveza)){
+              const zDiv=crKS.bullDiv&&crSveza;
               setSignalTime(id+'|CRYPTO');
-              newA.push({id,rsi,ma,type:'bull',st:div?.st||0,rd:div?.rd||0,price,time:new Date().toLocaleTimeString(),market:'CRYPTO',rsiLow:crKS.rsiLow,bullDiv:crKS.bullDiv});
+              newA.push({id,rsi,ma,type:'bull',st:(zDiv||!crKS.bullDiv)?(div?.st||0):0,rd:(zDiv||!crKS.bullDiv)?(div?.rd||0):0,price,time:new Date().toLocaleTimeString(),market:'CRYPTO',rsiLow:crKS.rsiLow,bullDiv:zDiv});
             }
           }
           // BEAR SIGNAL: bearish divergence
@@ -5459,7 +5560,7 @@ async function crFetchAll(){
           if(crBearS){
             const pd=crPrev[id];
             const wasBear=pd&&pd.bearDiv;
-            if(!wasBear){
+            if(!wasBear&&crSveza){
               setSignalTime(id+'|CRYPTO');
               newA.push({id,rsi,ma,type:'bear',st:div.st,rd:div.rd,price,time:new Date().toLocaleTimeString(),market:'CRYPTO',bearDiv:true,highPrice:div.highPrice||null});
             }
@@ -12513,22 +12614,30 @@ setInterval(function(){
 // One tab for all four strategies. One card = one signal (one divergence picture); a row per strategy that
 // took it (1B market entry, 1C/1D/1E limit entry), each with its own entry, stop loss and take profit.
 // Data (JSON from OBJAVI-SIGNALE.py on the robot's computer):
-//   JAVNO_API/feed/public     last 20 closed trades + their pictures          — everyone
+//   JAVNO_API/feed/public     FREE (24 Oct 2026): the 5-minute testing robot live + every closed 1-hour to weekly trade
+//                             (history since 14 Oct 2026, results in R) + their pictures — everyone
 //   JAVNO_API/feed/live       pending, open (with current price) and closed  — Bearer <subscriber key>
 //   JAVNO_API/feed/live/pics  pictures for the live feed (fetched again only when pics_v changes)
 // Opened from a file on the robot's computer with JAVNO_API empty: local preview from 127.0.0.1:8792
 // (OBJAVI-SIGNALE.py). On the website (https) nothing ever calls 127.0.0.1.
 //
 // TEST H1 · H4 · D1 (14 Oct 2026, Matic: "add 1h, 4h and 1d divergences the way you do now … symbolic positions
-// to keep statistics … a clear overview in TradeCore and on the live page"). The same scanner rules on 1-hour,
-// 4-hour and daily candles, every signal taken VIRTUALLY by 1B, 1C, 1D and 1E (nothing is sent to the exchange).
+// to keep statistics … a clear overview in TradeCore and on the live page") and W1 (15 Oct 2026, weekly candles;
+// Binance weeks start on Monday 00:00 UTC). The same scanner rules on 1-hour, 4-hour, daily and weekly candles,
+// every signal taken VIRTUALLY by 1B, 1C, 1D and 1E (nothing is sent to the exchange).
 // They come in a separate part of the feed ("test": trades with "tf", stats in R) that older pages ignore; the
 // timeframe switch shows either the robot's 5-minute trades or one TEST timeframe, never mixed.
+//
+// 16 Oct 2026 (Matic: "osredotoči se na 1h signale in večje, pri 5 min navedi, da je še v testiranju"): the 1-hour, 4-hour,
+// daily and weekly signals are the main product — first in the switch, H1 is the default, no TEST badges; their text says
+// "these are our stop loss and take profit, treat every signal as a suggestion" and that the results are simulated.
+// The robot's 5-minute trades come last, marked IN TESTING.
 // ══════════════════════════════════════
 var JF_LOKALNO = 'http://127.0.0.1:8792';
 var JF_STRAT = ['1B', '1C', '1D', '1E'];
-var JF_TF = ['5M', 'H1', 'H4', 'D1'];
-var JF_TF_NAPIS = {'5M': '5-minute', H1: '1-hour', H4: '4-hour', D1: 'daily'};
+var JF_TF = ['H1', 'H4', 'D1', 'W1', '5M'];      // 16 Oct 2026: 1 hour and longer first (main signals), 5 minutes last (in testing)
+var JF_TF_TEST = ['H1', 'H4', 'D1', 'W1'];       // the "test" part of the feed: trades on 1-hour to weekly candles
+var JF_TF_NAPIS = {'5M': '5-minute', H1: '1-hour', H4: '4-hour', D1: 'daily', W1: 'weekly'};
 var JF_STANJA = ['all', 'pending', 'open', 'closed', 'unfilled'];
 var JF_STANJE_NAPIS = {pending: 'WAITING FOR ENTRY', open: '● OPEN', closed: 'CLOSED', unfilled: 'NOT FILLED'};
 var JF_IZHOD = {target: 'take profit hit', stop: 'stop loss hit', market: 'closed at market', harvest: 'early take-profit',
@@ -12536,23 +12645,48 @@ var JF_IZHOD = {target: 'take profit hit', stop: 'stop loss hit', market: 'close
 var JF_BARVE = {div: '#f0a500', gor: 'rgba(0,232,122,.62)', dol: 'rgba(255,68,85,.62)', rsi: '#9d8cff',
                 cilj: '#00e87a', stop: '#ff4455', mreza: '#141c30', besedilo: '#5a6a99', ozadje: '#0a0e1a',
                 okno: 'rgba(120,140,200,.07)', signal: 'rgba(215,221,230,.55)', vstop: 'rgba(215,221,230,.8)'};
+// 24 Oct 2026 — Matic: "naredi zavihka FREE in LIVE … free vidi live 5 min in zaprte H1 in večje TF … tisti, ki se bo naročil,
+// bo imel live feed in tudi dobil e-mail … če izbere LIVE in ima free, ga usmeri na povezavo na naročnino … H1, H4, D1 in W1
+// igra naš robot, ki je profitabilen glede na statistiko od 14. 10. … pri 5 min navedi, da se testirajo različne strategije
+// in je demo." Two tabs inside the feed:
+//   FREE (everyone)       5-minute testing robot LIVE (demo) · LIVE ROBOT 1 hour to 1 week: closed trades and history, R
+//   LIVE (AI PRO)         everything live — new signals, waiting entries, open trades — and an e-mail for every new signal
+// A visitor without a subscription who picks LIVE gets the subscription offer (Stripe link). Local preview on the robot's
+// computer (opened as a file, no JAVNO_API): both tabs, no key needed — exactly what visitors and subscribers see.
 var JF = {podatki: null, slike: {}, slikeV: '', nacin: '', prikaz: [], izbrane: {}, nalagam: false, zahteva: 0,
-          podpis: '', opozorilo: '', f: jfBeriIzbiro(),
-          predogled: (function(){ try{ return localStorage.getItem('tc_df_predogled') === 'free' ? 'free' : 'live'; }
-                                  catch(e){ return 'live'; } })()};
+          podpis: '', opozorilo: '', f: jfBeriIzbiro(), tab: null, robot: null};
 
 function jfBeriIzbiro(){
   var z = {}; try{ z = JSON.parse(localStorage.getItem('tc_df') || '{}') || {}; }catch(e){}
-  return {tf: (JF_TF.indexOf(z.tf) >= 0 ? z.tf : '5M'),
+  // v2 (16 Oct 2026): everyone starts once on H1 — older pages saved 5M as the usual choice
+  return {tf: (z.v === 2 && JF_TF.indexOf(z.tf) >= 0 ? z.tf : 'H1'),
           s: (['all'].concat(JF_STRAT).indexOf(z.s) >= 0 ? z.s : 'all'),
           st: (JF_STANJA.indexOf(z.st) >= 0 ? z.st : 'all'),
           red: (z.red === 'old' ? 'old' : 'new'),
           n: ([20, 50, 100].indexOf(z.n) >= 0 ? z.n : 20)};
 }
-function jfShraniIzbiro(){ try{ localStorage.setItem('tc_df', JSON.stringify(JF.f)); }catch(e){} }
+function jfShraniIzbiro(){ try{ localStorage.setItem('tc_df', JSON.stringify(Object.assign({v: 2}, JF.f))); }catch(e){} }
 function jfLokalno(){ return location.protocol === 'file:' && !portalApi(); }
 function jfApi(){ return portalApi() || (jfLokalno() ? JF_LOKALNO : ''); }
-function jfZivo(){ return jfLokalno() ? JF.predogled === 'live' : portalImaDostop(); }
+function jfTab(){
+  if(JF.tab) return JF.tab;
+  if(jfLokalno()){ var z = ''; try{ z = localStorage.getItem('tc_df_predogled') || ''; }catch(e){} return z === 'free' ? 'free' : 'live'; }
+  return portalImaDostop() ? 'live' : 'free';
+}
+function jfTabIzberi(v){
+  JF.tab = (v === 'live' ? 'live' : 'free');
+  if(jfLokalno()){ try{ localStorage.setItem('tc_df_predogled', JF.tab); }catch(e){} }
+  JF.slikeV = ''; JF.podpis = ''; JF.opozorilo = (JF.tab === 'free' ? JF.opozorilo : '');
+  jfNalozi(false);
+}
+function jfZivo(){ return jfTab() === 'live' && (jfLokalno() || portalImaDostop()); }
+// a visitor without a subscription on the LIVE tab: the offer instead of live data
+function jfZaklenjeno(){ return jfTab() === 'live' && !jfLokalno() && !portalImaDostop(); }
+// the free package has the 5-minute trades live (waiting, open, closed) since 24 Oct 2026 — older packages only closed ones
+function jf5mZivo(){ return !!(JF.podatki && JF.podatki.free_5m === 'live'); }
+function jfVZivo(){ return JF.nacin === 'live' || JF.nacin === 'preview-live'; }
+// cards with waiting and open trades (filters by state): everything in LIVE, the 5-minute testing robot also in FREE
+function jfKarteZive(){ return jfVZivo() || (JF.f.tf === '5M' && jf5mZivo()); }
 function jfEsc(s){ return portalEsc(s); }
 
 // ── formatting (English) ──
@@ -12593,13 +12727,17 @@ function jfMinNapis(m){
   var d = Math.floor(m / 1440), hh = Math.round((m % 1440) / 60); if(hh === 24){ d++; hh = 0; }
   return d + ' days' + (hh ? ' ' + hh + ' h' : '');
 }
+function jfDan(ms){ var d = new Date(ms); return d.getDate() + ' ' + ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]; }
 function jfTrajanje(s){
   var d = s && s.div; if(!d) return null;
   var t = s.t || [], a = t[d.i1], b = t[d.i2], min = null;
   if(typeof a === 'number' && typeof b === 'number') min = Math.round((b - a) / 60000);
   else if(typeof d.ure === 'number') min = Math.round(d.ure * 60);
   if(min === null || isNaN(min) || min < 0) return null;
-  return {min: min, napis: jfMinNapis(min), od: (typeof a === 'number' ? jfUra(a) : ''), do: (typeof b === 'number' ? jfUra(b) : '')};
+  // points as clock times on 5-minute and 1-hour charts, with the date when they are a day or more apart, dates on daily/weekly
+  var kor = (t.length > 1 && t[1] > t[0]) ? t[1] - t[0] : 300000;
+  var f = kor >= 86400000 ? jfDan : (min >= 1200 ? function(ms){ return jfDan(ms) + ' ' + jfUra(ms); } : jfUra);
+  return {min: min, napis: jfMinNapis(min), od: (typeof a === 'number' ? f(a) : ''), do: (typeof b === 'number' ? f(b) : '')};
 }
 function jfVrsta(t){
   var u = String(t || '').toUpperCase(), h = (u.indexOf('HIDDEN') >= 0 || u.indexOf('SKRIT') >= 0) ? 'hidden ' : '';
@@ -12644,7 +12782,7 @@ function jfTrejdiTf(){
   if(!jfJeTest()) return JF.podatki.trades || [];
   var t = jfTest(); return ((t && t.trades) || []).filter(function(x){ return x.tf === JF.f.tf; });
 }
-function jfFilterTf(v){ JF.f.tf = (JF_TF.indexOf(v) >= 0 ? v : '5M'); jfShraniIzbiro(); JF.podpis = ''; jfPrikazi(); }
+function jfFilterTf(v){ JF.f.tf = (JF_TF.indexOf(v) >= 0 ? v : 'H1'); jfShraniIzbiro(); JF.podpis = ''; jfPrikazi(); }
 
 // ── cards: one per signal ──
 function jfKarte(trades){
@@ -12667,13 +12805,13 @@ function jfStanjeKarte(v){
   return 'closed';
 }
 function jfIzberiKarte(){
-  var f = JF.f, zivo = (JF.nacin === 'live' || JF.nacin === 'preview-live');
+  var f = JF.f, zivo = jfKarteZive();
   var karte = jfKarte(jfTrejdiTf()).map(function(c){
     var v = c.vrstice.filter(function(r){ return (f.s === 'all' || r.s === f.s) && (!zivo || f.st === 'all' || r.state === f.st); });
     return v.length ? Object.assign({}, c, {v: v}) : null;
   }).filter(Boolean);
   karte.sort(function(a, b){ return ((b.t || 0) - (a.t || 0)) * (zivo && f.red === 'old' ? -1 : 1); });
-  return zivo ? karte.slice(0, f.n) : karte;
+  return karte.slice(0, f.n);              // 24 Oct 2026: the free history is long too (every closed trade) — 20, 50 or 100 cards
 }
 function jfIzbrana(c){
   var id = JF.izbrane[c.k], i;
@@ -12692,6 +12830,7 @@ function jfGet(url, glave){
 function jfOdpri(){ jfNalozi(false); }
 function jfOsvezi(){ JF.podpis = ''; jfNalozi(false); }
 function jfPonastavi(){ JF.podatki = null; JF.slike = {}; JF.slikeV = ''; JF.podpis = ''; JF.opozorilo = ''; JF.zahteva++; JF.nalagam = false;
+  if(!jfLokalno()) JF.tab = null;          // a new key (or a removed one): LIVE for subscribers, FREE for everyone else
   var p = document.getElementById('page-df'); if(p && p.classList.contains('active')) jfNalozi(false); }
 function jfNalozi(tiho){
   var el = document.getElementById('df-body'); if(!el) return;
@@ -12722,7 +12861,7 @@ function jfNalozi(tiho){
     if(e && (e.status === 401 || e.status === 403) && zivo && !lok){
       PORTAL.veljavna = false; portalZavihekFeed(); try{ portalLicencaRender(); }catch(x){}
       JF.opozorilo = 'Your access key is not valid or the subscription has expired, so you see the free feed. Renew in AI PRO.';
-      JF.slikeV = ''; JF.podpis = '';
+      JF.tab = 'free'; JF.slikeV = ''; JF.podpis = '';
       jfNalozi(tiho); return;
     }
     if(e && e.status === 404){
@@ -12740,14 +12879,17 @@ function jfNalozi(tiho){
 function jfVir(t){ var v = document.getElementById('df-vir'); if(v) v.textContent = t; }
 function jfVirRender(){
   var o = JF.podatki; if(!o) return;
-  var n = jfTrejdiTf().length, tst = jfJeTest() ? 'TEST ' + JF.f.tf + ' · ' : '';
-  jfVir(tst + (JF.nacin === 'free' || JF.nacin === 'preview-free' ? 'free · last ' + n + ' closed trades' : 'live · ' + n + ' trades')
-        + (o.updated ? ' · updated ' + jfPred(o.updated) : ''));
+  var kdaj = o.updated ? ' · updated ' + jfPred(o.updated) : '';
+  if(jfZaklenjeno()){ jfVir('LIVE · for AI PRO subscribers' + kdaj); return; }
+  var n = jfTrejdiTf().length, pred = (JF.nacin.indexOf('preview') === 0 ? 'preview · ' : '');
+  var t = JF.f.tf === '5M' ? '5 MIN testing robot · demo · ' + (jfKarteZive() ? 'live · ' + n + ' trades' : 'last ' + n + ' closed')
+                           : 'LIVE ROBOT ' + JF.f.tf + ' · ' + (jfVZivo() ? 'live · ' + n + ' trades' : 'free · ' + n + ' closed trades');
+  jfVir(pred + (jfVZivo() ? 'LIVE · ' : 'FREE · ') + t + kdaj);
 }
 function jfSporocilo(t){ return '<div class="jf-sporocilo">' + t + '</div>'; }
 function jfNiPovezave(){
   return '<div class="jf-sporocilo"><b>Divergence Feed — coming soon.</b> Every RSI divergence our scanner finds on Binance '
-    + '5-minute charts, with entry, stop loss and take profit, as our robot trades it.</div>';
+    + '1-hour, 4-hour, daily and weekly charts, with our entry, stop loss and take profit.</div>';
 }
 
 // ── page ──
@@ -12761,61 +12903,151 @@ function jfFilterS(v){ JF.f.s = v; jfShraniIzbiro(); JF.podpis = ''; jfPrikazi()
 function jfFilterSt(v){ JF.f.st = v; jfShraniIzbiro(); JF.podpis = ''; jfPrikazi(); }
 function jfRed(v){ JF.f.red = v; jfShraniIzbiro(); JF.podpis = ''; jfPrikazi(); }
 function jfStevilo(n){ JF.f.n = n; jfShraniIzbiro(); JF.podpis = ''; jfPrikazi(); }
-function jfPredogled(v){ JF.predogled = (v === 'free' ? 'free' : 'live'); try{ localStorage.setItem('tc_df_predogled', JF.predogled); }catch(e){}
-  JF.slikeV = ''; JF.podpis = ''; jfNalozi(false); }
+function jfPredogled(v){ jfTabIzberi(v); }      // old name (local preview switch), now the FREE | LIVE tabs
 
 function jfGlava(){
-  var o = JF.podatki, h = '', zivo = (JF.nacin === 'live' || JF.nacin === 'preview-live');
-  var T = jfTest(), test = jfJeTest(), tf = JF.f.tf, tr = jfTrejdiTf();
-  var c = test ? ((T && T.counts && T.counts[tf]) || {}) : (o.counts || {});
+  var o = JF.podatki, h = '', zivo = jfVZivo();
+  var T = jfTest(), robot = jfJeTest(), tf = JF.f.tf, tr = jfTrejdiTf();
+  var c = robot ? ((T && T.counts && T.counts[tf]) || {}) : (o.counts || {});
   if(JF.nacin === 'preview-live' || JF.nacin === 'preview-free'){
-    h += '<div class="jf-ban jf-ban-pred"><b>LOCAL PREVIEW</b> · data straight from your robot through OBJAVI-SIGNALE — visible only on this computer. '
-      + 'View as ' + jfSeg(JF.predogled, [['free', 'VISITOR (FREE)'], ['live', 'SUBSCRIBER (LIVE)']], 'jfPredogled') + '</div>';
+    h += '<div class="jf-ban jf-ban-pred"><b>LOCAL PREVIEW</b> · data straight from your robot through OBJAVI-SIGNALE — visible only on this '
+      + 'computer. The FREE and LIVE tabs show exactly what visitors and subscribers see.</div>';
   }
-  if(JF.opozorilo && !zivo){ h += '<div class="jf-ban jf-ban-opoz">' + jfEsc(JF.opozorilo) + '</div>'; }
-  if(T) h += jfTfIzbira();
-  if(!zivo){
-    var akt = (c.open || 0) + (c.pending || 0);
-    h += '<div class="jf-ban jf-ban-free"><div class="jf-ban-t">' + (test
-        ? '<b>FREE · TEST ' + tf + '</b> · the last ' + tr.length + ' closed test trades on ' + JF_TF_NAPIS[tf] + ' charts, '
-          + 'each with the divergence it came from. Open test trades and new test signals, with stop loss and take profit, '
-          + 'are part of AI PRO.'
-        : '<b>FREE</b> · the last ' + tr.length + ' closed trades of our four strategies, '
-          + 'each with the divergence it came from. <b>Live signals</b> — new entries, open trades and their stop loss and take profit, '
-          + 'the moment our robot takes them — are part of AI PRO.')
-      + (akt ? '<span class="jf-zdaj">Right now: <b>' + (c.open || 0) + '</b> open ' + (test ? 'test ' : '') + 'trade' + ((c.open || 0) === 1 ? '' : 's')
-               + ' and <b>' + (c.pending || 0) + '</b> pending entr' + ((c.pending || 0) === 1 ? 'y' : 'ies') + ' — visible to subscribers.</span>' : '')
-      + '</div><button class="jf-cta" onclick="nav(\'ai\')">GET LIVE SIGNALS →</button></div>';
-  } else if(JF.nacin === 'live'){
-    h += '<div class="jf-ban jf-ban-live"><span class="pt-live">● LIVE</span> AI PRO · '
-      + (test ? '<span class="jf-test-z">TEST</span> ' + tf + ' — virtual trades on ' + JF_TF_NAPIS[tf] + ' charts, not traded by the robot'
-              : 'all signals of strategies 1B, 1C, 1D and 1E')
-      + (PORTAL.do ? ' · subscription active until <b>' + jfEsc(jfDatum(PORTAL.do)) + '</b>' : '') + '</div>';
-  }
+  var opoz = JF.opozorilo || ((!jfLokalno() && portalKljuc() && PORTAL.veljavna === false)
+    ? 'Your access key is not valid or the subscription has expired, so you see the free feed. Renew in AI PRO.' : '');
+  if(opoz && !zivo){ h += '<div class="jf-ban jf-ban-opoz">' + jfEsc(opoz) + '</div>'; }
+  h += jfTabi();
+  if(jfZaklenjeno()) return h + jfZaklep();
+  h += jfTfIzbira();
   var star = o.updated ? (Date.now() - o.updated) : 0;
   if(star > 15 * 60000){
     h += '<div class="jf-ban jf-ban-opoz">Last update ' + jfPred(o.updated) + ' — the robot may be offline, so the data shown can be out of date.</div>';
   }
-  if(test){
-    h += jfTestUvod() + jfTestTabela();
-  } else {
-    h += '<div class="jf-uvod"><b>Our robot trades every one of these signals</b> automatically, on a Binance Futures demo account. '
-      + 'Robot access for users — coming soon. Stop loss and take profit are suggestions calculated automatically for each strategy; '
-      + 'how you trade is up to you.' + jfKako('5M') + '</div>';
+  if(robot){
+    h += jfRobotGlava();
+    if(!zivo){
+      // "all N": every closed trade of this timeframe is in the package (same count as in the statistics)
+      var akt = (c.open || 0) + (c.pending || 0), zapStat = 0;
+      if(T && T.stats && T.stats[tf]) JF_STRAT.forEach(function(s){ zapStat += +((T.stats[tf][s] || {}).closed) || 0; });
+      var vse = tr.length > 0 && tr.length >= zapStat;
+      h += '<div class="jf-ban jf-ban-free"><div class="jf-ban-t"><b>FREE · ' + tf + '</b> · closed trades and history — '
+        + (tr.length ? (vse ? 'all ' : 'the last ') + tr.length + ' closed ' + JF_TF_NAPIS[tf] + ' trade' + (tr.length === 1 ? '' : 's')
+                       + (vse && T && T.since ? ' since ' + jfEsc(jfDatumMs(T.since)) : '')
+                     : 'no closed ' + JF_TF_NAPIS[tf] + ' trades yet')
+        + ', each with the divergence it came from. <b>New signals the moment they fire, open trades and an e-mail for every signal</b> '
+        + 'are in LIVE (AI PRO).'
+        + (akt ? '<span class="jf-zdaj">Right now: <b>' + (c.open || 0) + '</b> open trade' + ((c.open || 0) === 1 ? '' : 's')
+                 + ' and <b>' + (c.pending || 0) + '</b> waiting entr' + ((c.pending || 0) === 1 ? 'y' : 'ies') + ' — visible in LIVE.</span>' : '')
+        + '</div><button class="jf-cta" onclick="jfTabIzberi(\'live\')">GET LIVE SIGNALS →</button></div>';
+    }
   }
+  if(JF.nacin === 'live'){
+    h += '<div class="jf-ban jf-ban-live"><span class="jf-ban-t"><span class="pt-live">● LIVE</span> AI PRO · '
+      + (robot ? '<b>' + tf + '</b> — ' + JF_TF_NAPIS[tf] + ' signals of our live robot the moment they fire, all four strategies · '
+                 + 'an e-mail for every new signal'
+               : '<b>5 MIN</b> <span class="jf-5m-z">TESTING · DEMO</span> — our testing robot on a Binance demo account')
+      + (PORTAL.do ? ' · subscription active until <b>' + jfEsc(jfDatum(PORTAL.do)) + '</b>' : '')
+      + ' · <a href="#" class="jf-moja" onclick="nav(\'ai\');return false;">MY SUBSCRIPTION</a></span></div>';
+  }
+  h += robot ? jfTestTabela() + jfTestUvod() : jf5mUvod();
+  var zk = jfKarteZive();
   var tools = '<div class="b1p-orodja">';
   var st = function(x){ return tr.filter(function(t){ return x === 'all' || t.s === x; }).length; };
   tools += jfSeg(JF.f.s, [['all', 'ALL <span class="b1p-st">' + st('all') + '</span>']].concat(JF_STRAT.map(function(s){
     return [s, s + ' <span class="b1p-st">' + st(s) + '</span>']; })), 'jfFilterS');
-  if(zivo){
+  if(zk){
     var sk = function(x){ return tr.filter(function(t){ return (JF.f.s === 'all' || t.s === JF.f.s) && (x === 'all' || t.state === x); }).length; };
     tools += jfSeg(JF.f.st, [['all', 'ALL STATES'], ['pending', 'WAITING <span class="b1p-st">' + sk('pending') + '</span>'],
       ['open', 'OPEN <span class="b1p-st">' + sk('open') + '</span>'], ['closed', 'CLOSED <span class="b1p-st">' + sk('closed') + '</span>'],
       ['unfilled', 'NOT FILLED <span class="b1p-st">' + sk('unfilled') + '</span>']], 'jfFilterSt');
     tools += jfSeg(JF.f.red, [['new', 'NEWEST FIRST'], ['old', 'OLDEST FIRST']], 'jfRed');
-    tools += '<span class="b1p-pod">show</span>' + jfSeg(JF.f.n, [[20, '20'], [50, '50'], [100, '100']], 'jfStevilo');
   }
+  tools += '<span class="b1p-pod">show</span>' + jfSeg(JF.f.n, [[20, '20'], [50, '50'], [100, '100']], 'jfStevilo');
   return h + tools + '</div>';
+}
+
+// ── FREE | LIVE (24 Oct 2026) ──
+function jfTabi(){
+  var t = jfTab(), lok = jfLokalno(), dostop = lok || portalImaDostop();
+  var opis = t === 'live'
+    ? (dostop ? 'Everything live: new signals of our live robot the moment they fire, waiting entries, open trades with their current result '
+                + '— and an e-mail for every new signal.'
+              : 'Live signals and e-mail alerts are part of AI PRO.')
+    : 'Free for everyone: the 5-minute testing robot live, and every closed 1-hour to weekly trade of our live robot with its result.';
+  return '<div class="jf-zavi" role="tablist" aria-label="Free or live feed">'
+    + '<button role="tab" aria-selected="' + (t === 'free') + '" class="jf-zav' + (t === 'free' ? ' on' : '') + '" onclick="jfTabIzberi(\'free\')">'
+    + 'FREE <small>everyone</small></button>'
+    + '<button role="tab" aria-selected="' + (t === 'live') + '" class="jf-zav jf-zav-live' + (t === 'live' ? ' on' : '') + '" onclick="jfTabIzberi(\'live\')">'
+    + '<span class="jf-zav-tocka" aria-hidden="true">●</span>LIVE <small>' + (lok ? 'subscribers' : (dostop ? 'AI PRO' : '🔒 AI PRO')) + '</small></button>'
+    + '<span class="jf-zavi-opis">' + opis + '</span></div>';
+}
+// a visitor without a subscription picked LIVE: what it is and the way to the subscription
+function jfZaklep(){
+  var R = jfRobotPovzetek(), T = jfTest(), cn = (T && T.counts) || {}, odp = 0, ck = 0;
+  JF_TF_TEST.forEach(function(x){ odp += (cn[x] && cn[x].open) || 0; ck += (cn[x] && cn[x].pending) || 0; });
+  var cena = ''; try{ cena = portalCena(); }catch(e){}
+  return '<div class="jf-zaklep">'
+    + '<div class="jf-zaklep-n"><span class="pt-live">● LIVE</span> is part of <b>TradeCore AI PRO</b></div>'
+    + '<p>See every signal of our live robot the moment it fires — not only after the trade has closed.</p>'
+    + '<ul class="jf-zaklep-s">'
+    + '<li>New 1-hour, 4-hour, daily and weekly signals at once: the chart, our entry, stop loss and take profit for 1B, 1C, 1D and 1E</li>'
+    + '<li>An e-mail alert with the chart for every new signal</li>'
+    + '<li>Waiting entries and open trades with their current result</li></ul>'
+    + (odp + ck ? '<div class="jf-zdaj">Right now in LIVE: <b>' + odp + '</b> open trade' + (odp === 1 ? '' : 's') + ' and <b>' + ck
+                  + '</b> waiting entr' + (ck === 1 ? 'y' : 'ies') + ' on 1-hour to weekly charts.</div>' : '')
+    + (R && R.zaprtih ? '<div class="jf-zaklep-r">Our live robot on our statistics since ' + jfEsc(jfRobotOd(R)) + ': <b style="color:'
+                        + jfBarva(R.r) + '">' + jfR(R.r) + '</b> on ' + R.zaprtih + ' closed trades.</div>' : '')
+    + '<div class="jf-zaklep-g"><button class="jf-cta" onclick="jfNarocilo()">SUBSCRIBE' + (cena ? ' · ' + jfEsc(cena) : '') + ' →</button>'
+    + '<a href="#" class="jf-moja" onclick="nav(\'ai\');return false;">ALREADY SUBSCRIBED? ENTER YOUR KEY</a>'
+    + '<a href="#" class="jf-zaklep-free" onclick="jfTabIzberi(\'free\');return false;">← back to FREE</a></div>'
+    + '<div class="jf-s-pod">Secure card payment through Stripe · cancel anytime · not financial advice.</div>'
+    + '</div>';
+}
+function jfNarocilo(){
+  var u = ''; try{ u = portalStripe(); }catch(e){}
+  if(u && typeof portalKupi === 'function'){ portalKupi(); return; }
+  try{ nav('ai'); }catch(e){}
+}
+// LIVE ROBOT in R: sum of all closed trades of all four strategies on 1 hour to 1 week (statistics since the start, 14 Oct 2026)
+function jfRobotPovzetek(){
+  var T = jfTest(), st = T && T.stats; if(!st) return null;
+  var r = 0, zap = 0, zmag = 0, po = {};
+  JF_TF_TEST.forEach(function(tf){
+    var v = st[tf] || {}, rt = 0, zt = 0;
+    JF_STRAT.forEach(function(s){ var c = v[s] || {}; rt += (+c.r_sum || 0); zt += (+c.closed || 0); zmag += (+c.wins || 0); });
+    po[tf] = {r: rt, zaprtih: zt}; r += rt; zap += zt;
+  });
+  return {r: r, zaprtih: zap, zmag: zmag, po: po, od: T.since || null};
+}
+function jfRobotOd(R){ return (R && R.od) ? jfDatumMs(R.od) : '14 Oct 2026'; }
+function jfRobotGlava(){
+  var R = JF.robot || jfRobotPovzetek(), od = jfEsc(jfRobotOd(R));
+  var h = '<div class="jf-robot"><div class="jf-robot-l"><div class="jf-robot-n"><span class="jf-robot-z">● LIVE ROBOT</span>'
+    + '1-HOUR · 4-HOUR · DAILY · WEEKLY</div>'
+    + '<p>Our robot trades these signals on the 200 most traded Binance coins, with the stop loss and take profit shown on every card — '
+    + '<b>profitable on our statistics since '
+    + od + '</b>. Robot access for other users — coming soon.</p></div>';
+  if(R){
+    h += '<div class="jf-robot-d"><div class="jf-robot-r" style="color:' + jfBarva(R.r) + '">' + jfR(R.r) + '</div>'
+      + '<div class="jf-s-pod">' + R.zaprtih + ' closed trade' + (R.zaprtih === 1 ? '' : 's') + ' since ' + od
+      + (R.zaprtih ? ' · ' + Math.round(R.zmag / R.zaprtih * 100) + '% won' : '') + '</div></div>'
+      + '<div class="jf-robot-tf">' + JF_TF_TEST.map(function(x){
+          var p = R.po[x] || {};
+          return '<button class="jf-robot-c' + (x === JF.f.tf ? ' on' : '') + '" onclick="jfFilterTf(\'' + x + '\')" title="show the '
+            + JF_TF_NAPIS[x] + ' trades"><b>' + x + '</b>' + (p.zaprtih ? '<span style="color:' + jfBarva(p.r) + '">' + jfR(p.r) + '</span> '
+            + '<span class="jf-s-pod">· ' + p.zaprtih + ' closed</span>' : '<span class="jf-s-pod">no closed trades yet</span>') + '</button>';
+        }).join('') + '</div>';
+  }
+  return h + '<div class="jf-robot-pod"><b>R</b> = result ÷ risk: 1 R is what one trade risks down to its stop loss — with 10 USDT at risk '
+    + 'per trade, +1 R is +10 USDT. Our statistics since ' + od + ' count every signal of all four strategies, wins and losses, simulated '
+    + 'minute by minute on Binance Futures prices with fees. Past results do not guarantee future results.</div></div>';
+}
+// 5 MIN: the testing robot (different strategies, Binance demo account)
+function jf5mUvod(){
+  return '<div class="jf-test5"><div class="jf-robot-n"><span class="jf-5m-z">5 MIN · TESTING ROBOT · DEMO</span></div>'
+    + '<p><b>On 5-minute charts we test different strategies.</b> Our testing robot trades every 5-minute signal automatically on a '
+    + 'Binance Futures <b>demo account — not real money</b>. ' + (jfKarteZive() ? 'Live for everyone, free: waiting entries, open trades and '
+    + 'results. ' : '') + 'These are tests, not recommendations — our live robot trades the 1-hour to weekly signals.</p>' + jfKako('5M') + '</div>';
 }
 
 function jfKako(tf){
@@ -12832,38 +13064,40 @@ function jfKako(tf){
     + (tf === '5M' ? '' : ', fees included') + '. Times are in your time zone (' + jfPas() + ').</p></details>';
 }
 
-// ── TEST: timeframe switch, explanation and overview (14 Oct 2026) ──
+// ── timeframe switch, explanation and overview (14 Oct 2026). 16 Oct 2026, Matic: "osredotoči se na 1h signale in večje,
+// pri 5 min navedi, da je še v testiranju … napiši pri 1h, da to so naši SL in TP, vsak user naj vzame signal kot nasvet".
+// 1 hour and longer are the main signals; their results are simulated (not the robot's trades) and the page says so. ──
 function jfTfIzbira(){
   var T = jfTest(), sez = (T && T.trades) || [];
   var n = function(x){ return x === '5M' ? (JF.podatki.trades || []).length : sez.filter(function(t){ return t.tf === x; }).length; };
-  return '<div class="jf-tf"><span class="jf-tf-n">TIMEFRAME</span>'
-    + jfSeg(JF.f.tf, [['5M', '5 MIN · ROBOT <span class="b1p-st">' + n('5M') + '</span>']].concat(['H1', 'H4', 'D1'].map(function(x){
-        return [x, x + ' <span class="jf-test-z">TEST</span> <span class="b1p-st">' + n(x) + '</span>']; })), 'jfFilterTf')
-    + '<span class="jf-tf-pod">' + (jfJeTest() ? 'TEST = virtual trades, not traded by the robot' : 'the robot\'s real demo trades on 5-minute charts') + '</span></div>';
+  return '<div class="jf-tf"><span class="jf-tf-n">LIVE ROBOT</span>'
+    + jfSeg(JF.f.tf, JF_TF_TEST.map(function(x){ return [x, x + ' <span class="b1p-st">' + n(x) + '</span>']; }), 'jfFilterTf')
+    + '<span class="jf-tf-n jf-tf-n2">TESTING ROBOT</span>'
+    + jfSeg(JF.f.tf, [['5M', '5 MIN <span class="jf-5m-z">DEMO</span> <span class="b1p-st">' + n('5M') + '</span>']], 'jfFilterTf')
+    + '</div>';
 }
 function jfDatumMs(ms){ try{ return new Date(ms).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'}); }catch(e){ return ''; } }
 function jfTestUvod(){
-  var T = jfTest() || {}, tf = JF.f.tf;
-  return '<div class="jf-uvod jf-test-uvod"><span class="jf-test-z">TEST</span> <b>Virtual trades — not traded by the robot.</b> '
-    + 'Our scanner looks for the same RSI divergences on ' + JF_TF_NAPIS[tf] + ' candles, with exactly the rules it uses on the robot\'s '
-    + '5-minute charts, and every signal goes to 1B, 1C, 1D and 1E with their usual entry, stop loss and take profit. Nothing is sent '
-    + 'to the exchange: fills, stops and targets are simulated minute by minute on Binance Futures mark prices, fees included. '
-    + 'We run it to find out which timeframe works best' + (T.since ? ' — running since ' + jfEsc(jfDatumMs(T.since)) : '') + '.'
-    + jfKako(tf) + '</div>';
+  var tf = JF.f.tf;
+  return '<div class="jf-uvod jf-glavni-uvod"><b>These are the stop loss and take profit our robot uses.</b> For every RSI divergence our '
+    + 'scanner finds on ' + JF_TF_NAPIS[tf] + ' candles, each of our four strategies (1B, 1C, 1D, 1E) gives its entry, stop loss and take '
+    + 'profit. <b>Treat every signal as a suggestion</b> — whether and how you trade it is your own decision.' + jfKako(tf) + '</div>';
 }
 function jfTestTabela(){
   var T = jfTest(), st = T && T.stats;
   if(!st) return '';
-  var h = '<div class="jf-ovoj jf-test-ovoj"><table class="jf-tab jf-test-tab"><thead><tr><th>TEST OVERVIEW</th>'
+  var R = JF.robot || jfRobotPovzetek(), od = jfEsc(jfRobotOd(R)), sk = {};
+  var h = '<div class="jf-ovoj jf-test-ovoj"><table class="jf-tab jf-test-tab"><thead><tr><th>RESULTS SINCE ' + od.toUpperCase() + '</th>'
     + JF_STRAT.map(function(s){ return '<th class="st">' + s + ' <span class="jf-s-pod">' + (s === '1B' ? 'market' : 'limit') + '</span></th>'; }).join('')
     + '</tr></thead><tbody>';
-  ['H1', 'H4', 'D1'].forEach(function(tf){
+  JF_TF_TEST.forEach(function(tf){
     var v = st[tf] || {};
-    h += '<tr class="' + (tf === JF.f.tf ? 'on' : '') + '" onclick="jfFilterTf(\'' + tf + '\')" title="show the ' + JF_TF_NAPIS[tf] + ' test trades">'
+    h += '<tr class="' + (tf === JF.f.tf ? 'on' : '') + '" onclick="jfFilterTf(\'' + tf + '\')" title="show the ' + JF_TF_NAPIS[tf] + ' trades">'
       + '<td><b>' + tf + '</b> <span class="jf-s-pod">' + JF_TF_NAPIS[tf] + '</span><br><span class="jf-s-pod">' + (v.signals || 0) + ' signal'
       + ((v.signals || 0) === 1 ? '' : 's') + '</span></td>';
     JF_STRAT.forEach(function(s){
-      var c = v[s] || {};
+      var c = v[s] || {}, k = sk[s] = sk[s] || {r: 0, zap: 0, zmag: 0};
+      k.r += (+c.r_sum || 0); k.zap += (+c.closed || 0); k.zmag += (+c.wins || 0);
       if(!c.closed && !c.open && !c.pending){
         h += '<td class="st"><span class="jf-s-pod">' + (c.taken ? c.taken + ' taken · no result yet' : 'no trades yet') + '</span></td>';
         return;
@@ -12877,24 +13111,36 @@ function jfTestTabela(){
     });
     h += '</tr>';
   });
-  return h + '</tbody></table></div><div class="jf-test-pod">Total R of all closed test trades (R = result ÷ risk to the stop loss, fees included). '
-    + 'Click a row to see its trades.</div>';
+  h += '</tbody><tfoot><tr><td><b>ALL</b> <span class="jf-s-pod">1 hour to 1 week</span>'
+    + (R ? '<br><b class="jf-test-r" style="color:' + jfBarva(R.r) + '">' + jfR(R.r) + '</b>' : '') + '</td>'
+    + JF_STRAT.map(function(s){
+        var k = sk[s] || {r: 0, zap: 0, zmag: 0};
+        return '<td class="st">' + (k.zap ? '<b class="jf-test-r" style="color:' + jfBarva(k.r) + '">' + jfR(k.r) + '</b><br><span class="jf-s-pod">'
+          + k.zap + ' closed · ' + Math.round(k.zmag / k.zap * 100) + '% won</span>' : '<span class="jf-s-pod">—</span>') + '</td>';
+      }).join('') + '</tr></tfoot>';
+  return h + '</table></div><div class="jf-test-pod">R of every closed trade since ' + od + ' (R = result ÷ risk to the stop loss; simulated '
+    + 'on Binance Futures prices, fees included). Click a row to see its trades.</div>';
 }
 
 function jfPrikazi(tiho){
   var el = document.getElementById('df-body'); if(!el || !JF.podatki) return;
   var o = JF.podatki;
-  var podpis = JSON.stringify([JF.nacin, JF.f, JF.slikeV, jfTrejdiTf().map(function(t){ return [t.id, t.state, t.exit, t.exit_px, t.entry, t.sl, t.tp]; }),
-                              jfJeTest() && jfTest() ? jfTest().stats : null]);
+  var podpis = JSON.stringify([JF.nacin, jfTab(), jfZaklenjeno(), JF.f, JF.slikeV,
+                              jfTrejdiTf().map(function(t){ return [t.id, t.state, t.exit, t.exit_px, t.entry, t.sl, t.tp]; }),
+                              jfTest() ? jfTest().stats : null, jfTest() ? jfTest().counts : null]);
   jfVirRender();
   if(tiho && podpis === JF.podpis){ jfOsveziOdprte(); return; }      // same trades: only current prices of open ones
   JF.podpis = podpis;
   var top = el.scrollTop;
+  JF.robot = jfRobotPovzetek();
+  if(jfZaklenjeno()){ JF.prikaz = []; el.innerHTML = jfGlava(); if(tiho) el.scrollTop = top; return; }
   JF.prikaz = jfIzberiKarte();
   var h = jfGlava();
   if(!JF.prikaz.length){
     h += '<div class="b1p-prazno">' + (jfTrejdiTf().length ? 'No signal matches this filter.'
-      : (jfJeTest() ? 'No ' + JF_TF_NAPIS[JF.f.tf] + ' test trades to show yet — they appear here as soon as the first ' + JF.f.tf + ' signal is taken.'
+      : (jfJeTest() ? (jfVZivo() ? 'No ' + JF_TF_NAPIS[JF.f.tf] + ' trades yet — they appear here as soon as the first ' + JF.f.tf + ' signal is taken.'
+                                 : 'No closed ' + JF_TF_NAPIS[JF.f.tf] + ' trades yet — they appear here when the first one closes. Waiting '
+                                   + 'entries and open trades are in LIVE.')
                     : 'No trades to show yet.')) + '</div>';
   } else {
     h += '<div class="jf-mreza">' + JF.prikaz.map(jfKartaHtml).join('') + '</div>';
@@ -12909,8 +13155,8 @@ function jfKartaHtml(c, i){
   var traj = pic ? jfTrajanje(pic) : null, sel = jfIzbrana(c), sym = String(c.sym || '').replace(/USDT$/, '');
   var h = '<div class="jf-k jf-k-' + st + '" id="jf-k-' + i + '">'
     + '<div class="jf-gl"><span class="jf-sym">' + jfEsc(sym) + '</span>'
-    + (c.tf && c.tf !== '5M' ? '<span class="jf-test-z" title="virtual trade on ' + JF_TF_NAPIS[c.tf] + ' candles — not traded by the robot">TEST '
-       + jfEsc(c.tf) + '</span>' : '')
+    + (c.tf && c.tf !== '5M' ? '<span class="jf-tf-z" title="signal on ' + JF_TF_NAPIS[c.tf] + ' candles — our live robot trades it">' + jfEsc(c.tf) + '</span>'
+       : '<span class="jf-5m-z" title="5-minute signal — our testing robot trades it on a Binance demo account">5M · TESTING · DEMO</span>')
     + '<span style="color:' + (dolga ? 'var(--green)' : 'var(--red)') + '">' + (dolga ? 'LONG' : 'SHORT') + '</span>'
     + '<span class="jf-vrsta">' + jfEsc(jfVrsta(c.type)) + (c.str ? ' · strength ' + jfEsc(c.str) : '') + '</span>'
     + (traj ? '<span class="b1f-traj" title="how long the divergence lasted: from the first to the second price point">lasted ' + traj.napis + '</span>' : '')
@@ -12933,6 +13179,12 @@ function jfKartaHtml(c, i){
           + '<td id="jf-z-' + i + '-' + j + '">' + jfStanjeVrstice(r) + '</td></tr>';
       }).join('')
     + '</tbody></table></div>'
+    + (c.tf && c.tf !== '5M'
+       ? '<div class="jf-robot-v"><span class="jf-robot-z">● LIVE ROBOT</span>Our robot trades these signals with this stop loss and take profit'
+         + (JF.robot && JF.robot.zaprtih ? ' — profitable on our statistics since ' + jfEsc(jfRobotOd(JF.robot)) + ': <b style="color:'
+            + jfBarva(JF.robot.r) + '">' + jfR(JF.robot.r) + '</b>' : '') + '.</div>'
+       : '<div class="jf-test5-v"><span class="jf-5m-z">TESTING ROBOT · DEMO</span> Stop loss and take profit of our testing robot on a '
+         + 'Binance demo account — a test of a strategy, not a recommendation.</div>')
     + '<div class="b1f-noga">'
     + (pic ? '<button class="jf-mini" onclick="jfShrani(' + i + ')" title="save this chart as a PNG image">SAVE IMAGE</button>' : '')
     + '<a class="jf-mini" href="' + jfBinance(c.sym) + '" target="_blank" rel="noopener">BINANCE ↗</a></div>'
@@ -13027,13 +13279,16 @@ function jfNarisi(cv, c, r){
   g.textAlign = 'center'; g.textBaseline = 'top';
   var kor = (N > 1 && s.t[1] > s.t[0]) ? (s.t[1] - s.t[0]) : 300000;
   var MES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var gost = W < 430 ? 2 : 1;                                                              // narrow chart: half as many time labels
   for(var i = 0; i < N; i++){
     var d0 = new Date(s.t[i]), oz = null;
-    if(kor <= 300000){ if(d0.getMinutes() === 0) oz = jfUra(s.t[i]); }                      // 5 min: every full hour
-    else if(kor <= 3600000){ if(d0.getMinutes() === 0 && d0.getHours() % 6 === 0)          // 1 h: every 6 hours, date at midnight
+    if(kor <= 300000){ if(d0.getMinutes() === 0 && d0.getHours() % gost === 0) oz = jfUra(s.t[i]); }   // 5 min: every full hour
+    else if(kor <= 3600000){ if(d0.getMinutes() === 0 && d0.getHours() % (6 * gost) === 0) // 1 h: every 6 hours, date at midnight
       oz = d0.getHours() === 0 ? d0.getDate() + ' ' + MES[d0.getMonth()] : jfUra(s.t[i]); }
     else if(kor <= 14400000){ if(d0.getHours() < 4) oz = d0.getDate() + ' ' + MES[d0.getMonth()]; }   // 4 h: once a day
-    else if(d0.getDay() === 1){ oz = d0.getDate() + ' ' + MES[d0.getMonth()]; }              // 1 day: Mondays
+    else if(kor <= 86400000){ if(d0.getDay() === 1) oz = d0.getDate() + ' ' + MES[d0.getMonth()]; }   // 1 day: Mondays
+    else if(i > 0 && new Date(s.t[i - 1]).getMonth() !== d0.getMonth() && d0.getMonth() % 3 === 0)        // 1 week: each quarter,
+      oz = d0.getMonth() === 0 ? String(d0.getFullYear()) : MES[d0.getMonth()];                            // the year in January
     if(oz !== null){
       g.fillStyle = B.besedilo; g.fillText(oz, X(i), H - spodaj + 3);
       g.strokeStyle = B.mreza; g.beginPath(); g.moveTo(X(i) + 0.5, yC0); g.lineTo(X(i) + 0.5, yC0 + hC); g.moveTo(X(i) + 0.5, yR0); g.lineTo(X(i) + 0.5, yR0 + hR); g.stroke();
@@ -13153,13 +13408,22 @@ setInterval(function(){
 // A subscriber key is checked by the server (JAVNO_API/licence); this page holds no secret.
 // ══════════════════════════════════════
 var PORTAL_KLJUC = 'tc_licenca';
-var PORTAL = {veljavna: null, do: '', napaka: '', hvala: false};
+// 16 Oct 2026 — card payment through Stripe: after paying, Stripe sends the buyer back with ?session_id=cs_…; the page asks
+// the server (JAVNO_API/stripe/claim), gets the personal key, stores it and the live feed unlocks at once; AI PRO then shows
+// MY SUBSCRIPTION (status, key, Stripe page to change the card or cancel). Matic: "ko bo plačano bo imel subscriber meni".
+var PORTAL_SEJA = 'tc_stripe_seja';     // a paid checkout not activated yet (page closed too early, server down): tried again
+var PORTAL = {veljavna: null, do: '', napaka: '', hvala: false, cfg: {}, info: {}, aktiviram: false, cakam: false, nov: false,
+              vidim: false, brisem: 0};
 
 function portalKljuc(){ try{ return (localStorage.getItem(PORTAL_KLJUC) || '').trim(); }catch(e){ return ''; } }
+function portalBeri(k){ try{ return localStorage.getItem(k) || ''; }catch(e){ return ''; } }
+function portalPisi(k, v){ try{ if(v) localStorage.setItem(k, v); else localStorage.removeItem(k); }catch(e){} }
 function portalApi(){ return String((typeof JAVNO_API !== 'undefined' && JAVNO_API) || '').replace(/\/+$/, ''); }
+function portalLokalno(){ return typeof jfLokalno === 'function' && jfLokalno(); }
 function portalImaDostop(){ return !!portalKljuc() && PORTAL.veljavna !== false; }
-function portalCena(){ try{ return SITE_PRICE || ''; }catch(e){ return ''; } }
-function portalStripe(){ try{ return STRIPE_LINK || ''; }catch(e){ return ''; } }
+// price and Stripe link: from the server (/config — set in Cloudflare) or from SITE SETTINGS at the top of the page
+function portalCena(){ var c = PORTAL.cfg.price || ''; try{ return c || SITE_PRICE || ''; }catch(e){ return c; } }
+function portalStripe(){ var c = PORTAL.cfg.stripe_link || ''; try{ return c || STRIPE_LINK || ''; }catch(e){ return c; } }
 function portalKontakt(){ try{ return CONTACT_EMAIL || ''; }catch(e){ return ''; } }
 function portalEsc(s){ return String(s === null || s === undefined ? '' : s).replace(/[&<>"']/g, function(c){
   return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]; }); }
@@ -13169,7 +13433,8 @@ function portalZavihekFeed(){
   var t = document.getElementById('t-df'); if(!t) return;
   var live = portalImaDostop() && PORTAL.veljavna === true;
   t.innerHTML = 'DIVERGENCE FEED' + (live ? ' <span class="pt-live">● LIVE</span>' : '');
-  t.title = live ? 'live divergence signals — AI PRO' : 'last 20 closed trades free · live signals with AI PRO';
+  t.title = live ? 'live signals of our robot and e-mail alerts — AI PRO'
+                  : 'free: the 5-minute testing robot live + every closed 1-hour to weekly trade · live signals and e-mail alerts with AI PRO';
 }
 // names the shared code still calls (1B and 1C tabs do not exist on the public site)
 function portalZavihek1B(){ portalZavihekFeed(); }
@@ -13179,12 +13444,7 @@ function portalB1Odkleni(){}
 function portalNeveljavna(){ PORTAL.veljavna = false; portalZavihekFeed(); }
 function pvPripravi(){} function pvOdpri(){} function pvSkoci(){}
 
-// ── subscription ──
-function portalKupi(){
-  var u = portalStripe();
-  if(u){ window.open(u, '_blank', 'noopener'); return; }
-  portalStanjeIzpis('Card payment opens soon. Please check back in a few days.', 'opoz');
-}
+// ── helpers ──
 function portalStanjeIzpis(t, vrsta){
   var e = document.getElementById('lic-stanje'); if(!e) return;
   e.className = 'lic-stanje' + (vrsta ? ' ' + vrsta : ''); e.innerHTML = t;
@@ -13193,79 +13453,289 @@ function portalDatum(ymd){
   var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(ymd || ''); if(!m) return portalEsc(ymd || '');
   return (+m[3]) + ' ' + ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m[2] - 1] + ' ' + m[1];
 }
-function portalPreveri(k){
-  var api = portalApi() || (typeof jfLokalno === 'function' && jfLokalno() ? JF_LOKALNO : '');
+function portalKontaktHtml(){
+  var mail = portalKontakt();
+  return mail ? 'write to <a href="mailto:' + portalEsc(mail) + '">' + portalEsc(mail) + '</a>'
+              : 'reply to the receipt e-mail you got from Stripe';
+}
+function portalSkrijKljuc(k){ return k ? String(k).slice(0, 7) + '-••••-••••-••••' : ''; }
+function portalOdgovor(r){ return r.json().catch(function(){ return {}; }).then(function(o){ return {s: r.status, o: o || {}}; }); }
+function portalPocistiUrl(){
+  // the payment session (or ?portal=1) does not stay in the address bar, in bookmarks or in a shared link
+  try{
+    var u = new URL(location.href);
+    ['session_id', 'portal', 'subscribed', 'paid'].forEach(function(p){ u.searchParams.delete(p); });
+    history.replaceState(null, '', u.pathname + (u.searchParams.toString() ? '?' + u.searchParams.toString() : '') + u.hash);
+  }catch(e){}
+}
+
+// ── server ──
+function portalPreveri(k, sveze){
+  var api = portalApi() || (portalLokalno() ? JF_LOKALNO : '');
   if(!api) return Promise.resolve(null);
-  return fetch(api + '/licence', {cache: 'no-store', headers: {'Authorization': 'Bearer ' + k}}).then(function(r){
-    if(r.status === 401 || r.status === 403) return {valid: false};
+  return fetch(api + '/licence' + (sveze ? '?fresh=1' : ''), {cache: 'no-store', headers: {'Authorization': 'Bearer ' + k}}).then(function(r){
+    if(r.status === 401 || r.status === 403) return portalOdgovor(r).then(function(x){ return {valid: false, until: x.o.until || ''}; });
     if(!r.ok) throw new Error('http ' + r.status);
     return r.json();
   });
 }
+function portalSprejmi(o){                   // answer of /licence
+  if(!o) return;
+  PORTAL.veljavna = (o.valid !== false);
+  PORTAL.do = o.until || '';
+  PORTAL.info = (o.valid !== false) ? o : {until: o.until || ''};
+}
+function portalNaloziNastavitve(){
+  var api = portalApi(); if(!api) return;
+  fetch(api + '/config', {cache: 'no-store'}).then(function(r){ return r.ok ? r.json() : null; }).then(function(o){
+    if(!o) return;
+    PORTAL.cfg = {stripe_link: String(o.stripe_link || ''), price: String(o.price || ''), card: !!o.card};
+    portalOglasRender();
+    var c = document.getElementById('lic-cena'); if(c) c.innerHTML = portalCenaHtml();
+  }).catch(function(){});
+}
+
+// ── buying: Stripe Payment Link, then back here with ?session_id= ──
+function portalKupi(){
+  var u = portalStripe();
+  if(u){ location.href = u; return; }
+  portalStanjeIzpis('Card payment opens soon. Please check back in a few days.', 'opoz');
+}
+function portalAktivirajNakup(seja, poskus){
+  var api = portalApi();
+  poskus = poskus || 0;
+  portalPisi(PORTAL_SEJA, seja);
+  PORTAL.aktiviram = true; PORTAL.napaka = '';
+  portalLicencaRender();
+  if(!api){
+    PORTAL.aktiviram = false;
+    PORTAL.napaka = 'Your payment is safe, but the live feed is not online yet. Your access is activated automatically the next time '
+      + 'you open this page.';
+    portalLicencaRender(); return;
+  }
+  var konec = function(besedilo, pozabi){
+    PORTAL.aktiviram = false; PORTAL.cakam = false; PORTAL.napaka = besedilo;
+    if(pozabi){ portalPisi(PORTAL_SEJA, ''); portalPocistiUrl(); }
+    portalLicencaRender();
+  };
+  fetch(api + '/stripe/claim', {method: 'POST', cache: 'no-store', headers: {'Content-Type': 'application/json'},
+                                body: JSON.stringify({session_id: seja})})
+    .then(portalOdgovor)
+    .then(function(x){
+      var o = x.o;
+      if(x.s === 200 && o.key){
+        portalPisi(PORTAL_KLJUC, o.key); portalPisi(PORTAL_SEJA, ''); portalPocistiUrl();
+        PORTAL.aktiviram = false; PORTAL.cakam = false; PORTAL.napaka = ''; PORTAL.nov = (o.valid !== false); PORTAL.vidim = false;
+        PORTAL.veljavna = (o.valid !== false); PORTAL.do = o.until || '';
+        PORTAL.info = {valid: o.valid !== false, until: o.until || '', card: true, email: o.email || ''};
+        portalZavihekFeed(); portalLicencaRender();
+        try{ jfPonastavi(); }catch(e){}
+        portalPreveri(o.key).then(function(i){ if(i && i.valid !== false){ portalSprejmi(i); portalLicencaRender(); } }).catch(function(){});
+        return;
+      }
+      if(x.s === 202){
+        if(poskus < 30){
+          PORTAL.cakam = true; portalLicencaRender();
+          setTimeout(function(){ portalAktivirajNakup(seja, poskus + 1); }, 6000); return;
+        }
+        return konec('Your bank is still confirming the payment. Access unlocks automatically — open this page again in a few minutes.', false);
+      }
+      if(x.s === 409) return konec('This payment was not completed, so no subscription was started. If your card was charged, please '
+                                   + portalKontaktHtml() + '.', true);
+      if(x.s === 400 || x.s === 404) return konec('We could not find this payment. If your card was charged, please ' + portalKontaktHtml()
+                                                  + ' and we will activate your access.', true);
+      if(x.s === 403) return konec('This subscription has been cancelled.', true);
+      if(x.s === 503) return konec('Your payment is safe. Automatic activation is not available right now — your access is activated '
+                                   + 'the next time you open this page, or ' + portalKontaktHtml() + '.', false);
+      return konec('Your payment is safe, but it could not be confirmed right now (error ' + x.s + '). Reload this page in a minute.', false);
+    })
+    .catch(function(){
+      if(poskus < 3){ setTimeout(function(){ portalAktivirajNakup(seja, poskus + 1); }, 4000); return; }
+      konec('The server is not responding. Your payment is safe — reload this page in a minute and your access will be activated.', false);
+    });
+}
+
+// ── a key typed in by hand (other device, or a key sent by e-mail) ──
 function portalAktiviraj(vir){
-  var inp = document.getElementById(vir || 'lic-kljuc'), k = ((inp && inp.value) || '').trim().toUpperCase();
-  if(!k){ portalStanjeIzpis('Enter the access key you received by e-mail.', 'opoz'); return; }
-  try{ localStorage.setItem(PORTAL_KLJUC, k); }catch(e){}
-  PORTAL.veljavna = null; PORTAL.do = '';
-  if(!portalApi() && !(typeof jfLokalno === 'function' && jfLokalno())){
+  var inp = document.getElementById(vir || 'lic-kljuc'), k = ((inp && inp.value) || '').trim().toUpperCase().replace(/\s+/g, '');
+  if(!k){ portalStanjeIzpis('Enter your access key (TC-XXXX-XXXX-XXXX-XXXX).', 'opoz'); return; }
+  portalPisi(PORTAL_KLJUC, k);
+  PORTAL.veljavna = null; PORTAL.do = ''; PORTAL.info = {}; PORTAL.nov = false; PORTAL.vidim = false; PORTAL.napaka = '';
+  if(!portalApi() && !portalLokalno()){
     portalStanjeIzpis('Key saved. Live signals switch on as soon as the feed goes online.', 'ok');
     portalZavihekFeed(); return;
   }
   portalStanjeIzpis('Checking your key …', '');
   portalPreveri(k).then(function(o){
-    if(!o || o.valid === false){
-      PORTAL.veljavna = false;
-      portalStanjeIzpis('This key is not valid, or the subscription has expired.', 'nap');
-    } else {
-      PORTAL.veljavna = true; PORTAL.do = o.until || '';
-      portalStanjeIzpis('Subscription active' + (/^\d{4}-/.test(PORTAL.do) ? ' until ' + portalDatum(PORTAL.do) : '')
-        + '. Live signals are now unlocked in the Divergence Feed.', 'ok');
-    }
-    portalZavihekFeed(); portalLicencaGumbi();
+    portalSprejmi(o || {valid: false});
+    portalZavihekFeed(); portalLicencaRender();
+    if(PORTAL.veljavna) portalStanjeIzpis('Key accepted — live signals are unlocked on this device.', 'ok');
     try{ jfPonastavi(); }catch(e){}
   }).catch(function(){
     portalStanjeIzpis('The server is not responding. Please try again in a few minutes.', 'nap');
   });
 }
-function portalOdjava(){
-  try{ localStorage.removeItem(PORTAL_KLJUC); }catch(e){}
-  PORTAL.veljavna = null; PORTAL.do = '';
+function portalPotekloBesedilo(){
+  return /^\d{4}-/.test((PORTAL.info && PORTAL.info.until) || '')
+    ? 'This subscription ended on ' + portalDatum(PORTAL.info.until) + '. Subscribe again to unlock live signals.'
+    : 'This key is not valid, or the subscription has expired.';
+}
+function portalOdjava(takoj){
+  if(!takoj && (!PORTAL.brisem || Date.now() - PORTAL.brisem > 6000)){
+    PORTAL.brisem = Date.now();
+    var b = document.getElementById('lic-odjava'); if(b) b.textContent = 'SURE? CLICK AGAIN TO REMOVE';
+    portalStanjeIzpis('Copy your key first — without it, live signals cannot be opened again on this device.', 'opoz');
+    setTimeout(function(){
+      if(PORTAL.brisem && Date.now() - PORTAL.brisem >= 6000){
+        PORTAL.brisem = 0; var b2 = document.getElementById('lic-odjava'); if(b2) b2.textContent = 'REMOVE KEY FROM THIS DEVICE';
+      }
+    }, 6100);
+    return;
+  }
+  PORTAL.brisem = 0;
+  portalPisi(PORTAL_KLJUC, '');
+  PORTAL.veljavna = null; PORTAL.do = ''; PORTAL.info = {}; PORTAL.nov = false; PORTAL.vidim = false;
   portalZavihekFeed(); portalLicencaRender();
   try{ jfPonastavi(); }catch(e){}
 }
+function portalKljucPokazi(){
+  PORTAL.vidim = !PORTAL.vidim;
+  var e = document.getElementById('lic-moj-kljuc'), b = document.getElementById('lic-pokazi');
+  if(e) e.textContent = PORTAL.vidim ? portalKljuc() : portalSkrijKljuc(portalKljuc());
+  if(b) b.textContent = PORTAL.vidim ? 'HIDE' : 'SHOW';
+}
+function portalKljucKopiraj(){
+  var k = portalKljuc(); if(!k) return;
+  var ok = function(){ portalStanjeIzpis('Key copied. On your other device: AI PRO → <i>Already subscribed?</i> → paste it.', 'ok'); };
+  var rocno = function(){
+    try{
+      var t = document.createElement('textarea'); t.value = k; t.setAttribute('readonly', '');
+      t.style.position = 'fixed'; t.style.top = '0'; t.style.opacity = '0';
+      document.body.appendChild(t); t.select(); var r = document.execCommand('copy'); document.body.removeChild(t);
+      if(r){ ok(); return; }
+    }catch(e){}
+    if(!PORTAL.vidim) portalKljucPokazi();
+    portalStanjeIzpis('Select the key above and copy it.', 'opoz');
+  };
+  try{
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(k).then(ok, rocno); return; }
+  }catch(e){}
+  rocno();
+}
+// Stripe customer portal: change the card, invoices, cancel — then Stripe sends the subscriber back with ?portal=1
+function portalUpravljaj(){
+  var api = portalApi(), k = portalKljuc(); if(!api || !k) return;
+  var b = document.getElementById('lic-upravljaj');
+  if(b){ b.disabled = true; b.textContent = 'OPENING STRIPE …'; }
+  var nazaj = function(){ if(b){ b.disabled = false; b.textContent = 'MANAGE SUBSCRIPTION'; } };
+  var ret = location.href.split('#')[0].split('?')[0] + '?portal=1';
+  fetch(api + '/stripe/portal', {method: 'POST', cache: 'no-store',
+        headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + k}, body: JSON.stringify({return_url: ret})})
+    .then(portalOdgovor)
+    .then(function(x){
+      if(x.s === 200 && x.o.url){ location.href = x.o.url; return; }
+      nazaj();
+      portalStanjeIzpis(x.s === 503
+        ? 'Subscription management is not switched on yet. To change or cancel your subscription, please ' + portalKontaktHtml() + '.'
+        : (x.s === 404 ? 'This key was not bought by card, so there is no Stripe subscription to manage.'
+                       : 'The Stripe page could not be opened right now. Please try again in a minute.'), 'nap');
+    })
+    .catch(function(){ nazaj(); portalStanjeIzpis('The server is not responding. Please try again in a minute.', 'nap'); });
+}
 
-var PORTAL_OPOZORILO = '<b>Not financial advice.</b> TradeCore signals are information only. The suggested stop loss and take profit '
-  + 'are calculated automatically by our algorithm; whether and how you trade is your own decision. Trading crypto futures '
-  + 'with leverage is high risk and you can lose all of your capital. Past results do not guarantee future results. '
-  + 'Our robot trades these signals on a Binance demo account, not with real money.';
+var PORTAL_OPOZORILO = '<b>Not financial advice.</b> TradeCore signals are information only. The stop loss and take profit are ours — '
+  + 'calculated automatically by our algorithm for each strategy. Treat every signal as a suggestion: whether and how you trade is your '
+  + 'own decision. Trading crypto futures with leverage is high risk and you can lose all of your capital. Past results do not guarantee '
+  + 'future results. Our live robot trades the 1-hour to weekly signals; their statistics since 14 Oct 2026 are simulated on Binance Futures '
+  + 'prices for every signal (fees included). 5-minute signals come from our testing robot on a Binance demo account, not real money.';
 
-// ── AI PRO page ──
-function portalLicencaRender(){
-  var el = document.getElementById('ai-licenca'); if(!el) return;
-  var cena = portalCena(), cd = cena.split('/'), k = portalKljuc(), mail = portalKontakt();
-  el.innerHTML = '<div class="lic">'
-    + (PORTAL.hvala ? '<div class="lic-hvala"><b>Thank you for subscribing!</b> Your personal access key will arrive by e-mail '
-        + 'within 24 hours. Enter it below to unlock the live feed.</div>' : '')
-    + '<div class="lic-glava"><div class="lic-oznaka">TRADECORE AI PRO · SUBSCRIPTION</div>'
-    + '<h2>Live divergence signals</h2>'
-    + '<p>Our scanner watches the most traded Binance pairs on 5-minute charts around the clock. When it finds an RSI '
-    + 'divergence, our robot takes the trade — and AI PRO subscribers see the same signal at the same moment: the chart, '
-    + 'the entry, the stop loss and the take profit.</p></div>'
-    + '<div class="lic-telo lic-dva"><div>'
-    + '<ul class="lic-seznam">'
-    + '<li>Live signals from all four strategies — 1B, 1C, 1D and 1E</li>'
-    + '<li>Suggested entry, stop loss and take profit for every signal</li>'
+// ── AI PRO page: activation, my subscription, or the offer ──
+function portalVkljucenoHtml(){
+  return '<li>Live signals of our live robot on 1-hour, 4-hour, daily and weekly charts — the moment they fire</li>'
+    + '<li>An e-mail alert for every new signal, with the chart, entry, stop loss and take profit</li>'
+    + '<li>Our entry, stop loss and take profit for each of the four strategies (1B, 1C, 1D and 1E)</li>'
     + '<li>The divergence chart of every signal — price and RSI on the same candles</li>'
-    + '<li>Pending entries, open trades with their current result, closed trades with their outcome</li>'
-    + '<li>Updates about every 30 seconds</li></ul>'
-    + (cena ? '<div class="lic-cena">' + portalEsc(cd[0].trim()) + '<small>' + (cd[1] ? '/ ' + portalEsc(cd[1].trim()) + ' · ' : '') + 'cancel anytime</small></div>' : '')
+    + '<li>Waiting entries, open trades with their current result, closed trades with their outcome</li>'
+    + '<li>Updates about every 30 seconds</li>';
+}
+function portalCenaHtml(){
+  var cena = portalCena(), cd = cena.split('/');
+  return cena ? portalEsc(cd[0].trim()) + '<small>' + (cd[1] ? '/ ' + portalEsc(cd[1].trim()) + ' · ' : '') + 'cancel anytime</small>' : '';
+}
+function portalOpozoriloHtml(){
+  var mail = portalKontakt();
+  return '<div class="lic-opozorilo">' + PORTAL_OPOZORILO
+    + (mail ? '<br>Questions: <a href="mailto:' + portalEsc(mail) + '">' + portalEsc(mail) + '</a>' : '') + '</div>';
+}
+function portalAktivacijaHtml(){
+  return '<div class="lic"><div class="lic-glava"><div class="lic-oznaka">TRADECORE AI PRO</div>'
+    + '<h2><span class="lic-cakaj" aria-hidden="true"></span>Activating your subscription …</h2>'
+    + '<p>' + (PORTAL.cakam ? 'Your bank is still confirming the payment. This page keeps checking — please leave it open.'
+                            : 'Thank you for your payment! We are confirming it with Stripe — this takes a few seconds.') + '</p></div></div>';
+}
+function portalNarocnikHtml(){
+  var i = PORTAL.info || {}, k = portalKljuc(), d = portalDatum(PORTAL.do), datum = /^\d{4}-/.test(PORTAL.do || '');
+  var stanje, razred = '';
+  if(PORTAL.veljavna !== true){
+    stanje = (!portalApi() && !portalLokalno()) ? 'Key saved — live signals switch on as soon as the feed goes online.'
+                                                : 'Checking your subscription …';
+    razred = ' cakam';
+  } else if(i.status === 'past_due'){
+    stanje = 'Payment failed — please update your card (Manage subscription).' + (datum ? ' Access stays open until ' + d + '.' : '');
+    razred = ' opoz';
+  } else if(i.cancelled){
+    stanje = 'Cancelled — it will not renew.' + (datum ? ' Live signals stay open until ' + d + '.' : ''); razred = ' opoz';
+  } else if(i.renews){
+    stanje = 'Active' + (datum ? ' · renews automatically on ' + d : '');
+  } else {
+    stanje = 'Active' + (datum ? ' until ' + d : '');
+  }
+  return '<div class="lic">'
+    + (PORTAL.nov ? '<div class="lic-hvala"><b>Welcome to AI PRO!</b> Your payment went through and live signals are unlocked on this device. '
+                  + 'Save your access key below to use them on your other devices too.</div>' : '')
+    + '<div class="lic-glava"><div class="lic-oznaka">TRADECORE AI PRO · MY SUBSCRIPTION</div>'
+    + '<h2>' + (PORTAL.veljavna === true ? 'Your subscription is active' : 'Your subscription') + '</h2>'
+    + '<div class="lic-st' + razred + '"><span class="lic-tocka" aria-hidden="true"></span><span>' + stanje + '</span></div>'
+    + (i.email ? '<div class="lic-pod2">Subscribed as ' + portalEsc(i.email) + (i.test ? ' · <b>TEST PAYMENT</b>' : '') + '</div>' : '')
+    + '</div>'
+    + '<div class="lic-telo lic-dva"><div>'
+    + '<div class="lic-gumbi"><button class="lic-kupi" onclick="nav(\'df\')">OPEN LIVE SIGNALS →</button></div>'
+    + '<ul class="lic-seznam">' + portalVkljucenoHtml() + '</ul>'
+    + '</div><div>'
+    + '<div class="lic-moj"><label>YOUR ACCESS KEY</label>'
+    + '<div class="lic-moj-vrsta"><code id="lic-moj-kljuc">' + portalEsc(PORTAL.vidim ? k : portalSkrijKljuc(k)) + '</code>'
+    + '<button id="lic-pokazi" onclick="portalKljucPokazi()">' + (PORTAL.vidim ? 'HIDE' : 'SHOW') + '</button>'
+    + '<button onclick="portalKljucKopiraj()">COPY</button></div>'
+    + '<p>Your personal key — keep it private. On your phone or another computer: AI PRO → <i>Already subscribed?</i> → paste the key.</p></div>'
+    + '<div class="lic-gumbi">'
+    + (i.card ? '<button class="lic-odpri" id="lic-upravljaj" onclick="portalUpravljaj()">MANAGE SUBSCRIPTION</button>' : '')
+    + '<button class="lic-odjava" id="lic-odjava" onclick="portalOdjava()">REMOVE KEY FROM THIS DEVICE</button></div>'
+    + (i.card ? '<div class="lic-pod">Manage subscription opens the secure Stripe page: change your card, download invoices or cancel.</div>' : '')
+    + '<div id="lic-stanje" class="lic-stanje"></div>'
+    + '</div></div>'
+    + portalOpozoriloHtml()
+    + '</div>';
+}
+function portalPonudbaHtml(){
+  var k = portalKljuc();
+  return '<div class="lic">'
+    + (PORTAL.hvala ? '<div class="lic-hvala"><b>Thank you for subscribing!</b> Enter your access key below to unlock the live feed.</div>' : '')
+    + (PORTAL.napaka ? '<div class="lic-opoz-box"><b>YOUR PAYMENT</b> · ' + PORTAL.napaka + '</div>' : '')
+    + '<div class="lic-glava"><div class="lic-oznaka">TRADECORE AI PRO · SUBSCRIPTION</div>'
+    + '<h2>Live divergence signals — 1 hour to 1 week</h2>'
+    + '<p>Our scanner watches the most traded Binance pairs around the clock on 1-hour, 4-hour, daily and weekly charts, and our live robot '
+    + 'trades the signals. When it finds an RSI divergence, AI PRO subscribers see the signal at once — the chart, the entry, our stop loss '
+    + 'and our take profit — and get it by e-mail.</p></div>'
+    + '<div class="lic-telo lic-dva"><div>'
+    + '<ul class="lic-seznam">' + portalVkljucenoHtml() + '</ul>'
+    + '<div class="lic-cena" id="lic-cena">' + portalCenaHtml() + '</div>'
     + '<div class="lic-gumbi"><button class="lic-kupi" onclick="portalKupi()">SUBSCRIBE WITH CARD</button></div>'
-    + '<div class="lic-pod">Secure card payment through Stripe.</div>'
+    + '<div class="lic-pod">Secure card payment through Stripe. Cancel anytime.</div>'
     + '</div><div>'
     + '<div class="lic-koraki"><b>HOW IT WORKS</b><ol>'
-    + '<li>Subscribe with your card.</li>'
-    + '<li>Your personal access key arrives by e-mail, within 24 hours.</li>'
-    + '<li>Enter the key below — the live feed unlocks on this device.</li></ol></div>'
+    + '<li>Subscribe with your card on the secure Stripe page.</li>'
+    + '<li>After the payment you come straight back here — live signals unlock at once on this device.</li>'
+    + '<li>Your personal access key is shown here under My subscription: use it to open live signals on your phone or another computer.</li></ol></div>'
     + '<div class="lic-kljuc"><label for="lic-kljuc">Already subscribed?</label>'
     + '<input id="lic-kljuc" type="text" autocomplete="off" spellcheck="false" placeholder="TC-XXXX-XXXX-XXXX-XXXX" value="' + portalEsc(k) + '"'
     + ' onkeydown="if(event.key===\'Enter\')portalAktiviraj(\'lic-kljuc\')">'
@@ -13273,24 +13743,30 @@ function portalLicencaRender(){
     + '<div id="lic-stanje" class="lic-stanje"></div>'
     + '<div class="lic-gumbi" id="lic-gumbi"></div>'
     + '</div></div>'
-    + '<div class="lic-robot"><b>OUR ROBOT TRADES THESE SIGNALS</b>'
-    + '<span>Every signal in the feed is traded automatically by the TradeCore robot, on a Binance Futures demo account.</span>'
+    + '<div class="lic-robot lic-robot-live"><b>OUR LIVE ROBOT · 1 HOUR TO 1 WEEK</b>'
+    + '<span>Our robot trades the 1-hour, 4-hour, daily and weekly signals with the stop loss and take profit you see — profitable on our '
+    + 'statistics since 14 Oct 2026. Every closed trade and its result in R is in the Divergence Feed.</span>'
+    + '<span class="lic-5m">5-minute signals: our testing robot tries different strategies on a Binance demo account — free for everyone, live.</span>'
     + '<span class="lic-kmalu">Robot access for users — coming soon.</span>'
-    + '<span class="lic-kmalu">Telegram and e-mail alerts — coming soon.</span></div>'
-    + '<div class="lic-free">Free for everyone: the last 20 closed trades in the <a href="#" onclick="nav(\'df\');return false;">Divergence Feed</a>.</div>'
-    + '<div class="lic-opozorilo">' + PORTAL_OPOZORILO
-    + (mail ? '<br>Questions: <a href="mailto:' + portalEsc(mail) + '">' + portalEsc(mail) + '</a>' : '') + '</div>'
+    + '<span class="lic-kmalu">Telegram alerts — coming soon.</span></div>'
+    + '<div class="lic-free">Free for everyone in the <a href="#" onclick="nav(\'df\');return false;">Divergence Feed</a>: every closed '
+    + '1-hour to weekly trade since 14 Oct 2026 with its result in R, and the 5-minute testing robot live.</div>'
+    + portalOpozoriloHtml()
     + '</div>';
+}
+function portalLicencaRender(){
+  var el = document.getElementById('ai-licenca'); if(!el) return;
+  if(PORTAL.aktiviram){ el.innerHTML = portalAktivacijaHtml(); return; }
+  var k = portalKljuc();
+  if(k && PORTAL.veljavna !== false){ el.innerHTML = portalNarocnikHtml(); return; }
+  el.innerHTML = portalPonudbaHtml();
   portalLicencaGumbi();
-  if(k){
-    if(PORTAL.veljavna === true) portalStanjeIzpis('Subscription active' + (/^\d{4}-/.test(PORTAL.do) ? ' until ' + portalDatum(PORTAL.do) : '') + '.', 'ok');
-    else if(PORTAL.veljavna === false) portalStanjeIzpis('This key is not valid, or the subscription has expired.', 'nap');
-  }
+  if(k && PORTAL.veljavna === false) portalStanjeIzpis(portalPotekloBesedilo(), 'nap');
 }
 function portalLicencaGumbi(){
   var g = document.getElementById('lic-gumbi'); if(!g) return;
   g.innerHTML = '<button class="lic-odpri" onclick="nav(\'df\')">OPEN DIVERGENCE FEED</button>'
-    + (portalKljuc() ? '<button class="lic-odjava" onclick="portalOdjava()">REMOVE KEY</button>' : '');
+    + (portalKljuc() ? '<button class="lic-odjava" onclick="portalOdjava(1)">REMOVE KEY</button>' : '');
 }
 
 // ── ANALYSIS: promo block ──
@@ -13340,19 +13816,32 @@ function renderAff(){
   var tm = document.getElementById('tc-most'); if(tm) tm.style.display = 'none';
   var sbb = document.getElementById('sb-br-binance'); if(sbb) sbb.href = portalBinance();
   var sbm = document.getElementById('sb-br-mexc'); if(sbm) sbm.href = portalMexc();
-  try{ PORTAL.hvala = /[?&](subscribed|paid)=1\b/.test(location.search); }catch(e){}
+  var q = ''; try{ q = location.search || ''; }catch(e){}
+  var m = /[?&]session_id=(cs_(?:test|live)_[A-Za-z0-9]+)/.exec(q);
+  var seja = m ? m[1] : '';
+  if(!seja){ var s = portalBeri(PORTAL_SEJA); if(/^cs_(test|live)_[A-Za-z0-9]+$/.test(s)) seja = s; }
+  var izPortala = /[?&]portal=1(&|$)/.test(q);
+  PORTAL.hvala = !seja && /[?&](subscribed|paid)=1(&|$)/.test(q);
+  if(izPortala) portalPocistiUrl();
   portalZavihekFeed();
   portalLicencaRender();
   portalOglasRender();
+  portalNaloziNastavitve();
+  if(seja){                                       // back from the Stripe payment (or a payment not activated yet)
+    portalAktivirajNakup(seja, 0);
+    if(m) setTimeout(function(){ try{ nav('ai'); }catch(e){} }, 0);
+    return;
+  }
   var k = portalKljuc();
-  if(k && (portalApi() || (typeof jfLokalno === 'function' && jfLokalno()))){
-    portalPreveri(k).then(function(o){
+  if(k && (portalApi() || portalLokalno())){
+    portalPreveri(k, izPortala).then(function(o){
       if(!o) return;
-      PORTAL.veljavna = (o.valid !== false); PORTAL.do = o.until || '';
+      portalSprejmi(o);
       portalZavihekFeed(); portalLicencaRender();
+      if(izPortala && PORTAL.veljavna) portalStanjeIzpis('Back from Stripe — your subscription details are up to date.', 'ok');
     }).catch(function(){});
   }
-  if(PORTAL.hvala){ setTimeout(function(){ try{ nav('ai'); }catch(e){} }, 0); }
+  if(PORTAL.hvala || izPortala){ setTimeout(function(){ try{ nav('ai'); }catch(e){} }, 0); }
 })();
 
 </script>
