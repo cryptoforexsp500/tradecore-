@@ -13,7 +13,8 @@ var STRIPE_LINK = '';               // Stripe Payment Link — leave empty when 
 var SITE_PRICE = '€29 / month';     // price shown on the site (the real price is set in Stripe)
 var BINANCE_REF_LINK = '';          // your Binance referral link (empty = Binance sign-up page)
 var MEXC_REF_LINK = 'https://promote.mexc.com/r/MA1RGTsxcY';   // your MEXC referral link
-var CONTACT_EMAIL = '';             // support e-mail shown on AI PRO (empty = not shown)
+var CONTACT_EMAIL = 'cryptoforexsp500@gmail.com';   // support e-mail shown on AI PRO (empty = not shown)
+var X_HANDLE = 'Chollocar1';         // X (Twitter) account: pay with crypto, access codes (empty = not shown)
 /* ═══════════════════════════════════════════════════════════ */
 </script>
 <title>TradeCore — RSI Divergence Signals</title>
@@ -1063,6 +1064,106 @@ a.jf-zaklep-free:hover{color:var(--text)}
 .lic-kupi[disabled],.lic-odpri[disabled]{opacity:.6;cursor:wait}
 .lic-moj-vrsta button:focus-visible,.lic-odjava:focus-visible{outline:1px solid var(--blue);outline-offset:2px}
 .lic-stanje a{color:var(--green)}
+/* 26 Oct 2026: e-mail alerts, pay with crypto (X), 🔒 ADMIN — access codes */
+.lic-mail{border:1px solid var(--border2);background:var(--bg3);padding:10px 12px;margin:0 0 12px}
+.lic-mail>label{display:block;color:var(--green);font-size:9px;letter-spacing:.2em;margin-bottom:6px}
+.lic-mail p{color:var(--text2);font-size:10px;line-height:1.6;margin:0 0 8px}
+.lic-mail p i{font-style:normal;color:var(--text)}
+.lic-mail p b,.lic-mail .lic-st b{color:var(--text);font-weight:normal}
+.lic-mail .lic-kljuc{margin:0 0 4px}
+.lic-mail .lic-kljuc input{width:auto;flex:1 1 190px;min-width:0}
+.lic-mail .lic-gumbi{margin:0 0 4px}
+.lic-mail-g{font-size:10px!important;padding:6px 12px!important}
+p.lic-mail-cak{color:var(--amber)}
+/* right after the code: the e-mail for alerts (full width, under MY SUBSCRIPTION) */
+.lic-poziv{padding:16px 22px;border-bottom:1px solid var(--green);background:rgba(0,232,122,.06)}
+.lic-poziv .lic-mail-velik{border:1px solid var(--green);background:var(--bg2);margin:0;padding:14px 16px;max-width:680px}
+.lic-poziv-n{display:flex;align-items:center;gap:8px;color:var(--green);font-size:10px;letter-spacing:.16em;margin:0 0 6px}
+.lic-mail-velik h3{color:var(--text);font-size:15px;font-weight:bold;letter-spacing:.03em;margin:4px 0 8px}
+.lic-mail-velik p{font-size:10.5px}
+.lic-mail-velik .lic-kljuc input{font-size:12px;padding:9px 11px}
+.lic-mail-velik .lic-kljuc button{background:var(--green);color:#03140b;border-color:var(--green);font-weight:bold}
+.lic-mail-ne{font-family:inherit;font-size:9px;letter-spacing:.14em;background:none;border:0;color:var(--text2);cursor:pointer;padding:6px 0 0;
+  text-decoration:underline;text-underline-offset:3px}
+.lic-mail-ne:hover{color:var(--text)}
+.lic-prosnja{display:flex;flex-direction:column;gap:6px;margin:14px 0 12px;padding:10px 12px;border:1px solid var(--border2);
+  background:var(--bg3);font-size:10.5px;line-height:1.6;color:var(--text2)}
+.lic-prosnja>b{color:var(--text);font-weight:normal;letter-spacing:.15em;font-size:9px}
+.lic-prosnja .lic-kljuc{margin:2px 0 0}
+.lic-prosnja .lic-kljuc input{width:auto;flex:1 1 190px;min-width:0}
+.lic-prosnja .lic-kljuc button{color:var(--green);border-color:var(--green)}
+.lic-x-info{font-size:9.5px;color:var(--text2)} .lic-x-info a{color:var(--green)}
+.jf-zaklep-dva{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start;margin-top:12px}
+.jf-zaklep-dva .lic-prosnja{margin:0}
+.jf-koda{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px 12px;border:1px solid var(--border2);background:var(--bg3)}
+.jf-koda label{color:var(--text2);font-size:10px;flex:1 1 100%}
+.jf-koda input{background:var(--bg2);border:1px solid var(--border2);color:var(--text);font-family:inherit;font-size:11px;padding:8px 10px;
+  flex:1 1 190px;min-width:0;letter-spacing:.06em}
+.jf-koda button{font-family:inherit;cursor:pointer;letter-spacing:.12em;font-size:11px;padding:8px 14px;background:none;color:var(--text);
+  border:1px solid var(--border2)}
+.jf-koda button:hover{border-color:var(--green);color:var(--green)}
+@media (max-width:760px){.jf-zaklep-dva{grid-template-columns:1fr}}
+.pa-znacka{display:inline-block;min-width:16px;padding:0 4px;margin-left:4px;border-radius:8px;background:var(--amber);color:#1a1200;
+  font-size:9px;line-height:16px;text-align:center;letter-spacing:0}
+.pa-ck{flex-direction:row!important;align-items:center;gap:6px!important;flex:1 1 100%;font-size:10px!important;color:var(--text)!important}
+.pa-ck input{width:auto!important}
+a.jf-cta-x{background:none;color:var(--text);border:1px solid var(--border2);text-decoration:none;font-weight:normal}
+a.jf-cta-x:hover{border-color:var(--green);color:var(--green)}
+a.lic-adm{display:inline-block;margin-top:8px;color:var(--text3);font-size:9px;text-decoration:none;letter-spacing:.15em}
+a.lic-adm:hover{color:var(--text2)}
+.tab-adm{color:var(--amber)!important}
+#page-adm{overflow-y:auto!important;overflow-x:hidden;background:var(--bg)}
+#pa-body{max-width:1040px;margin:0 auto;padding:20px 20px 30px}
+.pa{border-top-color:var(--amber)}
+.pa-glava{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px}
+.pa-glava .lic-gumbi{margin:0}
+.pa .lic-glava p i{font-style:normal;color:var(--text)}
+.pa-sek{border-top:1px solid var(--border);padding:14px 0 6px}
+.lic-telo>.pa-sek:first-of-type{border-top:0;padding-top:2px}
+.pa-n{color:var(--amber);font-size:9px;letter-spacing:.2em;margin:0 0 10px}
+.pa-forma{display:flex;flex-wrap:wrap;gap:10px 14px;margin:0 0 12px}
+.pa-forma label{display:flex;flex-direction:column;gap:4px;color:var(--text2);font-size:9px;letter-spacing:.06em}
+.pa-forma input,.pa-forma select,.pa-orodja input{background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:inherit;
+  font-size:11px;padding:7px 9px;min-width:0}
+.pa-forma input[type=number]{width:90px}
+.pa-forma input:focus-visible,.pa-forma select:focus-visible,.pa-orodja input:focus-visible,.pa-f:focus-visible,.pa-akc button:focus-visible,
+.pa-em button:focus-visible{outline:1px solid var(--blue);outline-offset:2px}
+.pa-siroko{flex:1 1 260px}
+.pa-pod{color:var(--text2);font-size:10px;line-height:1.6;margin:0 0 10px}
+.pa-pod b{color:var(--text);font-weight:normal}
+.pa-nova{border:1px solid var(--green);background:rgba(0,232,122,.04);padding:12px;margin:4px 0 12px}
+.pa-n2{color:var(--green);font-size:10px;letter-spacing:.12em;margin:0 0 8px}
+.pa-n3{display:block;color:var(--text2);font-size:9px;letter-spacing:.15em;margin:10px 0 4px}
+.pa-koda{margin:0 0 6px}
+.pa-nova textarea{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:inherit;font-size:11px;
+  line-height:1.5;padding:8px 10px;resize:vertical;margin:0 0 10px}
+a.pa-x{text-decoration:none;display:inline-block}
+.pa-orodja{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 10px}
+.pa-f{font-family:inherit;font-size:10px;letter-spacing:.1em;padding:6px 10px;background:none;color:var(--text2);border:1px solid var(--border2);cursor:pointer}
+.pa-f.on{color:var(--green);border-color:var(--green)}
+.pa-orodja input{flex:1 1 200px}
+.pa-povz{color:var(--text2);font-size:10px}
+.pa-ovoj{overflow-x:auto;border:1px solid var(--border)}
+.pa-tab{width:100%;border-collapse:collapse;font-size:10.5px;min-width:820px}
+.pa-tab th{color:var(--text2);font-weight:normal;font-size:9px;letter-spacing:.12em;text-align:left;padding:7px 8px;border-bottom:1px solid var(--border2);white-space:nowrap}
+.pa-tab td{padding:6px 8px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:top;white-space:nowrap}
+.pa-tab code{font-family:inherit;color:var(--text)}
+.pa-tab tr.pa-ne td{color:var(--text3)}
+.pa-tab td.pa-op{white-space:normal;max-width:280px;overflow-wrap:anywhere;color:var(--text2)}
+.pa-akc{text-align:right}
+.pa-akc button,.pa-em button{font-family:inherit;font-size:9px;letter-spacing:.1em;padding:4px 8px;margin-left:4px;background:none;color:var(--text);
+  border:1px solid var(--border2);cursor:pointer}
+.pa-akc button:hover,.pa-em button:hover{border-color:var(--green);color:var(--green)}
+.pa-akc button.pa-rdeca{color:var(--red);border-color:rgba(255,68,85,.5)}
+.pa-akc button.pa-rdeca.res{background:var(--red);color:#fff;border-color:var(--red)}
+.pa-ok{color:var(--green)} .pa-nap{color:var(--red)} .pa-siv{color:var(--text3)}
+.pa-tab tr.pa-em td{background:var(--bg3);white-space:normal}
+.pa-em ul{list-style:none;margin:0;padding:0;display:grid;gap:5px}
+.pa-em li{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.pa-em li b{color:var(--text);font-weight:normal}
+.pa-mailodj input{width:260px}
+@media (max-width:760px){#pa-body{padding:14px 12px 24px}.pa-mailodj input{width:100%}}
+@media (max-width:768px){#t-adm{order:-1}}
 
 /* BEST BROKERS */
 body.javno .aff-stats-row{display:none}
@@ -1120,6 +1221,7 @@ body.javno .jv-paper,body.javno #paper-summary-cr{display:none!important}
     <div class="tab" onclick="nav('dev')" id="t-dev" style="color:var(--amber)">DEVIATION SCAN</div>
     <div class="tab" onclick="nav('df')" id="t-df" style="color:var(--green)">DIVERGENCE FEED</div>
     <div class="tab" onclick="nav('ai')" id="t-ai" style="color:#a855f7;border-left:1px solid var(--border)">🤖 AI PRO</div>
+    <div class="tab tab-adm" onclick="nav('adm')" id="t-adm" style="display:none" title="samo admin: kode naročnikov">🔒 ADMIN</div>
   </div>
   <div class="topbar-right">
     <div id="start-time-badge" style="font-size:9px;color:var(--text3);letter-spacing:.08em;padding:2px 8px;border:1px solid var(--border);cursor:pointer" title="Click for alarm history" onclick="nav('home');setTimeout(()=>document.getElementById('section-alarmlog').scrollIntoView({behavior:'smooth'}),100)">⏻ --:--:--</div>
@@ -1655,6 +1757,9 @@ body.javno .jv-paper,body.javno #paper-summary-cr{display:none!important}
   </div>
 </div>
 
+
+<!-- 🔒 ADMIN (26 Oct 2026): the admin password → LIVE and the access codes on any device; open with <site>/#admin -->
+<div class="page" id="page-adm"><div id="pa-body"></div></div>
 
 <div class="page" id="page-df">
   <div class="status-bar">
@@ -2546,7 +2651,7 @@ const MY_POSTS=[];   // public site: the sample posts with made-up comments and 
 // zavrne ("ni kripto"), skeniranje pa je jemalo cas in polnilo feed. Za vrnitev
 // nastavi SP500_VKLOPLJEN na true in dodaj 'sp500' nazaj v TABS.
 const SP500_VKLOPLJEN = false;
-const TABS=TC_JAVNO ? ['home','crypto','strat','aff','dev','df','ai']
+const TABS=TC_JAVNO ? ['home','crypto','strat','aff','dev','df','ai','adm']
                     : ['home','crypto','strat','aff','dev','b1','c1','pv','ai'];
 function nav(p){
   // Stari shranjeni signali lahko se vedno kazejo na zavihek, ki ga ni vec
@@ -2569,6 +2674,7 @@ function nav(p){
   if(p==='b1'){ if(TC_JAVNO && !portalImaDostop()){ portalPaywall(); } else { portalB1Odkleni(); b1Osvezi(); } }
   if(p==='pv') pvOdpri();
   if(p==='df') jfOdpri();
+  if(p==='adm' && typeof paOdpri==='function') paOdpri();
   if(p==='c1'){c1NaslovRender();c1PogledRender();c1Osvezi();}
   if(p==='an') anOdpri();
   if(p==='st') stOdpri();
@@ -12840,11 +12946,14 @@ function jfNalozi(tiho){
   if(!JF.podatki && !tiho) el.innerHTML = '<div class="jf-nalagam">Loading signals …</div>';
   JF.nalagam = true;
   var moja = ++JF.zahteva, zivo = jfZivo(), lok = jfLokalno();
-  var glave = (zivo && !lok) ? {'Authorization': 'Bearer ' + portalKljuc()} : {};
+  // 26 Oct 2026: the subscriber's code — or, on the public site, the admin session (admin password) when there is no valid code
+  var glave = (zivo && !lok) ? {'Authorization': 'Bearer ' + (typeof portalZeton === 'function' ? portalZeton() : portalKljuc())} : {};
   jfGet(api + (zivo ? '/feed/live' : '/feed/public'), glave).then(function(o){
     if(moja !== JF.zahteva) return null;
     if(zivo && o && o.pics_v && o.pics_v !== JF.slikeV){
-      return jfGet(api + '/feed/live/pics', glave).then(function(p){ JF.slike = (p && p.pics) || {}; JF.slikeV = o.pics_v; return o; });
+      return jfGet(api + '/feed/live/pics', glave).then(function(p){ JF.slike = (p && p.pics) || {}; JF.slikeV = o.pics_v; return o; },
+        // 26 Oct 2026: pictures missing for a moment (404, network) — show the live signals anyway, the pictures come next time
+        function(e){ if(e && (e.status === 401 || e.status === 403)) throw e; return o; });
     }
     if(!zivo){ JF.slike = (o && o.pics) || {}; JF.slikeV = ''; }
     return o;
@@ -12859,6 +12968,8 @@ function jfNalozi(tiho){
     if(moja !== JF.zahteva) return;
     JF.nalagam = false;
     if(e && (e.status === 401 || e.status === 403) && zivo && !lok){
+      // the admin session was refused (ended, password changed): the admin is logged out, the feed reloads (portalZavrnjen)
+      if(typeof portalZavrnjen === 'function' && portalZavrnjen(glave)) return;
       PORTAL.veljavna = false; portalZavihekFeed(); try{ portalLicencaRender(); }catch(x){}
       JF.opozorilo = 'Your access key is not valid or the subscription has expired, so you see the free feed. Renew in AI PRO.';
       JF.tab = 'free'; JF.slikeV = ''; JF.podpis = '';
@@ -12944,7 +13055,7 @@ function jfGlava(){
   if(JF.nacin === 'live'){
     h += '<div class="jf-ban jf-ban-live"><span class="jf-ban-t"><span class="pt-live">● LIVE</span> AI PRO · '
       + (robot ? '<b>' + tf + '</b> — ' + JF_TF_NAPIS[tf] + ' signals of our live robot the moment they fire, all four strategies · '
-                 + 'an e-mail for every new signal'
+                 + 'an e-mail for every signal, take profit and stop loss'
                : '<b>5 MIN</b> <span class="jf-5m-z">TESTING · DEMO</span> — our testing robot on a Binance demo account')
       + (PORTAL.do ? ' · subscription active until <b>' + jfEsc(jfDatum(PORTAL.do)) + '</b>' : '')
       + ' · <a href="#" class="jf-moja" onclick="nav(\'ai\');return false;">MY SUBSCRIPTION</a></span></div>';
@@ -12971,7 +13082,7 @@ function jfTabi(){
   var t = jfTab(), lok = jfLokalno(), dostop = lok || portalImaDostop();
   var opis = t === 'live'
     ? (dostop ? 'Everything live: new signals of our live robot the moment they fire, waiting entries, open trades with their current result '
-                + '— and an e-mail for every new signal.'
+                + '— and an e-mail for every new signal, take profit and stop loss.'
               : 'Live signals and e-mail alerts are part of AI PRO.')
     : 'Free for everyone: the 5-minute testing robot live, and every closed 1-hour to weekly trade of our live robot with its result.';
   return '<div class="jf-zavi" role="tablist" aria-label="Free or live feed">'
@@ -12991,16 +13102,18 @@ function jfZaklep(){
     + '<p>See every signal of our live robot the moment it fires — not only after the trade has closed.</p>'
     + '<ul class="jf-zaklep-s">'
     + '<li>New 1-hour, 4-hour, daily and weekly signals at once: the chart, our entry, stop loss and take profit for 1B, 1C, 1D and 1E</li>'
-    + '<li>An e-mail alert with the chart for every new signal</li>'
+    + '<li>An e-mail for every new signal (with the chart) and for every take profit and stop loss</li>'
     + '<li>Waiting entries and open trades with their current result</li></ul>'
     + (odp + ck ? '<div class="jf-zdaj">Right now in LIVE: <b>' + odp + '</b> open trade' + (odp === 1 ? '' : 's') + ' and <b>' + ck
                   + '</b> waiting entr' + (ck === 1 ? 'y' : 'ies') + ' on 1-hour to weekly charts.</div>' : '')
     + (R && R.zaprtih ? '<div class="jf-zaklep-r">Our live robot on our statistics since ' + jfEsc(jfRobotOd(R)) + ': <b style="color:'
                         + jfBarva(R.r) + '">' + jfR(R.r) + '</b> on ' + R.zaprtih + ' closed trades.</div>' : '')
     + '<div class="jf-zaklep-g"><button class="jf-cta" onclick="jfNarocilo()">SUBSCRIBE' + (cena ? ' · ' + jfEsc(cena) : '') + ' →</button>'
-    + '<a href="#" class="jf-moja" onclick="nav(\'ai\');return false;">ALREADY SUBSCRIBED? ENTER YOUR KEY</a>'
+    + (typeof portalProsnjaHtml === 'function' ? ''
+       : '<a href="#" class="jf-moja" onclick="nav(\'ai\');return false;">ALREADY SUBSCRIBED? ENTER YOUR KEY</a>')
     + '<a href="#" class="jf-zaklep-free" onclick="jfTabIzberi(\'free\');return false;">← back to FREE</a></div>'
     + '<div class="jf-s-pod">Secure card payment through Stripe · cancel anytime · not financial advice.</div>'
+    + (typeof portalProsnjaHtml === 'function' ? '<div class="jf-zaklep-dva">' + portalProsnjaHtml('jf') + portalKodaHtml('jf') + '</div>' : '')
     + '</div>';
 }
 function jfNarocilo(){
@@ -13420,7 +13533,8 @@ function portalBeri(k){ try{ return localStorage.getItem(k) || ''; }catch(e){ re
 function portalPisi(k, v){ try{ if(v) localStorage.setItem(k, v); else localStorage.removeItem(k); }catch(e){} }
 function portalApi(){ return String((typeof JAVNO_API !== 'undefined' && JAVNO_API) || '').replace(/\/+$/, ''); }
 function portalLokalno(){ return typeof jfLokalno === 'function' && jfLokalno(); }
-function portalImaDostop(){ return !!portalKljuc() && PORTAL.veljavna !== false; }
+// 26 Oct 2026: also the admin (admin password on this device)
+function portalImaDostop(){ return (!!portalKljuc() && PORTAL.veljavna !== false) || (typeof portalAdmin === 'function' && !!portalAdmin()); }
 // price and Stripe link: from the server (/config — set in Cloudflare) or from SITE SETTINGS at the top of the page
 function portalCena(){ var c = PORTAL.cfg.price || ''; try{ return c || SITE_PRICE || ''; }catch(e){ return c; } }
 function portalStripe(){ var c = PORTAL.cfg.stripe_link || ''; try{ return c || STRIPE_LINK || ''; }catch(e){ return c; } }
@@ -13430,8 +13544,9 @@ function portalEsc(s){ return String(s === null || s === undefined ? '' : s).rep
 
 // ── tab ──
 function portalZavihekFeed(){
+  var ta = document.getElementById('t-adm'); if(ta) ta.style.display = (portalAdmin() || PA.pokazi) ? '' : 'none';
   var t = document.getElementById('t-df'); if(!t) return;
-  var live = portalImaDostop() && PORTAL.veljavna === true;
+  var live = (portalImaDostop() && PORTAL.veljavna === true) || !!portalAdmin();
   t.innerHTML = 'DIVERGENCE FEED' + (live ? ' <span class="pt-live">● LIVE</span>' : '');
   t.title = live ? 'live signals of our robot and e-mail alerts — AI PRO'
                   : 'free: the 5-minute testing robot live + every closed 1-hour to weekly trade · live signals and e-mail alerts with AI PRO';
@@ -13524,7 +13639,7 @@ function portalAktivirajNakup(seja, poskus){
     .then(function(x){
       var o = x.o;
       if(x.s === 200 && o.key){
-        portalPisi(PORTAL_KLJUC, o.key); portalPisi(PORTAL_SEJA, ''); portalPocistiUrl();
+        portalPisi(PORTAL_KLJUC, o.key); portalPisi(PORTAL_SEJA, ''); portalPocistiUrl(); PORTAL.mail = {};
         PORTAL.aktiviram = false; PORTAL.cakam = false; PORTAL.napaka = ''; PORTAL.nov = (o.valid !== false); PORTAL.vidim = false;
         PORTAL.veljavna = (o.valid !== false); PORTAL.do = o.until || '';
         PORTAL.info = {valid: o.valid !== false, until: o.until || '', card: true, email: o.email || ''};
@@ -13560,7 +13675,7 @@ function portalAktiviraj(vir){
   var inp = document.getElementById(vir || 'lic-kljuc'), k = ((inp && inp.value) || '').trim().toUpperCase().replace(/\s+/g, '');
   if(!k){ portalStanjeIzpis('Enter your access key (TC-XXXX-XXXX-XXXX-XXXX).', 'opoz'); return; }
   portalPisi(PORTAL_KLJUC, k);
-  PORTAL.veljavna = null; PORTAL.do = ''; PORTAL.info = {}; PORTAL.nov = false; PORTAL.vidim = false; PORTAL.napaka = '';
+  PORTAL.veljavna = null; PORTAL.do = ''; PORTAL.info = {}; PORTAL.nov = false; PORTAL.vidim = false; PORTAL.napaka = ''; PORTAL.mail = {};
   if(!portalApi() && !portalLokalno()){
     portalStanjeIzpis('Key saved. Live signals switch on as soon as the feed goes online.', 'ok');
     portalZavihekFeed(); return;
@@ -13568,8 +13683,10 @@ function portalAktiviraj(vir){
   portalStanjeIzpis('Checking your key …', '');
   portalPreveri(k).then(function(o){
     portalSprejmi(o || {valid: false});
+    // 26 Oct 2026: right after the code — where to send the alerts (on top of MY SUBSCRIPTION, the cursor in the field)
+    if(PORTAL.veljavna){ PORTAL.mailPoziv = true; PORTAL.mail.fokus = true; }
     portalZavihekFeed(); portalLicencaRender();
-    if(PORTAL.veljavna) portalStanjeIzpis('Key accepted — live signals are unlocked on this device.', 'ok');
+    if(PORTAL.veljavna) portalStanjeIzpis('Code accepted — live signals are unlocked on this device.', 'ok');
     try{ jfPonastavi(); }catch(e){}
   }).catch(function(){
     portalStanjeIzpis('The server is not responding. Please try again in a few minutes.', 'nap');
@@ -13594,7 +13711,7 @@ function portalOdjava(takoj){
   }
   PORTAL.brisem = 0;
   portalPisi(PORTAL_KLJUC, '');
-  PORTAL.veljavna = null; PORTAL.do = ''; PORTAL.info = {}; PORTAL.nov = false; PORTAL.vidim = false;
+  PORTAL.veljavna = null; PORTAL.do = ''; PORTAL.info = {}; PORTAL.nov = false; PORTAL.vidim = false; PORTAL.mail = {};
   portalZavihekFeed(); portalLicencaRender();
   try{ jfPonastavi(); }catch(e){}
 }
@@ -13606,7 +13723,7 @@ function portalKljucPokazi(){
 }
 function portalKljucKopiraj(){
   var k = portalKljuc(); if(!k) return;
-  var ok = function(){ portalStanjeIzpis('Key copied. On your other device: AI PRO → <i>Already subscribed?</i> → paste it.', 'ok'); };
+  var ok = function(){ portalStanjeIzpis('Key copied. On your other device: AI PRO → <i>Have an access code?</i> → paste it.', 'ok'); };
   var rocno = function(){
     try{
       var t = document.createElement('textarea'); t.value = k; t.setAttribute('readonly', '');
@@ -13652,7 +13769,7 @@ var PORTAL_OPOZORILO = '<b>Not financial advice.</b> TradeCore signals are infor
 // ── AI PRO page: activation, my subscription, or the offer ──
 function portalVkljucenoHtml(){
   return '<li>Live signals of our live robot on 1-hour, 4-hour, daily and weekly charts — the moment they fire</li>'
-    + '<li>An e-mail alert for every new signal, with the chart, entry, stop loss and take profit</li>'
+    + '<li>An e-mail for every new signal — with the chart, entry, stop loss and take profit — and for every take profit and stop loss hit</li>'
     + '<li>Our entry, stop loss and take profit for each of the four strategies (1B, 1C, 1D and 1E)</li>'
     + '<li>The divergence chart of every signal — price and RSI on the same candles</li>'
     + '<li>Waiting entries, open trades with their current result, closed trades with their outcome</li>'
@@ -13663,9 +13780,12 @@ function portalCenaHtml(){
   return cena ? portalEsc(cd[0].trim()) + '<small>' + (cd[1] ? '/ ' + portalEsc(cd[1].trim()) + ' · ' : '') + 'cancel anytime</small>' : '';
 }
 function portalOpozoriloHtml(){
-  var mail = portalKontakt();
+  var mail = portalKontakt(), x = portalX();
   return '<div class="lic-opozorilo">' + PORTAL_OPOZORILO
-    + (mail ? '<br>Questions: <a href="mailto:' + portalEsc(mail) + '">' + portalEsc(mail) + '</a>' : '') + '</div>';
+    + (mail || x ? '<br>Questions: ' : '')
+    + (mail ? '<a href="mailto:' + portalEsc(mail) + '">' + portalEsc(mail) + '</a>' : '')
+    + (x ? (mail ? ' · ' : '') + 'X <a href="' + portalEsc(portalXUrl()) + '" target="_blank" rel="noopener">@' + portalEsc(x) + '</a>' : '')
+    + '<br><a class="lic-adm" href="#admin" onclick="PA.pokazi=true;nav(\'adm\');return false;">admin</a></div>';
 }
 function portalAktivacijaHtml(){
   return '<div class="lic"><div class="lic-glava"><div class="lic-oznaka">TRADECORE AI PRO</div>'
@@ -13698,15 +13818,17 @@ function portalNarocnikHtml(){
     + '<div class="lic-st' + razred + '"><span class="lic-tocka" aria-hidden="true"></span><span>' + stanje + '</span></div>'
     + (i.email ? '<div class="lic-pod2">Subscribed as ' + portalEsc(i.email) + (i.test ? ' · <b>TEST PAYMENT</b>' : '') + '</div>' : '')
     + '</div>'
+    + portalMailPozivHtml()
     + '<div class="lic-telo lic-dva"><div>'
     + '<div class="lic-gumbi"><button class="lic-kupi" onclick="nav(\'df\')">OPEN LIVE SIGNALS →</button></div>'
     + '<ul class="lic-seznam">' + portalVkljucenoHtml() + '</ul>'
     + '</div><div>'
+    + (PORTAL.mailPoziv ? '' : portalMailHtml())
     + '<div class="lic-moj"><label>YOUR ACCESS KEY</label>'
     + '<div class="lic-moj-vrsta"><code id="lic-moj-kljuc">' + portalEsc(PORTAL.vidim ? k : portalSkrijKljuc(k)) + '</code>'
     + '<button id="lic-pokazi" onclick="portalKljucPokazi()">' + (PORTAL.vidim ? 'HIDE' : 'SHOW') + '</button>'
     + '<button onclick="portalKljucKopiraj()">COPY</button></div>'
-    + '<p>Your personal key — keep it private. On your phone or another computer: AI PRO → <i>Already subscribed?</i> → paste the key.</p></div>'
+    + '<p>Your personal key — keep it private. On your phone or another computer: AI PRO → <i>Have an access code?</i> → paste the key.</p></div>'
     + '<div class="lic-gumbi">'
     + (i.card ? '<button class="lic-odpri" id="lic-upravljaj" onclick="portalUpravljaj()">MANAGE SUBSCRIPTION</button>' : '')
     + '<button class="lic-odjava" id="lic-odjava" onclick="portalOdjava()">REMOVE KEY FROM THIS DEVICE</button></div>'
@@ -13731,12 +13853,14 @@ function portalPonudbaHtml(){
     + '<div class="lic-cena" id="lic-cena">' + portalCenaHtml() + '</div>'
     + '<div class="lic-gumbi"><button class="lic-kupi" onclick="portalKupi()">SUBSCRIBE WITH CARD</button></div>'
     + '<div class="lic-pod">Secure card payment through Stripe. Cancel anytime.</div>'
+    + portalProsnjaHtml('ai')
     + '</div><div>'
     + '<div class="lic-koraki"><b>HOW IT WORKS</b><ol>'
     + '<li>Subscribe with your card on the secure Stripe page.</li>'
     + '<li>After the payment you come straight back here — live signals unlock at once on this device.</li>'
-    + '<li>Your personal access key is shown here under My subscription: use it to open live signals on your phone or another computer.</li></ol></div>'
-    + '<div class="lic-kljuc"><label for="lic-kljuc">Already subscribed?</label>'
+    + '<li>Your personal access key is shown here under My subscription: use it to open live signals on your phone or another computer.</li>'
+    + '<li>Add your e-mail under My subscription: one e-mail for every new signal, take profit and stop loss.</li></ol></div>'
+    + '<div class="lic-kljuc"><label for="lic-kljuc">Have an access code?</label>'
     + '<input id="lic-kljuc" type="text" autocomplete="off" spellcheck="false" placeholder="TC-XXXX-XXXX-XXXX-XXXX" value="' + portalEsc(k) + '"'
     + ' onkeydown="if(event.key===\'Enter\')portalAktiviraj(\'lic-kljuc\')">'
     + '<button onclick="portalAktiviraj(\'lic-kljuc\')">ACTIVATE</button></div>'
@@ -13758,7 +13882,7 @@ function portalLicencaRender(){
   var el = document.getElementById('ai-licenca'); if(!el) return;
   if(PORTAL.aktiviram){ el.innerHTML = portalAktivacijaHtml(); return; }
   var k = portalKljuc();
-  if(k && PORTAL.veljavna !== false){ el.innerHTML = portalNarocnikHtml(); return; }
+  if(k && PORTAL.veljavna !== false){ el.innerHTML = portalNarocnikHtml(); portalMailNalozi(); return; }
   el.innerHTML = portalPonudbaHtml();
   portalLicencaGumbi();
   if(k && PORTAL.veljavna === false) portalStanjeIzpis(portalPotekloBesedilo(), 'nap');
@@ -13808,6 +13932,533 @@ function renderAff(){
     + '</div>';
 }
 
+// ══════════════════════════════════════
+// 26 Oct 2026 — Matic: "dodaj mi še admin geslo, da lahko dostopam … za kodo me kontaktira na Twitter, kjer se dogovoriva
+// za plačilo v kripto, in mu pošljem kodo, ki jo lahko kadarkoli prekličem … vsak, ki se naroči, dobi mail iz
+// cryptoforexsp500@gmail.com, tudi če samo ročno vpiše kodo, ki jih bom kot nagradno igro delil na Twitterju …
+// maili morajo biti tudi za SL in TP."
+//   · 🔒 ADMIN: <site>/#admin (or the 🔒 ADMIN tab once logged in). The admin password (ADMIN_PASSWORD in Cloudflare) gives an
+//     admin session (30 days) on this device: LIVE without a code, and the access codes — new (crypto, giveaway, gift, test),
+//     extend, revoke, their e-mail addresses. The admin panel is in Slovenian (only Matic sees it).
+//   · REQUEST ACCESS (Matic: »na live dodaj opcijo: pošlji e-mail, ko ga nekdo vpiše … twitter kot povezavo informativno …
+//     vnos aktivacijske kode, ki jo lahko pošlješ preko e-maila«): on LIVE and in AI PRO a visitor leaves an e-mail →
+//     Matic gets an e-mail (reply goes to the visitor) → 🔒 ADMIN → PROŠNJE → a code by e-mail. X is an information link.
+//   · E-MAIL ALERTS: a subscriber with any code enters an e-mail in MY SUBSCRIPTION → a confirmation e-mail from
+//     cryptoforexsp500@gmail.com (sent by OBJAVI-SIGNALE on the robot's computer) → every new signal and every TP / SL by e-mail.
+// ══════════════════════════════════════
+var PORTAL_ADMIN = 'tc_admin', PORTAL_MAIL = 'tc_email', PORTAL_OD = 'cryptoforexsp500@gmail.com';
+var PA = {veljavna: null, pokazi: false, kode: null, nalagam: false, filter: 'valid', isci: '', nova: null, vrsta: 'paid',
+          odprta: '', emaili: {}, brisem: '', brisemT: 0, prosnje: null, prosnja: null};
+PORTAL.mail = {};
+
+function portalX(){ try{ return String(X_HANDLE || '').replace(/^@/, '').trim(); }catch(e){ return ''; } }
+function portalXUrl(){ var x = portalX(); return x ? 'https://x.com/' + encodeURIComponent(x) : ''; }
+function portalAdmin(){
+  var t = portalBeri(PORTAL_ADMIN), m = /^TCA\.(\d{13})\.[0-9a-f]{64}$/.exec(t);
+  return (m && +m[1] > Date.now() && PA.veljavna !== false) ? t : '';
+}
+// the token for /feed/live: the subscriber's code, or the admin session when there is no valid code
+function portalZeton(){ var k = portalKljuc(); return (k && PORTAL.veljavna !== false) ? k : (portalAdmin() || k); }
+// /feed/live answered 401 with the admin session (password changed, session ended): log out the admin, not the subscriber
+function portalZavrnjen(glave){
+  var a = portalAdmin();
+  if(a && glave && glave.Authorization === 'Bearer ' + a){ paKonec('Seja admina je potekla ali je bilo geslo spremenjeno — prijavi se znova.'); return true; }
+  return false;
+}
+
+// ── request access (crypto payment, a code by e-mail) — X only as an information link ──
+function portalXInfo(){
+  var x = portalX();
+  return x ? '<span class="lic-x-info">Questions? X <a href="' + portalEsc(portalXUrl()) + '" target="_blank" rel="noopener">@' + portalEsc(x) + '</a></span>' : '';
+}
+function portalProsnjaHtml(kje){
+  var id = 'pr-' + kje;
+  return '<div class="lic-prosnja" id="' + id + '"><b>PAY WITH CRYPTO OR GET A CODE</b>'
+    + '<span>Leave your e-mail: we contact you, agree on the payment (crypto too) and send your personal access code by e-mail.</span>'
+    + '<div class="lic-kljuc"><input id="' + id + '-mail" type="email" autocomplete="email" spellcheck="false" placeholder="you@example.com"'
+    + ' aria-label="your e-mail" onkeydown="if(event.key===\'Enter\')portalProsnja(\'' + kje + '\')">'
+    + '<button onclick="portalProsnja(\'' + kje + '\')">REQUEST ACCESS</button></div>'
+    + '<div id="' + id + '-st" class="lic-stanje"></div>' + portalXInfo() + '</div>';
+}
+function portalProsnja(kje){
+  var api = portalApi(), inp = document.getElementById('pr-' + kje + '-mail');
+  var izpis = function(t, v){ var el = document.getElementById('pr-' + kje + '-st'); if(el){ el.className = 'lic-stanje' + (v ? ' ' + v : ''); el.innerHTML = t; } };
+  var e = String((inp && inp.value) || '').trim().toLowerCase();
+  if(!/^[^\s@<>()",;:\[\]\\]{1,64}@[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,24}$/.test(e)){ izpis('Please enter a valid e-mail address.', 'opoz'); return; }
+  if(!api){ izpis('Requests open as soon as the live feed is online.', 'opoz'); return; }
+  izpis('Sending …', '');
+  fetch(api + '/request', {method: 'POST', cache: 'no-store', headers: {'Content-Type': 'application/json'},
+                           body: JSON.stringify({email: e, site: location.href.split('#')[0].split('?')[0], kje: kje})})
+    .then(portalOdgovor).then(function(x){
+      if(x.s === 200){
+        if(inp) inp.value = '';
+        izpis('Thank you! We will contact you at <b>' + portalEsc(x.o.email || e) + '</b> soon — your access code comes by e-mail from '
+              + PORTAL_OD + '.', 'ok');
+        return;
+      }
+      izpis(x.s === 429 ? 'Too many requests from this connection — please try again in an hour.'
+        : (x.s === 400 ? 'Please check the e-mail address.' : 'The request could not be sent right now — please try again in a minute.'), 'nap');
+    }).catch(function(){ izpis('The server is not responding. Please try again in a minute.', 'nap'); });
+}
+// the access code right on LIVE: activate, then AI PRO asks where to send the alerts
+function portalKodaHtml(kje){
+  var id = 'lic-kljuc-' + kje;
+  return '<div class="lic-kljuc jf-koda"><label for="' + id + '">Have an access code?</label>'
+    + '<input id="' + id + '" type="text" autocomplete="off" spellcheck="false" placeholder="TC-XXXX-XXXX-XXXX-XXXX"'
+    + ' onkeydown="if(event.key===\'Enter\')portalAktivirajIz(\'' + id + '\')">'
+    + '<button onclick="portalAktivirajIz(\'' + id + '\')">ACTIVATE</button></div>';
+}
+function portalAktivirajIz(id){
+  var inp = document.getElementById(id), k = ((inp && inp.value) || '').trim();
+  if(!k){ try{ inp.focus(); }catch(e){} return; }
+  var ai = document.getElementById('lic-kljuc'); if(ai) ai.value = k;
+  try{ nav('ai'); }catch(e){}
+  portalAktiviraj(ai ? 'lic-kljuc' : id);
+}
+
+// ── e-mail alerts (MY SUBSCRIPTION) ──
+function portalMailNalozi(sveze){
+  var api = portalApi(), k = portalKljuc(); if(!api || !k || PORTAL.veljavna !== true) return;
+  var M = PORTAL.mail, e = portalBeri(PORTAL_MAIL), za = k + '|' + e;
+  if(!sveze && M.za === za && M.ts && Date.now() - M.ts < 60000) return;
+  M.za = za; M.ts = Date.now();
+  fetch(api + '/email' + (e ? '?e=' + encodeURIComponent(e) : ''), {cache: 'no-store', headers: {'Authorization': 'Bearer ' + k}})
+    .then(portalOdgovor).then(function(x){
+      if(M.za !== za) return;
+      if(x.s !== 200){ M.nalozeno = true; M.stanje = M.stanje || 'none'; portalMailRender(); return; }
+      M.stanje = x.o.status || 'none'; M.maska = x.o.email || ''; M.karta = x.o.card_email || ''; M.kartaStanje = x.o.card_status || '';
+      M.nalozeno = true;
+      portalMailRender();
+      if(sveze === 1 && M.stanje === 'pending') portalMailIzpis('Not confirmed yet — open the e-mail from ' + PORTAL_OD + ' and click CONFIRM MY E-MAIL.', 'opoz');
+    }).catch(function(){ if(M.za === za){ M.nalozeno = true; M.stanje = M.stanje || 'none'; portalMailRender(); } });
+}
+function portalMailRender(){
+  var el = document.getElementById('lic-mail'); if(el) el.outerHTML = portalMailHtml(!!PORTAL.mailPoziv);
+  // right after the code: the cursor goes to the e-mail field (once)
+  if(PORTAL.mail.fokus){ var i = document.getElementById('lic-mail-vnos'); if(i){ PORTAL.mail.fokus = false; try{ i.focus(); }catch(e){} } }
+}
+// 26 Oct 2026 (Matic: »ko vpišeš kodo, se ti odpre opcija, da vpišeš svoj e-mail, na katerega boš dobival alerte«)
+function portalMailPozivHtml(){ return PORTAL.mailPoziv ? '<div class="lic-poziv">' + portalMailHtml(true) + '</div>' : ''; }
+function portalMailPozivZapri(){ PORTAL.mailPoziv = false; PORTAL.mail.fokus = false; portalLicencaRender(); }
+function portalMailIzpis(t, vrsta){
+  var e = document.getElementById('lic-mail-st'); if(!e) return;
+  e.className = 'lic-stanje' + (vrsta ? ' ' + vrsta : ''); e.innerHTML = t;
+}
+function portalMailHtml(poziv){
+  var M = PORTAL.mail || {}, e = portalBeri(PORTAL_MAIL);
+  var h = '<div class="lic-mail' + (poziv ? ' lic-mail-velik' : '') + '" id="lic-mail">'
+    + (poziv ? '<div class="lic-poziv-n"><span class="lic-tocka" aria-hidden="true"></span>CODE ACCEPTED — LIVE IS UNLOCKED ON THIS DEVICE</div>'
+             + '<h3>Where should we send your alerts?</h3>' : '<label>E-MAIL ALERTS</label>');
+  var ne = poziv ? '<button class="lic-mail-ne" onclick="portalMailPozivZapri()">' + (M.stanje === 'confirmed' ? 'DONE' : 'NOT NOW') + '</button>' : '';
+  var opis = 'One e-mail for every new signal of our live robot (1 hour to 1 week) and for every take profit and stop loss, from <i>'
+    + PORTAL_OD + '</i>. Unsubscribe anytime.';
+  var st = '<div id="lic-mail-st" class="lic-stanje"></div>';
+  if(!portalApi()) return h + '<p>' + opis + ' Available as soon as the live feed is online.</p>' + st + '</div>';
+  if(PORTAL.veljavna !== true || !M.nalozeno) return h + '<p>' + opis + '</p><p class="lic-mail-cak">Checking …</p>' + st + ne + '</div>';
+  var vklop = function(kam, karta){
+    return '<div class="lic-st"><span class="lic-tocka" aria-hidden="true"></span><span>ON — alerts go to <b>' + portalEsc(kam) + '</b>'
+      + (karta ? ' (the e-mail you paid with)' : '') + '</span></div>'
+      + '<p>Every new signal and every take profit / stop loss, from <i>' + PORTAL_OD + '</i>. Not arriving? Check the spam folder and mark it as '
+      + '“not spam”.</p><div class="lic-gumbi"><button class="lic-odjava lic-mail-g" id="lic-mail-stop" onclick="portalMailStop(' + (karta ? 1 : 0)
+      + ')">STOP E-MAILS</button>' + (karta ? '' : '<button class="lic-odjava lic-mail-g" onclick="portalMailDrug()">CHANGE E-MAIL</button>') + '</div>';
+  };
+  if(M.stanje === 'confirmed') return h + vklop(M.maska || e, false) + st + ne + '</div>';
+  if(M.stanje !== 'pending' && M.karta && M.kartaStanje === 'confirmed') return h + vklop(M.karta, true) + st + ne + '</div>';
+  if(M.stanje === 'pending'){
+    return h + '<p class="lic-mail-cak">✉ Almost done: open the e-mail from <i>' + PORTAL_OD + '</i> sent to <b>' + portalEsc(M.maska || e)
+      + '</b> and click <b>CONFIRM MY E-MAIL</b> (check the spam folder too). Alerts start right after.</p>'
+      + '<div class="lic-gumbi"><button class="lic-odjava lic-mail-g" onclick="portalMailNalozi(1)">I CONFIRMED IT</button>'
+      + '<button class="lic-odjava lic-mail-g" onclick="portalMailPoslji(1)">SEND AGAIN</button>'
+      + '<button class="lic-odjava lic-mail-g" onclick="portalMailDrug()">OTHER E-MAIL</button></div>' + st + ne + '</div>';
+  }
+  return h + '<p>' + opis + (M.stanje === 'stopped' || (M.karta && M.kartaStanje === 'stopped')
+           ? ' You unsubscribed — enter your e-mail again to turn the alerts back on.' : '') + '</p>'
+    + '<div class="lic-kljuc"><input id="lic-mail-vnos" type="email" autocomplete="email" spellcheck="false" placeholder="you@example.com"'
+    + ' aria-label="your e-mail" value="' + portalEsc(e) + '" onkeydown="if(event.key===\'Enter\')portalMailPoslji()">'
+    + '<button onclick="portalMailPoslji()">GET E-MAIL ALERTS</button></div>' + st + ne + '</div>';
+}
+function portalMailPoslji(znova){
+  var api = portalApi(), k = portalKljuc(); if(!api || !k) return;
+  var inp = document.getElementById('lic-mail-vnos');
+  var e = String(znova ? portalBeri(PORTAL_MAIL) : ((inp && inp.value) || '')).trim().toLowerCase();
+  if(!/^[^\s@<>()",;:\[\]\\]{1,64}@[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,24}$/.test(e)){ portalMailIzpis('Please enter a valid e-mail address.', 'opoz'); return; }
+  portalMailIzpis('Sending …', '');
+  fetch(api + '/email', {method: 'POST', cache: 'no-store', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + k},
+                         body: JSON.stringify({email: e, site: location.href.split('#')[0].split('?')[0]})})
+    .then(portalOdgovor).then(function(x){
+      if(x.s === 200){
+        portalPisi(PORTAL_MAIL, e);
+        var M = PORTAL.mail; M.stanje = x.o.status || 'pending'; M.maska = x.o.email || e; M.nalozeno = true; M.za = k + '|' + e; M.ts = Date.now();
+        portalMailRender();
+        if(M.stanje === 'pending') portalMailIzpis(x.o.recent
+          ? 'We sent the confirmation e-mail a few minutes ago — please check your inbox and the spam folder.'
+          : 'Confirmation e-mail on its way — it usually arrives within a minute or two.', 'ok');
+        else if(M.stanje === 'confirmed') portalMailIzpis('This e-mail is already confirmed — alerts are on.', 'ok');
+        return;
+      }
+      portalMailIzpis(x.s === 429 ? 'Too many tries from this connection — please try again in an hour.'
+        : (x.s === 400 ? 'Please check the e-mail address.'
+        : (x.s === 401 ? 'Your access code is not valid any more.' : 'It could not be saved right now — please try again in a minute.')), 'nap');
+    }).catch(function(){ portalMailIzpis('The server is not responding. Please try again in a minute.', 'nap'); });
+}
+function portalMailStop(karta){
+  var api = portalApi(), k = portalKljuc(), M = PORTAL.mail; if(!api || !k) return;
+  if(M.brisem !== karta || Date.now() - (M.brisemT || 0) > 6000){
+    M.brisem = karta; M.brisemT = Date.now();
+    var b = document.getElementById('lic-mail-stop'); if(b) b.textContent = 'SURE? CLICK AGAIN';
+    portalMailIzpis('Click again to stop the alert e-mails.', 'opoz'); return;
+  }
+  M.brisem = null;
+  fetch(api + '/email/stop', {method: 'POST', cache: 'no-store', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + k},
+                              body: JSON.stringify(karta ? {card: true} : {email: portalBeri(PORTAL_MAIL)})})
+    .then(portalOdgovor).then(function(x){
+      if(x.s !== 200){ portalMailIzpis('It could not be stopped right now — try again, or use the link at the bottom of any alert e-mail.', 'nap'); return; }
+      if(karta) M.kartaStanje = 'stopped'; else M.stanje = 'stopped';
+      portalMailRender();
+      portalMailIzpis('Unsubscribed — no more alert e-mails. Live signals on the site stay as they are.', 'ok');
+    }).catch(function(){ portalMailIzpis('The server is not responding. Please try again in a minute.', 'nap'); });
+}
+function portalMailDrug(){
+  portalPisi(PORTAL_MAIL, ''); var M = PORTAL.mail; M.stanje = 'none'; M.karta = ''; M.za = portalKljuc() + '|'; M.nalozeno = true;
+  portalMailRender(); var i = document.getElementById('lic-mail-vnos'); if(i){ i.value = ''; try{ i.focus(); }catch(e){} }
+}
+
+// ── 🔒 ADMIN (Slovenian: only Matic sees it) ──
+var PA_VRSTE = [['paid', 'plačilo v kripto (X)', 31], ['giveaway', 'nagradna igra (X)', 7], ['gift', 'darilo', 31], ['test', 'preizkus', 3]];
+var PA_VRSTA_SL = {paid: 'kripto', giveaway: 'nagrada', gift: 'darilo', test: 'preizkus', card: 'kartica'};
+var PA_MAIL_SL = {confirmed: 'potrjen', pending: 'čaka potrditev', stopped: 'odjavljen'};
+var PA_VIR_SL = {site: 'vpisal sam', admin: 'vpisal admin', stripe: 'kartica', note: 'iz opombe'};
+
+function paIzpis(t, vrsta, id){
+  var e = document.getElementById(id || 'pa-stanje'); if(!e) return;
+  e.className = 'lic-stanje' + (vrsta ? ' ' + vrsta : ''); e.innerHTML = t;
+}
+function paNapaka(x){ return (x && x.o && x.o.error) ? String(x.o.error) : (x && x.s ? 'napaka ' + x.s : 'strežnik ne odgovarja'); }
+function paKlic(pot, telo){
+  var api = portalApi(), t = portalAdmin();
+  if(!api) return Promise.reject({s: 0, o: {error: 'stran še ni povezana s strežnikom (JAVNO_API)'}});
+  var glave = {'Authorization': 'Bearer ' + t}; if(telo) glave['Content-Type'] = 'application/json';
+  return fetch(api + pot, {method: telo ? 'POST' : 'GET', cache: 'no-store', headers: glave, body: telo ? JSON.stringify(telo) : undefined})
+    .then(portalOdgovor, function(){ throw {s: 0, o: {}}; })
+    .then(function(x){
+      if(x.s === 401){ paKonec('Seja admina je potekla ali je bilo geslo spremenjeno — prijavi se znova.'); throw x; }
+      if(x.s !== 200) throw x;
+      return x.o;
+    });
+}
+function paDatum(ymd){ var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(ymd || ''); return m ? (+m[3]) + '. ' + (+m[2]) + '. ' + m[1] : portalEsc(ymd || '—'); }
+function paUra(u){                      // last visit: '2026-10-13T19' (UTC hour) → local time
+  var m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2})/.exec(u || ''); if(!m) return '—';
+  var d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4]));
+  return d.getDate() + '. ' + (d.getMonth() + 1) + '. ' + ('0' + d.getHours()).slice(-2) + ':00';
+}
+function paZagon(){
+  var h = ''; try{ h = location.hash || ''; }catch(e){}
+  if(h === '#admin'){ PA.pokazi = true; setTimeout(function(){ try{ nav('adm'); }catch(e){} }, 0); }
+  try{ window.addEventListener('hashchange', function(){ if(location.hash === '#admin'){ PA.pokazi = true; nav('adm'); } }); }catch(e){}
+  if(portalBeri(PORTAL_ADMIN) && !portalAdmin()) portalPisi(PORTAL_ADMIN, '');        // session ended
+  if(portalAdmin() && portalApi()){
+    paKlic('/admin/check').then(function(){ PA.veljavna = true; portalZavihekFeed(); paNaloziProsnje(); }).catch(function(){});
+  }
+  portalZavihekFeed();
+}
+function paOdpri(){ PA.pokazi = true; portalZavihekFeed(); paRender(); if(portalAdmin() && !PA.kode && !PA.nalagam) paNalozi(); }
+function paLive(){ try{ nav('df'); jfTabIzberi('live'); }catch(e){} }
+function paPrijava(){
+  var inp = document.getElementById('pa-geslo'), g = (inp && inp.value) || '';
+  if(!portalApi()){ paIzpis('Stran še ni povezana s strežnikom (JAVNO_API).', 'nap'); return; }
+  if(!g){ paIzpis('Vpiši admin geslo.', 'opoz'); return; }
+  var b = document.getElementById('pa-prijava'); if(b) b.disabled = true;
+  paIzpis('Preverjam …', '');
+  fetch(portalApi() + '/admin/login', {method: 'POST', cache: 'no-store', headers: {'Content-Type': 'application/json'},
+                                       body: JSON.stringify({password: g})})
+    .then(portalOdgovor).then(function(x){
+      if(b) b.disabled = false;
+      if(x.s === 200 && x.o.token){
+        portalPisi(PORTAL_ADMIN, x.o.token); PA.veljavna = true; PA.kode = null; PA.nova = null; if(inp) inp.value = '';
+        portalZavihekFeed(); paRender(); paNalozi();
+        try{ jfPonastavi(); }catch(e){}
+        return;
+      }
+      paIzpis(x.s === 401 ? 'Napačno geslo.'
+        : (x.s === 429 ? 'Preveč napačnih poskusov s tega omrežja — počakaj eno uro.'
+        : (x.s === 503 ? 'Admin geslo v Cloudflare še ni nastavljeno ali ima manj kot 10 znakov (ADMIN_PASSWORD — KLJUCI.bat → 5 → 5).'
+        : (x.s === 404 ? 'Na Cloudflare je še stari worker.js — prilepi novega (STREZNIK/worker.js).' : 'Napaka ' + x.s + '.'))), 'nap');
+    }).catch(function(){ if(b) b.disabled = false; paIzpis('Strežnik ne odgovarja.', 'nap'); });
+}
+function paKonec(sporocilo){
+  portalPisi(PORTAL_ADMIN, ''); PA.veljavna = null; PA.kode = null; PA.nova = null; PA.emaili = {}; PA.odprta = '';
+  portalZavihekFeed(); paRender(); if(sporocilo) paIzpis(sporocilo, 'opoz');
+  try{ jfPonastavi(); }catch(e){}
+}
+function paRender(){
+  var el = document.getElementById('pa-body'); if(!el) return;
+  if(!portalAdmin()){
+    el.innerHTML = '<div class="lic pa"><div class="lic-glava"><div class="lic-oznaka">TRADECORE · 🔒 ADMIN</div><h2>Admin prijava</h2>'
+      + '<p>Admin geslo (v Cloudflare <i>ADMIN_PASSWORD</i>, nastaviš ga s KLJUCI.bat → 5 → 5) na tej napravi odklene LIVE brez kode in '
+      + 'upravljanje kod naročnikov: nove kode za plačilo v kripto in nagradne igre, podaljšanje, preklic. Prijava velja 30 dni.</p></div>'
+      + '<div class="lic-telo"><form class="lic-kljuc" onsubmit="paPrijava();return false;">'
+      + '<input type="text" name="username" value="admin" autocomplete="username" hidden>'
+      + '<input id="pa-geslo" type="password" autocomplete="current-password" placeholder="admin geslo" aria-label="admin geslo">'
+      + '<button type="submit" id="pa-prijava">PRIJAVA</button></form><div id="pa-stanje" class="lic-stanje"></div></div></div>';
+    return;
+  }
+  var m = /^TCA\.(\d{13})\./.exec(portalAdmin()), d = m ? new Date(+m[1]) : null;
+  el.innerHTML = '<div class="lic pa"><div class="lic-glava pa-glava"><div><div class="lic-oznaka">TRADECORE · 🔒 ADMIN</div>'
+    + '<h2>Kode naročnikov</h2><div class="lic-st"><span class="lic-tocka" aria-hidden="true"></span><span>prijavljen'
+    + (d ? ' do ' + d.getDate() + '. ' + (d.getMonth() + 1) + '. ' + d.getFullYear() : '') + ' · LIVE je na tej napravi odklenjen</span></div></div>'
+    + '<div class="lic-gumbi"><button class="lic-odpri" onclick="paLive()">ODPRI LIVE →</button>'
+    + '<button class="lic-odjava" onclick="paNalozi()">↻ OSVEŽI</button><button class="lic-odjava" onclick="paKonec()">ODJAVA</button></div></div>'
+    + '<div class="lic-telo"><div id="pa-stanje" class="lic-stanje"></div>'
+    + '<div class="pa-sek" id="pa-nova">' + paNovaVsebina() + '</div>'
+    + '<div class="pa-sek" id="pa-prosnje">' + paProsnjeVsebina() + '</div>'
+    + '<div class="pa-sek"><div class="pa-n">KODE</div><div class="pa-orodja" id="pa-orodja">' + paOrodja() + '</div>'
+    + '<div id="pa-tabela">' + paTabela() + '</div></div>'
+    + '<div class="pa-sek"><div class="pa-n">ODJAVA E-NASLOVA</div><p class="pa-pod">Kdor na mail odgovori STOP (ali ne želi več mailov): vpiši njegov e-naslov — '
+    + 'odjavljen bo na vseh kodah. Vsak mail ima tudi svojo povezavo za odjavo.</p><div class="lic-kljuc pa-mailodj">'
+    + '<input id="pa-stop" type="email" autocomplete="off" placeholder="kupec@example.com" aria-label="e-naslov za odjavo" '
+    + 'onkeydown="if(event.key===\'Enter\')paOdjaviMail()"><button onclick="paOdjaviMail()">ODJAVI</button></div>'
+    + '<div id="pa-stop-st" class="lic-stanje"></div></div>'
+    + '<div class="lic-opozorilo">Maili naročnikom — potrditev e-naslova, vsak nov signal H1–W1 in vsak TP/SL — gredo iz <i>' + PORTAL_OD
+    + '</i>; pošilja jih OBJAVI-SIGNALE na računalniku robota (Gmail nastaviš s KLJUCI.bat → 8). Gmail dovoli okoli 500 prejemnikov na dan, '
+    + 'kar je dovolj za ~20 naročnikov z e-pošto. Preklicana ali potekla koda: brez LIVE in brez mailov.</div>'
+    + '</div></div>';
+}
+function paNovaVsebina(){
+  var v = PA.vrsta, dni = (PA_VRSTE.filter(function(x){ return x[0] === v; })[0] || ['', '', 31])[2], pr = PA.prosnja;
+  var h = '<div class="pa-n">NOVA KODA</div><div class="pa-forma">'
+    + '<label>vrsta<select id="pa-vrsta" onchange="paVrsta(this.value)">' + PA_VRSTE.map(function(x){
+        return '<option value="' + x[0] + '"' + (x[0] === v ? ' selected' : '') + '>' + x[1] + '</option>'; }).join('') + '</select></label>'
+    + '<label>dni<input id="pa-dni" type="number" min="1" max="3660" value="' + dni + '"></label>'
+    + (v === 'giveaway' ? '<label>kod<input id="pa-st" type="number" min="1" max="50" value="1"></label>' : '')
+    + '<label class="pa-siroko">opomba (vidiš samo ti)<input id="pa-opomba" type="text" maxlength="200" placeholder="'
+    + (v === 'paid' ? 'npr. X @ime · 30 USDC · tx …' : (v === 'giveaway' ? 'npr. X nagradna igra 26. 10.' : '')) + '"'
+    + (pr && v !== 'giveaway' ? ' value="' + portalEsc('prošnja ' + pr.email) + '"' : '') + '></label>'
+    + (v !== 'giveaway' ? '<label class="pa-siroko">e-naslov kupca (neobvezno — maili s signali začnejo takoj, brez potrditve)'
+      + '<input id="pa-mail" type="email" autocomplete="off" placeholder="kupec@example.com"' + (pr ? ' value="' + portalEsc(pr.email) + '"' : '')
+      + '></label>'
+      + '<label class="pa-ck"><input type="checkbox" id="pa-poslji"' + (pr || PA.poslji !== false ? ' checked' : '')
+      + ' onchange="PA.poslji=this.checked"> pošlji kodo na ta e-naslov (mail iz ' + PORTAL_OD + ')</label>' : '')
+    + '</div><div class="lic-gumbi"><button class="lic-kupi" id="pa-ustvari" onclick="paNova()">USTVARI ' + (v === 'giveaway' ? 'KODE' : 'KODO')
+    + '</button></div><div id="pa-nova-st" class="lic-stanje"></div>';
+  if(v === 'giveaway') h = h.replace('<div id="pa-nova-st"', '<p class="pa-pod">Eno kodo nagradne igre lahko uporabi več ljudi (vsak vpiše svoj e-naslov, do 300). '
+    + 'Ko je igre konec, kodo prekličeš.</p><div id="pa-nova-st"');
+  return h + (PA.nova ? paNovaRezultat() : '');
+}
+function paVrsta(v){
+  var o = document.getElementById('pa-opomba'), opomba = o ? o.value : '';
+  PA.vrsta = v; var el = document.getElementById('pa-nova'); if(el) el.innerHTML = paNovaVsebina();
+  var o2 = document.getElementById('pa-opomba'); if(o2) o2.value = opomba;
+}
+function paNova(){
+  var g = function(id){ var e = document.getElementById(id); return e ? String(e.value || '').trim() : ''; };
+  var v = PA.vrsta, dni = Math.round(+g('pa-dni')), st = v === 'giveaway' ? Math.round(+g('pa-st') || 1) : 1;
+  var opomba = g('pa-opomba'), mail = v === 'giveaway' ? '' : g('pa-mail');
+  if(!(dni >= 1 && dni <= 3660)){ paIzpis('Število dni: od 1 do 3660.', 'opoz', 'pa-nova-st'); return; }
+  if(!(st >= 1 && st <= 50)){ paIzpis('Število kod: od 1 do 50.', 'opoz', 'pa-nova-st'); return; }
+  var b = document.getElementById('pa-ustvari'); if(b) b.disabled = true;
+  paIzpis('Delam …', '', 'pa-nova-st');
+  var poslji = !!(mail && document.getElementById('pa-poslji') && document.getElementById('pa-poslji').checked);
+  var telo = {days: dni, kind: v, count: st, note: opomba}; if(mail){ telo.email = mail; telo.send = poslji; }
+  if(PA.prosnja && mail && mail.toLowerCase() === PA.prosnja.email) telo.request_id = PA.prosnja.id;
+  paKlic('/admin/key', telo).then(function(o){
+    PA.nova = {kode: (o.keys && o.keys.length ? o.keys : [{key: o.key, id: o.id}]), until: o.until, vrsta: v, mail: mail, poslana: !!o.mailed};
+    PA.prosnja = null;
+    paNaloziProsnje();
+    var el = document.getElementById('pa-nova'); if(el) el.innerHTML = paNovaVsebina();
+    paNalozi(true);
+  }).catch(function(x){
+    if(b) b.disabled = false;
+    if(portalAdmin()) paIzpis('Koda ni bila narejena: ' + portalEsc(paNapaka(x)), 'nap', 'pa-nova-st');
+  });
+}
+function paSporocilo(n){
+  var stran = location.href.split('#')[0].split('?')[0], doo = portalDatum(n.until), kode = n.kode.map(function(k){ return k.key; });
+  if(n.vrsta === 'giveaway' && kode.length > 1){
+    return '🎁 TradeCore AI PRO giveaway: LIVE divergence signals (1H to 1W) + an e-mail for every signal and every take profit / stop loss, until '
+      + doo + '.\n\n' + kode.join('\n') + '\n\nActivate: ' + stran + ' → AI PRO → paste a code → ACTIVATE. Then add your e-mail in AI PRO → My subscription.'
+      + '\nNot financial advice.';
+  }
+  return 'Your TradeCore AI PRO access code:  ' + kode[0] + '\nValid until: ' + doo + '\n\n'
+    + '1. Open ' + stran + ' → AI PRO tab, paste the code and click ACTIVATE.\n'
+    + '2. DIVERGENCE FEED → LIVE unlocks on that device (you can activate it on your phone and PC).\n'
+    + '3. E-mail alerts for every new signal (1 hour to 1 week) and every take profit / stop loss: '
+    + (n.mail ? 'they come from ' + PORTAL_OD + ' to the e-mail you gave me.'
+              : 'enter your e-mail in AI PRO → My subscription and click the link in the confirmation e-mail from ' + PORTAL_OD + '.')
+    + '\n\nPlease keep the code private. Signals are not financial advice; trading crypto futures is risky.\nTradeCore';
+}
+function paNovaRezultat(){
+  var n = PA.nova, vec = n.kode.length > 1;
+  return '<div class="pa-nova"><div class="pa-n2">' + (vec ? n.kode.length + ' NOVE KODE' : 'NOVA KODA') + ' · '
+    + portalEsc(PA_VRSTA_SL[n.vrsta] || n.vrsta) + ' · velja do ' + paDatum(n.until) + '</div>'
+    + n.kode.map(function(k, i){
+        return '<div class="lic-moj-vrsta pa-koda"><code>' + portalEsc(k.key) + '</code><button onclick="paKopirajKodo(' + i + ')">KOPIRAJ</button></div>';
+      }).join('')
+    + '<p class="pa-pod">Koda se pokaže samo zdaj — strežnik hrani samo njen odtis. Prekličeš jo kadarkoli spodaj v seznamu (PREKLIČI).'
+    + (n.mail ? ' Maili s signali gredo na <b>' + portalEsc(n.mail) + '</b>.' : '')
+    + (n.poslana ? ' <b>Koda gre po mailu na ' + portalEsc(n.mail) + '</b> — OBJAVI-SIGNALE jo pošlje v 1 minuti iz ' + PORTAL_OD + '.' : '') + '</p>'
+    + '<label class="pa-n3" for="pa-besedilo">BESEDILO ZA X (DM' + (vec ? ' ali objava' : '') + ') ALI E-POŠTO</label>'
+    + '<textarea id="pa-besedilo" readonly rows="' + (vec ? 8 + n.kode.length : 10) + '">' + portalEsc(paSporocilo(n)) + '</textarea>'
+    + '<div class="lic-gumbi"><button class="lic-odpri" onclick="paKopirajBesedilo()">KOPIRAJ BESEDILO</button>'
+    + '<a class="lic-odjava pa-x" href="https://x.com/messages" target="_blank" rel="noopener">ODPRI SPOROČILA NA X →</a>'
+    + '<button class="lic-odjava" onclick="PA.nova=null;var e=document.getElementById(\'pa-nova\');if(e)e.innerHTML=paNovaVsebina();">ZAPRI</button></div>'
+    + '<div id="pa-kop" class="lic-stanje"></div></div>';
+}
+function paKopiraj(t, ok){
+  var naredi = function(){ paIzpis(ok, 'ok', 'pa-kop'); };
+  var rocno = function(){
+    try{
+      var x = document.createElement('textarea'); x.value = t; x.setAttribute('readonly', '');
+      x.style.position = 'fixed'; x.style.top = '0'; x.style.opacity = '0';
+      document.body.appendChild(x); x.select(); var r = document.execCommand('copy'); document.body.removeChild(x);
+      if(r){ naredi(); return; }
+    }catch(e){}
+    paIzpis('Označi besedilo in ga kopiraj ročno (Ctrl+C).', 'opoz', 'pa-kop');
+  };
+  try{ if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(t).then(naredi, rocno); return; } }catch(e){}
+  rocno();
+}
+function paKopirajKodo(i){ var k = PA.nova && PA.nova.kode[i]; if(k) paKopiraj(k.key, 'Koda ' + portalEsc(k.key) + ' je kopirana.'); }
+function paKopirajBesedilo(){ if(PA.nova) paKopiraj(paSporocilo(PA.nova), 'Besedilo je kopirano — na X ga prilepi s Ctrl+V.'); }
+
+function paNaloziProsnje(){
+  if(!portalAdmin()) return;
+  paKlic('/admin/requests').then(function(o){
+    PA.prosnje = o.requests || [];
+    var e = document.getElementById('pa-prosnje'); if(e) e.innerHTML = paProsnjeVsebina();
+    paZnacka();
+  }).catch(function(){});
+}
+function paZnacka(){
+  var t = document.getElementById('t-adm'); if(!t) return;
+  var n = (PA.prosnje || []).filter(function(x){ return x.status === 'new'; }).length;
+  t.innerHTML = '🔒 ADMIN' + (n ? ' <span class="pa-znacka">' + n + '</span>' : '');
+}
+function paProsnjeVsebina(){
+  var sez = PA.prosnje, h = '<div class="pa-n">PROŠNJE ZA DOSTOP' + (sez ? ' · ' + sez.filter(function(x){ return x.status === 'new'; }).length
+    + ' novih' : '') + '</div>';
+  if(!sez) return h + '<div class="lic-stanje">Nalagam …</div>';
+  if(!sez.length) return h + '<p class="pa-pod">Še ni prošenj. Obiskovalci jih pošljejo na LIVE in v AI PRO (REQUEST ACCESS) — '
+    + 'obvestilo ti pride po mailu, odgovoriš kar nanj.</p>';
+  return h + '<div class="pa-ovoj"><table class="pa-tab pa-tab-pr"><thead><tr><th>e-naslov</th><th>čas (UTC)</th><th>kje</th><th>stanje</th>'
+    + '<th></th></tr></thead><tbody>' + sez.slice(0, 50).map(function(r){
+      var nova = r.status === 'new', id = +r.id || 0;
+      return '<tr class="' + (nova ? '' : 'pa-ne') + '"><td><b>' + portalEsc(r.email) + '</b></td><td>' + portalEsc(String(r.created || '').slice(0, 16))
+        + '</td><td>' + ({jf: 'LIVE', ai: 'AI PRO'}[r.kje] || '—') + '</td><td>' + (nova ? '<span class="pa-ok">nova</span>'
+        : 'rešena' + (r.key_id ? ' · koda ' + portalEsc(r.key_id) : '')) + '</td><td class="pa-akc">'
+        + (nova ? '<button onclick="paKodaZaProsnjo(' + id + ')">NAREDI KODO IN JO POŠLJI</button>'
+                + '<button onclick="paProsnjaStanje(' + id + ',\'done\')">REŠENO</button>'
+                : '<button onclick="paProsnjaStanje(' + id + ',\'new\')">ODPRI ZNOVA</button>') + '</td></tr>';
+    }).join('') + '</tbody></table></div><div id="pa-pr-st" class="lic-stanje"></div>';
+}
+function paKodaZaProsnjo(id){
+  var r = (PA.prosnje || []).filter(function(x){ return +x.id === +id; })[0]; if(!r) return;
+  PA.prosnja = {id: +r.id, email: String(r.email)}; PA.vrsta = 'paid'; PA.nova = null;
+  var el = document.getElementById('pa-nova'); if(el){ el.innerHTML = paNovaVsebina(); try{ el.scrollIntoView({behavior: 'smooth', block: 'start'}); }catch(e){} }
+  paIzpis('Koda za <b>' + portalEsc(r.email) + '</b>: izberi dni in klikni USTVARI KODO — koda gre po mailu, alarmi se vklopijo.', 'ok', 'pa-nova-st');
+}
+function paProsnjaStanje(id, st){
+  paKlic('/admin/request-done', {id: id, status: st}).then(function(){ paNaloziProsnje(); })
+    .catch(function(x){ if(portalAdmin()) paIzpis('Ni šlo: ' + portalEsc(paNapaka(x)), 'nap', 'pa-pr-st'); });
+}
+function paNalozi(tiho){
+  if(!portalAdmin()) return;
+  paNaloziProsnje();
+  PA.nalagam = true; if(!tiho) paIzpis('Nalagam kode …', '');
+  paKlic('/admin/keys').then(function(o){
+    PA.kode = o.keys || []; PA.nalagam = false;
+    paOsveziKode(); if(!tiho) paIzpis('', '');
+  }).catch(function(x){ PA.nalagam = false; if(portalAdmin()) paIzpis('Kod ni bilo mogoče naložiti: ' + portalEsc(paNapaka(x)), 'nap'); });
+}
+function paOsveziKode(){
+  var o = document.getElementById('pa-orodja'), t = document.getElementById('pa-tabela');
+  if(o){ var fo = document.activeElement && document.activeElement.id === 'pa-isci'; o.innerHTML = paOrodja();
+         if(fo){ var i = document.getElementById('pa-isci'); if(i){ i.focus(); try{ i.setSelectionRange(i.value.length, i.value.length); }catch(e){} } } }
+  if(t) t.innerHTML = paTabela();
+}
+function paVrstaKode(k){ return PA_VRSTA_SL[k.kind] || ((k.card_status || /^Stripe/.test(k.note || '')) ? 'kartica' : '—'); }
+function paOrodja(){
+  var vse = PA.kode || [], velj = vse.filter(function(k){ return k.valid; });
+  var mailov = velj.reduce(function(a, k){ return a + (+k.emails_confirmed || 0); }, 0);
+  return '<button class="pa-f' + (PA.filter === 'valid' ? ' on' : '') + '" onclick="paFilter(\'valid\')">VELJAVNE ' + velj.length + '</button>'
+    + '<button class="pa-f' + (PA.filter === 'all' ? ' on' : '') + '" onclick="paFilter(\'all\')">VSE ' + vse.length + '</button>'
+    + '<input id="pa-isci" type="search" placeholder="išči: opomba, oznaka, vrsta" aria-label="išči kode" value="' + portalEsc(PA.isci) + '" oninput="paIsci(this.value)">'
+    + '<span class="pa-povz">' + mailov + ' potrjenih e-naslovov na veljavnih kodah</span>';
+}
+function paFilter(f){ PA.filter = f; paOsveziKode(); }
+function paIsci(q){ PA.isci = q; var t = document.getElementById('pa-tabela'); if(t) t.innerHTML = paTabela(); }
+function paTabela(){
+  if(!PA.kode) return '<div class="lic-stanje">' + (PA.nalagam ? 'Nalagam …' : '') + '</div>';
+  var q = String(PA.isci || '').toLowerCase().trim();
+  var izbor = PA.kode.filter(function(k){
+    if(PA.filter === 'valid' && !k.valid) return false;
+    return !q || (String(k.id) + ' ' + String(k.note || '') + ' ' + paVrstaKode(k)).toLowerCase().indexOf(q) >= 0;
+  });
+  if(!izbor.length) return '<div class="lic-stanje">' + (PA.kode.length ? 'Ni kod za ta izbor.' : 'Še ni nobene kode.') + '</div>';
+  var h = '<div class="pa-ovoj"><table class="pa-tab"><thead><tr><th>oznaka</th><th>vrsta</th><th>velja do</th><th>stanje</th><th>maili</th>'
+    + '<th>nazadnje</th><th>opomba</th><th></th></tr></thead><tbody>';
+  izbor.forEach(function(k){
+    var id = /^[0-9a-f]{8}$/.test(String(k.id || '')) ? String(k.id) : '', st = k.revoked ? '<span class="pa-nap">preklicana</span>'
+      : (k.valid ? '<span class="pa-ok">velja</span>' : '<span class="pa-siv">potekla</span>');
+    if(k.card_cancel) st += ' <span class="pa-siv">· odpovedal</span>'; else if(k.card_status === 'past_due') st += ' <span class="pa-nap">· plačilo ni uspelo</span>';
+    var mail = '<span title="potrjeni">✓ ' + (+k.emails_confirmed || 0) + '</span>' + (+k.emails_pending ? ' <span class="pa-siv" title="čakajo potrditev">· ? ' + k.emails_pending + '</span>' : '')
+      + (+k.emails_stopped ? ' <span class="pa-siv" title="odjavljeni">· ✕ ' + k.emails_stopped + '</span>' : '');
+    var res = PA.brisem === id && Date.now() - PA.brisemT < 6000;
+    h += '<tr class="' + (k.valid ? '' : 'pa-ne') + '"><td><code>' + portalEsc(id) + '</code></td><td>' + portalEsc(paVrstaKode(k)) + '</td>'
+      + '<td>' + paDatum(k.until) + '</td><td>' + st + '</td><td>' + mail + '</td><td>' + paUra(k.last_seen) + '</td>'
+      + '<td class="pa-op">' + portalEsc(k.note || '') + '</td><td class="pa-akc">'
+      + '<button onclick="paPodaljsaj(\'' + id + '\')">' + (k.revoked ? 'VKLOPI +31 DNI' : '+31 DNI') + '</button>'
+      + (k.revoked ? '' : '<button class="pa-rdeca' + (res ? ' res' : '') + '" onclick="paPreklici(\'' + id + '\')">' + (res ? 'RES PREKLIČEM?' : 'PREKLIČI') + '</button>')
+      + '<button onclick="paEmaili(\'' + id + '\')">' + (PA.odprta === id ? 'SKRIJ' : 'MAILI') + '</button></td></tr>';
+    if(PA.odprta === id) h += '<tr class="pa-em"><td colspan="8">' + paEmailiHtml(id) + '</td></tr>';
+  });
+  return h + '</tbody></table></div><div id="pa-tab-st" class="lic-stanje"></div>';
+}
+function paEmailiHtml(id){
+  var sez = PA.emaili[id];
+  if(!sez) return '<span class="pa-siv">nalagam e-naslove …</span>';
+  if(!sez.length) return '<span class="pa-siv">Ta koda še nima e-naslova. Naročnik ga vpiše na strani (AI PRO → My subscription) in potrdi s klikom na povezavo v mailu.</span>';
+  return '<ul>' + sez.map(function(e, i){
+    return '<li><b>' + portalEsc(e.email) + '</b><span class="' + (e.status === 'confirmed' ? 'pa-ok' : 'pa-siv') + '">' + portalEsc(PA_MAIL_SL[e.status] || e.status)
+      + '</span><span class="pa-siv">' + portalEsc(PA_VIR_SL[e.source] || e.source || '') + '</span>'
+      + (e.status !== 'stopped' ? '<button onclick="paOdjaviMailKode(\'' + id + '\',' + i + ')">ODJAVI</button>' : '') + '</li>';
+  }).join('') + '</ul>';
+}
+function paPodaljsaj(id){
+  paIzpis('Podaljšujem …', '', 'pa-tab-st');
+  paKlic('/admin/extend', {id: id, days: 31}).then(function(o){
+    paNalozi(true); paIzpis('Koda ' + portalEsc(id) + ' velja do ' + paDatum(o.until) + '.', 'ok');
+  }).catch(function(x){ if(portalAdmin()) paIzpis('Ni šlo: ' + portalEsc(paNapaka(x)), 'nap', 'pa-tab-st'); });
+}
+function paPreklici(id){
+  if(PA.brisem !== id || Date.now() - PA.brisemT > 6000){
+    PA.brisem = id; PA.brisemT = Date.now(); paOsveziKode();
+    setTimeout(function(){ if(PA.brisem === id && Date.now() - PA.brisemT >= 6000){ PA.brisem = ''; paOsveziKode(); } }, 6100);
+    return;
+  }
+  PA.brisem = '';
+  paKlic('/admin/revoke', {id: id}).then(function(){
+    paNalozi(true); paIzpis('Koda ' + portalEsc(id) + ' je preklicana: naročnik ob naslednji osvežitvi izgubi LIVE, maili prenehajo.', 'ok');
+  }).catch(function(x){ if(portalAdmin()) paIzpis('Ni šlo: ' + portalEsc(paNapaka(x)), 'nap', 'pa-tab-st'); });
+}
+function paEmaili(id){
+  if(PA.odprta === id){ PA.odprta = ''; paOsveziKode(); return; }
+  PA.odprta = id; paOsveziKode();
+  paKlic('/admin/emails?id=' + encodeURIComponent(id)).then(function(o){ PA.emaili[id] = o.emails || []; if(PA.odprta === id) paOsveziKode(); })
+    .catch(function(x){ PA.emaili[id] = []; if(portalAdmin()) paIzpis('E-naslovov ni bilo mogoče naložiti: ' + portalEsc(paNapaka(x)), 'nap', 'pa-tab-st'); });
+}
+function paOdjaviMailKode(id, i){ var e = (PA.emaili[id] || [])[i]; if(e) paOdjaviMail(e.email); }
+function paOdjaviMail(e){
+  var inp = document.getElementById('pa-stop'), mail = String(e || (inp && inp.value) || '').trim();
+  var izpis = e ? 'pa-tab-st' : 'pa-stop-st';
+  if(!mail){ paIzpis('Vpiši e-naslov.', 'opoz', izpis); return; }
+  paKlic('/admin/email-stop', {email: mail}).then(function(o){
+    if(inp && !e) inp.value = '';
+    paIzpis(portalEsc(o.email || mail) + ' ne dobi več mailov' + (o.stopped ? ' (odjavljen na ' + o.stopped + ' ' + (o.stopped === 1 ? 'kodi' : 'kodah') + ').' : ' — ni bil prijavljen.'), 'ok', izpis);
+    PA.emaili = {}; if(PA.odprta){ var id = PA.odprta; PA.odprta = ''; paEmaili(id); } paNalozi(true);
+  }).catch(function(x){ if(portalAdmin()) paIzpis('Ni šlo: ' + portalEsc(paNapaka(x)), 'nap', izpis); });
+}
+
 // ── start ──
 (function portalZagon(){
   document.body.classList.add('javno');
@@ -13827,6 +14478,7 @@ function renderAff(){
   portalLicencaRender();
   portalOglasRender();
   portalNaloziNastavitve();
+  paZagon();
   if(seja){                                       // back from the Stripe payment (or a payment not activated yet)
     portalAktivirajNakup(seja, 0);
     if(m) setTimeout(function(){ try{ nav('ai'); }catch(e){} }, 0);
