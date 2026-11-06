@@ -910,6 +910,7 @@ body.na-ai #content{display:none}
 .jf-gl{display:flex;align-items:baseline;gap:8px;font-size:11px;flex-wrap:wrap}
 .jf-sym{color:var(--text);font-weight:bold;letter-spacing:.06em}
 .jf-vrsta{color:var(--text2);font-size:10px}
+.jf-dvojna{color:#ffd24a;font-size:10px;font-weight:bold;border:1px solid rgba(255,210,74,.65);background:rgba(255,210,74,.10);padding:0 6px;line-height:15px;letter-spacing:.06em;white-space:nowrap}
 .jf-pill{margin-left:auto;font-size:9px;letter-spacing:.1em;border:1px solid var(--border2);color:var(--text2);padding:0 6px;line-height:15px;white-space:nowrap}
 .jf-pill-open{color:var(--amber);border-color:var(--amber)}
 .jf-pill-pending{color:var(--blue);border-color:var(--blue)}
@@ -3427,9 +3428,11 @@ function b1fOpis(t){
                        : 'Divergence v smeri trejda v posnetku ni.';
   }
   var bear=(d.tip==='bear'), sp=(d.p2-d.p1)/d.p1;
-  var cena = (bear?'vrh':'dno')+' cene '+b1fSt(d.p1)+' → '+b1fSt(d.p2)+' ('+b1fPct(sp)+', '
+  var dv=!!(d.dvojna && d.p0!==undefined && d.p0!==null && d.r0!==undefined && d.r0!==null);
+  var cena = (dv?'<b style="color:#ffd24a">★ dvojna divergenca</b> · ':'')
+             +(bear?'vrh':'dno')+' cene '+(dv?b1fSt(d.p0)+' → ':'')+b1fSt(d.p1)+' → '+b1fSt(d.p2)+' ('+b1fPct(sp)+', '
              +(bear ? (d.p2>d.p1?'višji':'nižji') : (d.p2<d.p1?'nižje':'višje'))+')';
-  var rsi = 'RSI '+b1fSt(d.r1,1)+' → '+b1fSt(d.r2,1)+' ('+(d.r2>d.r1?'višje':'nižje')+')';
+  var rsi = 'RSI '+(dv?b1fSt(d.r0,1)+' → ':'')+b1fSt(d.r1,1)+' → '+b1fSt(d.r2,1)+' ('+(d.r2>d.r1?'višje':'nižje')+')';
   var tr=dfTrajanje(s);
   var traj = tr ? ' · divergenca je trajala <b class="b1f-traj-b">'+tr.napis+'</b>'+(tr.od&&tr.do?' ('+tr.od+' → '+tr.do+')':'') : '';
   return cena+' · '+rsi+traj+(d.skrita?' · <b style="color:var(--text)">skrita</b>':'');
@@ -3636,20 +3639,29 @@ function b1fNarisi(cv, t){
   var d=s.div;
   if(d){
     var bear=(d.tip==='bear');
+    var dv=!!(d.dvojna && d.i0!==undefined && d.i0!==null && d.p0!==undefined && d.r0!==undefined && d.i0>=0);   // 30. 10. 2026: dvojna
+    var ri0=dv ? ((d.ri0!==undefined && d.ri0!==null) ? d.ri0 : d.i0) : null;
     g.strokeStyle=B.div; g.globalAlpha=0.35; g.setLineDash([2,3]);
-    [d.i1,d.i2].forEach(function(i){ g.beginPath(); g.moveTo(X(i)+0.5,yC0); g.lineTo(X(i)+0.5,yR0+hR); g.stroke(); });
+    (dv ? [d.i0,d.i1,d.i2] : [d.i1,d.i2]).forEach(function(i){ g.beginPath(); g.moveTo(X(i)+0.5,yC0); g.lineTo(X(i)+0.5,yR0+hR); g.stroke(); });
     g.setLineDash([]); g.globalAlpha=1;
     g.lineWidth=2;
     var a1=Y(d.p1), a2=Y(d.p2), r1=YR(d.r1), r2=YR(d.r2);
     g.beginPath(); g.moveTo(X(d.i1),a1); g.lineTo(X(d.i2),a2); g.stroke();
     g.beginPath(); g.moveTo(X(d.ri1),r1); g.lineTo(X(d.ri2),r2); g.stroke();
+    var tocke=[[X(d.i1),a1],[X(d.i2),a2],[X(d.ri1),r1],[X(d.ri2),r2]];
+    if(dv){
+      var a0=Y(d.p0), r0=YR(d.r0);
+      g.beginPath(); g.moveTo(X(d.i0),a0); g.lineTo(X(d.i1),a1); g.stroke();
+      g.beginPath(); g.moveTo(X(ri0),r0); g.lineTo(X(d.ri1),r1); g.stroke();
+      tocke.push([X(d.i0),a0],[X(ri0),r0]);
+    }
     g.lineWidth=1;
-    [[X(d.i1),a1],[X(d.i2),a2],[X(d.ri1),r1],[X(d.ri2),r2]].forEach(function(p){
+    tocke.forEach(function(p){
       g.beginPath(); g.arc(p[0],p[1],3.6,0,Math.PI*2); g.fillStyle=B.div; g.fill(); g.strokeStyle=B.ozadje; g.lineWidth=1.2; g.stroke();
     });
     g.lineWidth=1;
     g.fillStyle=B.div; g.font='bold 9px Courier New, monospace'; g.textBaseline='bottom';
-    var oz=(d.skrita?'skrita ':'')+(bear?'medvedja':'bikovska');
+    var oz=(dv?'★ dvojna ':'')+(d.skrita?'skrita ':'')+(bear?'medvedja':'bikovska');
     g.fillText(oz, levo+4, yC0+11);
     // trajanje divergence: kotirna črta med grafoma, od prve do druge točke cene, z napisom
     var tr=dfTrajanje(s);
@@ -12845,6 +12857,10 @@ function jfTrajanje(s){
   var f = kor >= 86400000 ? jfDan : (min >= 1200 ? function(ms){ return jfDan(ms) + ' ' + jfUra(ms); } : jfUra);
   return {min: min, napis: jfMinNapis(min), od: (typeof a === 'number' ? f(a) : ''), do: (typeof b === 'number' ? f(b) : '')};
 }
+// 30 Oct 2026: double divergence (scanner SKENER-2026-10-30-dvojna) — "★ DOUBLE" in the type or a third point on the chart
+function jfDvojna(c, pic){
+  return String((c && c.type) || '').toUpperCase().indexOf('DOUBLE') >= 0 || !!(pic && pic.div && pic.div.dvojna);
+}
 function jfVrsta(t){
   var u = String(t || '').toUpperCase(), h = (u.indexOf('HIDDEN') >= 0 || u.indexOf('SKRIT') >= 0) ? 'hidden ' : '';
   var x = [];
@@ -13272,6 +13288,7 @@ function jfKartaHtml(c, i){
        : '<span class="jf-5m-z" title="5-minute signal — our testing robot trades it on a Binance demo account">5M · TESTING · DEMO</span>')
     + '<span style="color:' + (dolga ? 'var(--green)' : 'var(--red)') + '">' + (dolga ? 'LONG' : 'SHORT') + '</span>'
     + '<span class="jf-vrsta">' + jfEsc(jfVrsta(c.type)) + (c.str ? ' · strength ' + jfEsc(c.str) : '') + '</span>'
+    + (jfDvojna(c, pic) ? '<span class="jf-dvojna" title="special: double divergence — three price points in a row against RSI">★ DOUBLE DIVERGENCE</span>' : '')
     + (traj ? '<span class="b1f-traj" title="how long the divergence lasted: from the first to the second price point">lasted ' + traj.napis + '</span>' : '')
     + '<span class="jf-pill jf-pill-' + st + '">' + JF_STANJE_NAPIS[st] + '</span></div>'
     + '<div class="jf-pod">signal ' + jfCas(c.t) + (c.sig_px ? ' · price ' + jfSt(c.sig_px) : '') + '</div>'
@@ -13311,9 +13328,11 @@ function jfOpis(s){
   if(!d) return s.rsi_nizek ? 'RSI-below-10 alarm without divergence: RSI at the signal ' + jfSt(Math.round((s.rsi_zdaj || 0) * 10) / 10) + '.'
                             : 'No divergence in the direction of the trade on this chart.';
   var bear = (d.tip === 'bear'), sp = (d.p2 - d.p1) / d.p1;
-  var cena = 'price ' + (bear ? 'high' : 'low') + ' ' + jfSt(d.p1) + ' → ' + jfSt(d.p2) + ' (' + jfPct(sp) + ', '
+  var dv = !!(d.dvojna && d.p0 !== undefined && d.p0 !== null && d.r0 !== undefined && d.r0 !== null);
+  var cena = (dv ? '<b style="color:#ffd24a">★ double divergence</b> · ' : '')
+             + 'price ' + (bear ? 'high' : 'low') + ' ' + (dv ? jfSt(d.p0) + ' → ' : '') + jfSt(d.p1) + ' → ' + jfSt(d.p2) + ' (' + jfPct(sp) + ', '
              + (bear ? (d.p2 > d.p1 ? 'higher' : 'lower') : (d.p2 < d.p1 ? 'lower' : 'higher')) + ')';
-  var rsi = 'RSI ' + (+d.r1).toFixed(1) + ' → ' + (+d.r2).toFixed(1) + ' (' + (d.r2 > d.r1 ? 'higher' : 'lower') + ')';
+  var rsi = 'RSI ' + (dv ? (+d.r0).toFixed(1) + ' → ' : '') + (+d.r1).toFixed(1) + ' → ' + (+d.r2).toFixed(1) + ' (' + (d.r2 > d.r1 ? 'higher' : 'lower') + ')';
   var tr = jfTrajanje(s);
   return cena + ' · ' + rsi + (tr ? ' · divergence lasted <b class="b1f-traj-b">' + tr.napis + '</b>' + (tr.od && tr.do ? ' (' + tr.od + ' → ' + tr.do + ')' : '') : '')
     + (d.skrita ? ' · <b style="color:var(--text)">hidden</b>' : '');
@@ -13436,20 +13455,29 @@ function jfNarisi(cv, c, r){
   var d = s.div;
   if(d){
     var bear = (d.tip === 'bear');
+    var dv = !!(d.dvojna && d.i0 !== undefined && d.i0 !== null && d.p0 !== undefined && d.r0 !== undefined && d.i0 >= 0);
+    var ri0 = dv ? ((d.ri0 !== undefined && d.ri0 !== null) ? d.ri0 : d.i0) : null;
     g.strokeStyle = B.div; g.globalAlpha = 0.35; g.setLineDash([2, 3]);
-    [d.i1, d.i2].forEach(function(ii){ g.beginPath(); g.moveTo(X(ii) + 0.5, yC0); g.lineTo(X(ii) + 0.5, yR0 + hR); g.stroke(); });
+    (dv ? [d.i0, d.i1, d.i2] : [d.i1, d.i2]).forEach(function(ii){ g.beginPath(); g.moveTo(X(ii) + 0.5, yC0); g.lineTo(X(ii) + 0.5, yR0 + hR); g.stroke(); });
     g.setLineDash([]); g.globalAlpha = 1;
     g.lineWidth = 2;
     var a1 = Y(d.p1), a2 = Y(d.p2), r1 = YR(d.r1), r2 = YR(d.r2);
     g.beginPath(); g.moveTo(X(d.i1), a1); g.lineTo(X(d.i2), a2); g.stroke();
     g.beginPath(); g.moveTo(X(d.ri1), r1); g.lineTo(X(d.ri2), r2); g.stroke();
+    var tocke = [[X(d.i1), a1], [X(d.i2), a2], [X(d.ri1), r1], [X(d.ri2), r2]];
+    if(dv){                                   // double divergence: the third (oldest) point, line P0 → P1
+      var a0 = Y(d.p0), r0 = YR(d.r0);
+      g.beginPath(); g.moveTo(X(d.i0), a0); g.lineTo(X(d.i1), a1); g.stroke();
+      g.beginPath(); g.moveTo(X(ri0), r0); g.lineTo(X(d.ri1), r1); g.stroke();
+      tocke.push([X(d.i0), a0], [X(ri0), r0]);
+    }
     g.lineWidth = 1;
-    [[X(d.i1), a1], [X(d.i2), a2], [X(d.ri1), r1], [X(d.ri2), r2]].forEach(function(pt){
+    tocke.forEach(function(pt){
       g.beginPath(); g.arc(pt[0], pt[1], 3.6, 0, Math.PI * 2); g.fillStyle = B.div; g.fill(); g.strokeStyle = B.ozadje; g.lineWidth = 1.2; g.stroke();
     });
     g.lineWidth = 1;
     g.fillStyle = B.div; g.font = 'bold 9px Courier New, monospace'; g.textBaseline = 'bottom';
-    g.fillText((d.skrita ? 'hidden ' : '') + (bear ? 'bearish' : 'bullish'), levo + 4, yC0 + 11);
+    g.fillText((dv ? '★ double ' : '') + (d.skrita ? 'hidden ' : '') + (bear ? 'bearish' : 'bullish'), levo + 4, yC0 + 11);
     var tr = jfTrajanje(s);
     if(tr){
       var xa = X(d.i1), xb = X(d.i2), ym = Math.round(yC0 + hC + presl / 2) + 0.5, nap = tr.napis;
