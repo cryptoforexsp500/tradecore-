@@ -11,7 +11,7 @@ var TC_JAVNO = true;
 var JAVNO_API = 'https://tradecore-api.matic-hocevar-1.workers.dev';                 // your Cloudflare Worker, e.g. 'https://tradecore-api.yourname.workers.dev'
 var STRIPE_LINK = '';               // Stripe Payment Link — leave empty when STRIPE_LINK is set in Cloudflare (Worker settings)
 var SITE_PRICE = '€29 / month';     // price shown on the site (the real price is set in Stripe)
-var BINANCE_REF_LINK = '';          // your Binance referral link (empty = Binance sign-up page)
+var BINANCE_REF_LINK = 'https://www.binance.com/register?ref=21903892';   // your Binance referral link (empty = Binance sign-up page)
 var MEXC_REF_LINK = 'https://promote.mexc.com/r/MA1RGTsxcY';   // your MEXC referral link
 var CONTACT_EMAIL = 'cryptoforexsp500@gmail.com';   // support e-mail shown on AI PRO (empty = not shown)
 var X_HANDLE = 'Chollocar1';         // X (Twitter) account: pay with crypto, access codes (empty = not shown)
@@ -997,6 +997,21 @@ body.na-ai #content{display:none}
 .jd-vaba-n{font-size:14px;color:var(--text);line-height:1.45;margin:2px 0 4px}
 .jd-vaba .jr-z b{color:#c084fc;font-weight:normal;letter-spacing:.14em}
 .jd-izvoz .jf-cta{padding:6px 12px;font-size:9.5px}
+.jl-gumbi{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-left:auto}
+.jl-bn{display:inline-block;flex:0 0 auto;padding:8px 14px;border:1px solid #f0b90b;color:#f0b90b;background:rgba(240,185,11,.08);
+  font-size:10px;letter-spacing:.12em;font-weight:bold;text-decoration:none;font-family:inherit;white-space:nowrap}
+.jl-bn:hover{background:rgba(240,185,11,.16)}
+.jl-tekst{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--green);padding:11px 14px;margin:0 0 10px;
+  font-size:10.5px;line-height:1.7;color:var(--text2);max-width:1200px}
+.jl-tekst b{color:var(--text);font-weight:normal}
+.jd-demo-uvod{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:11px 13px;margin:0 0 10px;background:var(--bg2);
+  border:1px solid var(--border2);border-left:3px solid var(--amber);font-size:10.5px;line-height:1.65;color:var(--text2)}
+.jd-demo-uvod .jd-demo-t{flex:1 1 420px;min-width:0}
+.jd-demo-uvod b{color:var(--text);font-weight:normal}
+.jd-zak a{color:var(--amber);text-decoration:none;border-bottom:1px dotted var(--amber);font-size:9.5px;letter-spacing:.06em;white-space:nowrap}
+.jd-zak a:hover{color:var(--text)}
+.jf-test5-v a,.jf-uvod a{color:var(--amber);text-decoration:none;border-bottom:1px dotted var(--amber)}
+.jf-test5-v a:hover,.jf-uvod a:hover{color:var(--text)}
 .jd-povz{display:flex;flex-wrap:wrap;gap:4px 18px;align-items:baseline;font-size:10px;color:var(--text2);margin:0 0 9px;line-height:1.6}
 .jd-povz b{font-size:15px;font-weight:normal;font-variant-numeric:tabular-nums}
 .jd-povz .jd-x{color:var(--text)}
@@ -12951,6 +12966,7 @@ function jfRezultat(r){
   return null;
 }
 function jfRzdaj(r){
+  if(r.state === 'open' && !r.sl && r.now_r !== undefined && r.now_r !== null) return r.now_r;   // DEMO: R from the robot, no stop loss shown
   if(r.state !== 'open' || !r.now_px || !r.entry || !r.sl || r.entry === r.sl) return null;
   return jfSmer(r) * (r.now_px - r.entry) / Math.abs(r.entry - r.sl);
 }
@@ -13081,13 +13097,13 @@ function jfVir(t){ var v = document.getElementById('df-vir'); if(v) v.textConten
 function jfVirRender(){
   var o = JF.podatki; if(!o) return;
   var kdaj = o.updated ? ' · updated ' + jfPred(o.updated) : '';
-  if(jfZaklenjeno()){ jfVir('LIVE · for AI PRO subscribers' + kdaj); return; }
+  if(jfZaklenjeno()){ jfVir('LIVE · results of our robot on Binance · signals for AI PRO subscribers' + kdaj); return; }
   if(jfVZivo() && jfPogled() === 'racun'){ var A = jfRacun();
     jfVir((JF.nacin.indexOf('preview') === 0 ? 'preview · ' : '') + 'LIVE ACCOUNT · ' + (A ? (A.trades_total || (A.trades || []).length) + ' trades since ' + jfDatumMs(A.since) : 'waiting for data') + kdaj); return; }
   if(jfVZivo() && jfPogled() === 'dnevnik'){ var J = jdDnevnik();
     jfVir((JF.nacin.indexOf('preview') === 0 ? 'preview · ' : '') + 'TRADE JOURNAL · ' + (J ? J.rows_total + ' closed trades since ' + jfDatumMs(J.since) : 'waiting for data') + kdaj); return; }
   if(!jfVZivo()){ var nf = jfKarte(jfTrejdiTf()).length;
-    jfVir((JF.nacin.indexOf('preview') === 0 ? 'preview · ' : '') + 'FREE · 5 MIN testing robot · demo · last ' + nf + ' signals live' + kdaj); return; }
+    jfVir((JF.nacin.indexOf('preview') === 0 ? 'preview · ' : '') + 'DEMO · closed trades of the live robot · 5 MIN testing robot · last ' + nf + ' signals live' + kdaj); return; }
   var n = jfTrejdiTf().length, pred = (JF.nacin.indexOf('preview') === 0 ? 'preview · ' : '');
   var t = JF.f.tf === '5M' ? '5 MIN testing robot · demo · ' + (jfKarteZive() ? 'live · ' + n + ' trades' : 'last ' + n + ' closed')
                            : 'LIVE ROBOT ' + JF.f.tf + ' · ' + (jfVZivo() ? 'live · ' + n + ' trades' : 'free · ' + n + ' closed trades');
@@ -13127,12 +13143,8 @@ function jfGlava(){
   if(jfZaklenjeno()) return h + jfZaklep();
   if(zivo) h += jfPogledi();
   if(!zivo){
-    h += jtHtml();
-    h += jdVaba();
-    h += '<div class="jf-teaser"><span style="flex:1 1 420px;min-width:0"><span class="pt-live" style="font-size:10px;margin:0 6px 0 0">● LIVE ACCOUNT</span>'
-      + '<b>Open trades and new signals the moment they fire</b> — 1-hour to weekly and our 5-minute 1G strategy — with an e-mail '
-      + 'for every signal, take profit and stop loss, plus the full live account with growth charts. Part of AI PRO.</span>'
-      + '<button class="jf-cta" onclick="jfTabIzberi(\'live\')">SEE THE LIVE ACCOUNT →</button></div>';
+    h += jdDemoUvod();
+    h += jdDemoHtml();
   } else if(jfPogled() === 'racun') return h + jfRacunHtml();
   else if(jfPogled() === 'dnevnik') return h + (jdHtml() || jfSporocilo('<b>TRADE JOURNAL</b> — the journal is being prepared and appears '
     + 'here with the next update of the robot.'));
@@ -13168,7 +13180,8 @@ function jfGlava(){
       + ' · <a href="#" class="jf-moja" onclick="nav(\'ai\');return false;">MY SUBSCRIPTION</a></span></div>';
   }
   h += robot ? jfTestTabela() + jfTestUvod() : jf5mUvod();
-  if(!zivo) h += '<div class="jf-uvod" style="margin-top:-4px">Free: the last 50 signals of the testing robot. Click a coin to open it on Binance.</div>';
+  if(!zivo) h += '<div class="jf-uvod" style="margin-top:-4px">Free: the last 50 signals of the testing robot — stop loss and take profit are in '
+    + '<a href="#" onclick="jfTabIzberi(\'live\');return false;">LIVE</a>. Click a coin to open it on Binance.</div>';
   var zk = jfKarteZive();
   var tools = '<div class="b1p-orodja">';
   var st = function(x){ return tr.filter(function(t){ return x === 'all' || t.s === x; }).length; };
@@ -13191,14 +13204,15 @@ function jfTabi(){
   var opis = t === 'live'
     ? (dostop ? 'Every trade of our live robot since 14 Oct 2026 in R, the full trade journal to export — and live signals the moment '
                 + 'they fire, with an e-mail for every new signal, take profit and stop loss.'
-              : 'The live account, live signals and e-mail alerts are part of AI PRO.')
-    : 'Free for everyone: the results of our live robot since 14 Oct 2026 in R, and the last 50 signals of our 5-minute testing robot, '
-      + 'live. The full trade journal is part of AI PRO.';
+              : 'Our robot trades these signals on a real Binance account — its results since 14 Oct 2026 in R. Signals with stop loss and '
+                + 'take profit, the trade journal and e-mail alerts are part of AI PRO.')
+    : 'DEMO, free for everyone: the closed trades of our live robot (results only) and the last 50 signals of our 5-minute testing '
+      + 'robot on a Binance demo account, live. Stop loss and take profit are in LIVE.';
   return '<div class="jf-zavi" role="tablist" aria-label="Free or live feed">'
     + '<button role="tab" aria-selected="' + (t === 'free') + '" class="jf-zav' + (t === 'free' ? ' on' : '') + '" onclick="jfTabIzberi(\'free\')">'
-    + 'FREE <small>everyone</small></button>'
+    + 'DEMO <small>free · everyone</small></button>'
     + '<button role="tab" aria-selected="' + (t === 'live') + '" class="jf-zav jf-zav-live' + (t === 'live' ? ' on' : '') + '" onclick="jfTabIzberi(\'live\')">'
-    + '<span class="jf-zav-tocka" aria-hidden="true">●</span>LIVE <small>' + (lok ? 'subscribers' : (dostop ? 'AI PRO' : '🔒 AI PRO')) + '</small></button>'
+    + '<span class="jf-zav-tocka" aria-hidden="true">●</span>LIVE <small>' + (lok ? 'our robot · subscribers' : (dostop ? 'our robot · AI PRO' : 'our robot on Binance')) + '</small></button>'
     + '<span class="jf-zavi-opis">' + opis + '</span></div>';
 }
 // a visitor without a subscription picked LIVE: what it is and the way to the subscription
@@ -13206,7 +13220,7 @@ function jfZaklep(){
   var R = jfRobotPovzetek(), T = jfTest(), cn = (T && T.counts) || {}, odp = 0, ck = 0;
   JF_TF_TEST.forEach(function(x){ odp += (cn[x] && cn[x].open) || 0; ck += (cn[x] && cn[x].pending) || 0; });
   var cena = ''; try{ cena = portalCena(); }catch(e){}
-  return '<div class="jf-zaklep">'
+  return jlHtml() + jdVaba() + '<div class="jf-zaklep">'
     + '<div class="jf-zaklep-n"><span class="pt-live">● LIVE</span> is part of <b>TradeCore AI PRO</b></div>'
     + '<p>See our real Binance account trade by trade, and every signal of our live robot the moment it fires.</p>'
     + '<ul class="jf-zaklep-s">'
@@ -13223,7 +13237,7 @@ function jfZaklep(){
     + '<div class="jf-zaklep-g"><button class="jf-cta" onclick="jfNarocilo()">SUBSCRIBE' + (cena ? ' · ' + jfEsc(cena) : '') + ' →</button>'
     + (typeof portalProsnjaHtml === 'function' ? ''
        : '<a href="#" class="jf-moja" onclick="nav(\'ai\');return false;">ALREADY SUBSCRIBED? ENTER YOUR KEY</a>')
-    + '<a href="#" class="jf-zaklep-free" onclick="jfTabIzberi(\'free\');return false;">← back to FREE</a></div>'
+    + '<a href="#" class="jf-zaklep-free" onclick="jfTabIzberi(\'free\');return false;">← back to DEMO</a></div>'
     + '<div class="jf-s-pod">Secure card payment through Stripe · cancel anytime · not financial advice.</div>'
     + (typeof portalProsnjaHtml === 'function' ? '<div class="jf-zaklep-dva">' + portalProsnjaHtml('jf') + portalKodaHtml('jf') + '</div>' : '')
     + '</div>';
@@ -13363,7 +13377,7 @@ function jfPrikazi(tiho){
   JF.podpis = podpis;
   var top = el.scrollTop;
   JF.robot = jfRobotPovzetek();
-  if(jfZaklenjeno()){ JF.prikaz = []; el.innerHTML = jfGlava(); if(tiho) el.scrollTop = top; return; }
+  if(jfZaklenjeno()){ JF.prikaz = []; el.innerHTML = jfGlava(); if(tiho) el.scrollTop = top; setTimeout(function(){ try{ jlNarisi(); }catch(e){} }, 0); return; }
   if(racun){ JF.prikaz = []; el.innerHTML = jfGlava(); if(tiho) el.scrollTop = top; jrNarisi(); return; }
   setTimeout(function(){ try{ jtNarisi(); }catch(e){} }, 0);
   JF.prikaz = jfIzberiKarte();
@@ -13648,17 +13662,119 @@ function jdPovzetek(){ var j = JF.podatki && (JF.podatki.journal_summary || JF.p
 function jdOdpri(){ JF.pogled = 'dnevnik'; try{ localStorage.setItem('tc_df_pogled', 'dnevnik'); }catch(e){} jfTabIzberi('live'); }
 function jdVaba(){
   var J = jdPovzetek(); if(!J) return '';
-  var S = J.summary, T = jtSled(), od = jfDatumMs(J.since), BT = J.by_tf || {}, g5 = BT['5M'] || {}, nH = 0, rH = 0;
-  ['H1', 'H4', 'D1', 'W1'].forEach(function(x){ var g = BT[x] || {}; nH += g.n || 0; rH += g.r_sum || 0; });
-  if(T && T.summary){ nH = T.summary.n; rH = T.summary.r_sum; }
+  var S = J.summary, od = jfDatumMs(J.since), BT = J.by_tf || {}, g5 = BT['5M'] || {}, nH = 0;
+  ['H1', 'H4', 'D1', 'W1'].forEach(function(x){ nH += (BT[x] || {}).n || 0; });
   return '<div class="jd-vaba"><div class="jd-vaba-l"><div class="jr-z"><b>AI PRO · TRADE JOURNAL</b></div>'
-    + '<div class="jd-vaba-n">The full journal of the trades that made <b style="color:' + jfBarva(rH) + ';font-weight:normal">' + jfR(rH) + '</b> since '
+    + '<div class="jd-vaba-n">The full journal of the trades that made <b style="color:' + jfBarva(S.r_sum) + ';font-weight:normal">' + jfR(S.r_sum) + '</b> since '
     + jfEsc(od) + ' is available in AI PRO.</div>'
-    + '<div class="jr-pod" style="max-width:760px">All ' + nH + ' closed 1-hour to weekly trades behind this result'
-    + (g5.n ? ', plus ' + g5.n + ' trades of our 5-minute 1G strategy on our real Binance account (' + jfR(g5.r_sum) + ')' : '')
+    + '<div class="jr-pod" style="max-width:760px">All ' + S.n + ' closed trades behind this result — ' + nH + ' on 1-hour to weekly signals'
+    + (g5.n ? ' and ' + g5.n + ' of our 5-minute 1G strategy on our real Binance account' : '')
     + ' — each with its entry, stop loss, take profit, exit and result in R. Filter by timeframe and strategy and export the journal '
     + 'to CSV or Excel.</div></div>'
-    + '<button class="jf-cta" onclick="jdOdpri()">OPEN THE TRADE JOURNAL →</button></div>';
+    + '<button class="jf-cta" onclick="' + (jfZaklenjeno() ? 'jfNarocilo()' : 'jdOdpri()') + '">OPEN THE TRADE JOURNAL →</button></div>';
+}
+// ══ 7 Nov 2026, 9:54 — DEMO | LIVE ══
+// Matic: "dobičke daj pod LIVE in zraven linke za prijavo … dodaj tudi 5 min, ki se live trguje, torej vse, kar je na Binance. Moj robot
+// to trguje — napiši, da so navedeni njegovi stop lossi in TP, ni pa to financial advice; služi kot signal za trejderje, saj je divergenca
+// dober signal in ni potrebno ročno iskanje. Na demo vključi tudi zaključene trejde, ki so bili live … jasna ločitev med demo in live …
+// na free ne rabiš pokazati SL in TP za nobeno, samo omogoči dostop do live … naredi link: skleni subscription in deli ta referral link."
+var JL_TF = ['H1', 'H4', 'D1', 'W1', '5M'];
+function jlGumbi(){
+  var cena = ''; try{ cena = portalCena(); }catch(e){}
+  return '<div class="jl-gumbi"><button class="jf-cta" onclick="jfNarocilo()">SUBSCRIBE TO LIVE' + (cena ? ' · ' + jfEsc(cena) : '') + ' →</button>'
+    + '<a class="jl-bn" href="' + jfEsc(portalBinance()) + '" target="_blank" rel="noopener sponsored" title="open a Binance account with our referral link">'
+    + 'OPEN A BINANCE ACCOUNT ↗</a></div>';
+}
+function jdZaklep(){
+  return '<a href="#" onclick="event.stopPropagation();jfTabIzberi(\'live\');return false;" title="stop loss and take profit are part of LIVE — '
+    + 'subscribe to see them">🔒 IN LIVE · SUBSCRIBE</a>';
+}
+function jlTf(v){ JF.rac.jl = (JL_TF.indexOf(v) >= 0 ? v : 'ALL'); JF.rac.hov.jl = null;
+  var b = document.getElementById('jl-seg'); if(b) b.innerHTML = jlSegHtml(); var o = document.getElementById('jl-g1-v'); if(o) o.innerHTML = ''; jlNarisi(); }
+function jlSegHtml(){ var J = jdPovzetek(), c = (J && J.curves) || {};
+  return jfSeg(JF.rac.jl || 'ALL', [['ALL', 'ALL']].concat(JL_TF.filter(function(x){ return (c[x] || []).length > 1; }).map(function(x){ return [x, x]; })), 'jlTf'); }
+function jlNarisi(){
+  var J = jdPovzetek(), cv = document.getElementById('jl-g1'); if(!J || !cv) return;
+  var k = ((J.curves || {})[JF.rac.jl || 'ALL'] || []).map(function(p){ return [p[0], p[1], p[1]]; });
+  jrGrafRast(cv, k, 'r', 'jl', 'jl-g1-v');
+}
+function jlHtml(){
+  var J = jdPovzetek(); if(!J) return '';
+  var S = J.summary, od = jfDatumMs(J.since), BT = J.by_tf || {}, BS = J.by_strategy || {};
+  var h = '<div class="jr jl">';
+  h += '<div class="jr-hero"><div><div class="jr-z"><span class="pt-live">● LIVE</span>OUR ROBOT ON BINANCE · RESULTS SINCE ' + jfEsc(od).toUpperCase() + '</div>'
+    + '<div class="jr-big" style="color:' + jfBarva(S.r_sum) + '">' + jfR(S.r_sum) + '</div>'
+    + '<div class="jr-pod">' + S.n + ' closed trades · ' + jrWin(S) + ' won' + (S.pf ? ' · profit factor ' + S.pf.toFixed(2) : '')
+    + ' — 1-hour to weekly signals and our 5-minute 1G strategy · 1 R = the risk of one trade, from entry to its stop loss</div></div>'
+    + jlGumbi() + '</div>';
+  h += '<div class="jl-tekst"><b>Our robot trades these signals on Binance.</b> Every signal comes with the <b>stop loss and take profit our robot '
+    + 'uses</b> — they are listed with each signal in LIVE. An RSI divergence is a strong signal, and our scanner finds them for you on the 200 '
+    + 'most traded Binance coins, on 1-hour to weekly charts and every 5 minutes — <b>no manual searching</b>. The signals are meant for traders '
+    + 'as a starting point: <b>this is not financial advice</b>; whether and how you trade a signal is your own decision.</div>';
+  h += '<div class="jr-plosce">' + JL_TF.map(function(tf){
+      var g = BT[tf] || {};
+      return '<div class="jr-pl" style="cursor:pointer" onclick="jlTf(\'' + tf + '\')" title="show the ' + JR_TF_NAPIS[tf] + ' growth on the chart">'
+        + '<div class="jr-pl-n">' + tf + ' · ' + JR_TF_NAPIS[tf].toUpperCase() + (tf === '5M' ? ' · 1G' : '') + '</div>'
+        + '<div class="jr-pl-v" style="color:' + (g.n ? jfBarva(g.r_sum) : 'var(--text2)') + '">' + (g.n ? jfR(g.r_sum) : '—') + '</div>'
+        + '<div class="jr-pl-p">' + (g.n ? g.n + ' closed · ' + jrWin(g) + ' won' : 'no closed trades yet') + '</div></div>';
+    }).join('')
+    + Object.keys(BS).sort().map(function(s){
+      var g = BS[s] || {};
+      return '<div class="jr-pl"><div class="jr-pl-n">STRATEGY ' + s + '</div>'
+        + '<div class="jr-pl-v" style="color:' + (g.n ? jfBarva(g.r_sum) : 'var(--text2)') + '">' + (g.n ? jfR(g.r_sum) : '—') + '</div>'
+        + '<div class="jr-pl-p">' + (g.n ? g.n + ' closed · ' + jrWin(g) + ' won' : 'no closed trades yet') + '</div></div>';
+    }).join('') + '</div>';
+  h += '<div class="jr-blok"><div class="jr-blok-g"><span class="jr-blok-n">GROWTH IN R</span><span class="jr-blok-p">every closed trade since ' + jfEsc(od) + '</span>'
+    + '<span id="jl-seg">' + jlSegHtml() + '</span><span class="jr-odcitek" id="jl-g1-v" aria-live="polite"></span></div>'
+    + '<canvas class="jr-platno" id="jl-g1" role="img" aria-label="growth in R of our live robot since ' + jfEsc(od) + '"></canvas></div>';
+  h += '<div class="jr-opomba"><b>How these results are counted.</b> 1B–1F: every RSI divergence our scanner found on Binance 1-hour to weekly charts '
+    + 'since ' + jfEsc(od) + ', with the stop loss and take profit of each signal, simulated minute by minute on Binance Futures prices with fees; '
+    + 'since 27 Oct our robot also trades them on a real Binance account. 1G (5-minute signals): real trades on our Binance Futures account'
+    + (J.real_since ? ' since ' + jfEsc(jfDatumMs(J.real_since)) : '') + '. Past results do not guarantee future results; not financial advice.</div>';
+  return h + '</div>';
+}
+function jdDemoUvod(){
+  var J = jdPovzetek(), S = J && J.summary;
+  return '<div class="jd-demo-uvod"><div class="jd-demo-t"><b>DEMO — free for everyone:</b> the closed trades of our live robot with their results, '
+    + 'and our 5-minute testing robot on a Binance demo account. Signals with <b>stop loss and take profit</b>, the trade journal and e-mail '
+    + 'alerts are in <b><span class="pt-live" style="font-size:9px;margin:0 3px 0 0">●</span>LIVE</b>.</div>'
+    + (S ? '<button class="jf-cta" onclick="jfTabIzberi(\'live\')">LIVE RESULTS: ' + jfR(S.r_sum) + ' SINCE ' + jfEsc(jfDatumMs(J.since)).toUpperCase() + ' →</button>' : '')
+    + '<a class="jl-bn" href="' + jfEsc(portalBinance()) + '" target="_blank" rel="noopener sponsored">OPEN A BINANCE ACCOUNT ↗</a></div>';
+}
+function jdDemoVrstice(){
+  var J = jdPovzetek(); if(!J || !J.recent || !J.recent_cols) return [];
+  var ix = {}; J.recent_cols.forEach(function(k, i){ ix[k] = i; });
+  return J.recent.map(function(r){ return {exit_t: r[ix.closed], tf: r[ix.tf], s: r[ix.s], sym: r[ix.sym], side: r[ix.side], exit: r[ix.exit],
+                                           r: r[ix.r], src: r[ix.src]}; });
+}
+function jdDemoN(n){ JF.jd.dn = n; JF.podpis = ''; jfPrikazi(true); }
+function jdDemoHtml(){
+  var J = jdPovzetek(), V = jdDemoVrstice(); if(!J || !V.length) return '';
+  var n = JF.jd.dn || 20, tr = V.slice(0, n), od = jfDatumMs(J.since);
+  var h = '<div class="jr jd-demo"><div class="jr-blok"><div class="jr-blok-g"><span class="jr-blok-n"><span class="pt-live" style="font-size:9px;margin:0 5px 0 0">●</span>'
+    + 'CLOSED TRADES OF OUR LIVE ROBOT</span><span class="jr-blok-p">the latest ' + V.length + ' of ' + J.rows_total + ' since ' + jfEsc(od)
+    + ' · result in R · stop loss and take profit are in LIVE</span>' + jlGumbi() + '</div>';
+  h += '<div class="jf-ovoj"><table class="jf-tab jr-tr"><thead><tr><th>CLOSED</th><th>TF</th><th>STRAT.</th><th>COIN</th><th>SIDE</th><th>EXIT</th>'
+    + '<th class="st">RESULT</th><th>STOP LOSS · TAKE PROFIT</th><th></th></tr></thead><tbody>'
+    + tr.map(function(t){
+        var sym = String(t.sym || '').replace(/USDT$/, ''), d = t.side === 'LONG';
+        return '<tr onclick="jfOdpriBinance(\'' + jfEsc(t.sym) + '\')" title="open ' + jfEsc(sym) + ' on Binance Futures">'
+          + '<td>' + (t.exit_t ? jfCas(t.exit_t) : '—') + '</td>'
+          + '<td>' + (t.tf === '5M' ? '<span class="jf-5m-z">5M</span>' : '<span class="jf-tf-z">' + jfEsc(t.tf) + '</span>') + '</td>'
+          + '<td>' + jfEsc(t.s) + (t.src === 'real' ? ' <span class="pt-live" style="font-size:8px;margin:0" title="real trade on our Binance account">●</span>' : '') + '</td>'
+          + '<td><b>' + jfEsc(sym) + '</b></td>'
+          + '<td style="color:' + (d ? 'var(--green)' : 'var(--red)') + '">' + (d ? 'LONG' : 'SHORT') + '</td>'
+          + '<td>' + (JR_IZHOD[t.exit] || 'CLOSED') + '</td>'
+          + '<td class="st"><span style="color:' + jfBarva(t.r) + '">' + jfR(t.r) + '</span></td>'
+          + '<td class="jd-zak">' + jdZaklep() + '</td>'
+          + '<td class="jr-bn">BINANCE ↗</td></tr>';
+      }).join('') + '</tbody></table></div>';
+  if(V.length > tr.length) h += '<button class="dn-vec jf-mini" style="margin-top:8px" onclick="jdDemoN(' + (n + 30) + ')">SHOW 30 MORE · ' + (V.length - tr.length) + ' left</button>';
+  h += '<div class="jr-opomba" style="margin-bottom:0">1B–1F on 1-hour to weekly signals (every signal counted, simulated on Binance Futures prices with '
+    + 'fees; traded on our real account since 27 Oct) and 1G <span class="pt-live" style="font-size:8px;margin:0">●</span> on 5-minute signals '
+    + '(real trades on our Binance account). The full journal of all ' + J.rows_total + ' trades with entry, stop loss, take profit and export is '
+    + 'part of LIVE. Not financial advice.</div>';
+  return h + '</div></div>';
 }
 function jdHtml(){
   var J = jdDnevnik(); if(!J) return '';
@@ -13720,6 +13836,7 @@ function jtNarisi(){
   jrGrafRast(cv, k, 'r', 'jt', 'jt-g1-v');
 }
 window.addEventListener('resize', function(){ try{ jtNarisi(); }catch(e){} });
+window.addEventListener('resize', function(){ try{ if(jfZaklenjeno()) jlNarisi(); }catch(e){} });
 function jrFilterTf(v){ jrFilter('tf', v); }
 function jrFilterSt(v){ jrFilter('st', v); }
 
@@ -13846,7 +13963,7 @@ function jrGrafDni(cv, dni, en){
 window.addEventListener('resize', function(){ try{ if(jfVZivo() && jfPogled() === 'racun') jrNarisi(); }catch(e){} });
 
 function jfKartaHtml(c, i){
-  var dolga = (c.side === 'LONG'), st = jfStanjeKarte(c.v), pic = c.pic ? JF.slike[c.pic] : null;
+  var dolga = (c.side === 'LONG'), st = jfStanjeKarte(c.v), pic = c.pic ? JF.slike[c.pic] : null, zakl = !jfVZivo();
   var traj = pic ? jfTrajanje(pic) : null, sel = jfIzbrana(c), sym = String(c.sym || '').replace(/USDT$/, '');
   var h = '<div class="jf-k jf-k-' + st + '" id="jf-k-' + i + '">'
     + '<div class="jf-gl"><a class="jf-sym jf-sym-a" href="' + jfBinance(c.sym) + '" target="_blank" rel="noopener sponsored" '
@@ -13863,16 +13980,18 @@ function jfKartaHtml(c, i){
              + jfEsc(sym) + ' at the signal"></canvas>'
            : '<div class="b1f-brez">no chart was saved for this signal</div>')
     + '<div class="jf-opis">' + jfOpis(pic) + '</div>'
-    + '<div class="jf-ovoj"><table class="jf-tab"><thead><tr><th>STRATEGY</th><th class="st">ENTRY</th><th class="st">STOP LOSS</th>'
-    + '<th class="st">TAKE PROFIT</th><th>STATUS · RESULT</th></tr></thead><tbody>'
+    + '<div class="jf-ovoj"><table class="jf-tab"><thead><tr><th>STRATEGY</th><th class="st">ENTRY</th>'
+    + (zakl ? '<th class="st" colspan="2">STOP LOSS · TAKE PROFIT</th>' : '<th class="st">STOP LOSS</th><th class="st">TAKE PROFIT</th>')
+    + '<th>STATUS · RESULT</th></tr></thead><tbody>'
     + c.v.map(function(r, j){
         var sl = jfOdmik(r, r.sl), tp = jfOdmik(r, r.tp);
         return '<tr class="' + (j === sel ? 'on' : '') + '" id="jf-r-' + i + '-' + j + '" onclick="jfIzberiVrstico(' + i + ',' + j + ')" '
-          + 'title="show this strategy\'s stop loss and take profit on the chart">'
+          + 'title="' + (zakl ? 'stop loss and take profit of this strategy are in LIVE' : 'show this strategy\'s stop loss and take profit on the chart') + '">'
           + '<td><b>' + jfEsc(r.s) + '</b> <span class="jf-s-pod">' + (r.et === 'market' ? 'market' : 'limit') + '</span></td>'
           + '<td class="st">' + jfSt(r.entry) + '</td>'
-          + '<td class="st">' + jfSt(r.sl) + ' <span class="jf-s-pod">' + jfPct(sl) + '</span></td>'
-          + '<td class="st">' + jfSt(r.tp) + ' <span class="jf-s-pod">' + jfPct(tp) + '</span></td>'
+          + (zakl ? '<td class="st jd-zak" colspan="2">' + jdZaklep() + '</td>'
+                  : '<td class="st">' + jfSt(r.sl) + ' <span class="jf-s-pod">' + jfPct(sl) + '</span></td>'
+                    + '<td class="st">' + jfSt(r.tp) + ' <span class="jf-s-pod">' + jfPct(tp) + '</span></td>')
           + '<td id="jf-z-' + i + '-' + j + '">' + jfStanjeVrstice(r) + '</td></tr>';
       }).join('')
     + '</tbody></table></div>'
@@ -13880,8 +13999,11 @@ function jfKartaHtml(c, i){
        ? '<div class="jf-robot-v"><span class="jf-robot-z">● LIVE ROBOT</span>Our robot trades these signals with this stop loss and take profit'
          + (JF.robot && JF.robot.zaprtih ? ' — profitable on our statistics since ' + jfEsc(jfRobotOd(JF.robot)) + ': <b style="color:'
             + jfBarva(JF.robot.r) + '">' + jfR(JF.robot.r) + '</b>' : '') + '.</div>'
-       : '<div class="jf-test5-v"><span class="jf-5m-z">TESTING ROBOT · DEMO</span> Stop loss and take profit of our testing robot on a '
-         + 'Binance demo account — a test of a strategy, not a recommendation.</div>')
+       : (zakl ? '<div class="jf-test5-v"><span class="jf-5m-z">TESTING ROBOT · DEMO</span> Stop loss and take profit of every signal are '
+                 + 'in <a href="#" onclick="jfTabIzberi(\'live\');return false;">LIVE</a> — <a href="#" onclick="jfNarocilo();return false;">'
+                 + 'subscribe</a> · <a href="' + jfEsc(portalBinance()) + '" target="_blank" rel="noopener sponsored">open a Binance account ↗</a></div>'
+               : '<div class="jf-test5-v"><span class="jf-5m-z">TESTING ROBOT · DEMO</span> Stop loss and take profit of our testing robot on a '
+                 + 'Binance demo account — a test of a strategy, not a recommendation.</div>'))
     + '<div class="b1f-noga">'
     + (pic ? '<button class="jf-mini" onclick="jfShrani(' + i + ')" title="save this chart as a PNG image">SAVE IMAGE</button>' : '')
     + '<a class="jf-mini" href="' + jfBinance(c.sym) + '" target="_blank" rel="noopener sponsored" style="color:#f0b90b;border-color:rgba(240,185,11,.5)">TRADE ON BINANCE ↗</a></div>'
