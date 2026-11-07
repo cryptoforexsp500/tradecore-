@@ -10,7 +10,7 @@
 var TC_JAVNO = true;
 var JAVNO_API = 'https://tradecore-api.matic-hocevar-1.workers.dev';                 // your Cloudflare Worker, e.g. 'https://tradecore-api.yourname.workers.dev'
 var STRIPE_LINK = '';               // Stripe Payment Link — leave empty when STRIPE_LINK is set in Cloudflare (Worker settings)
-var SITE_PRICE = '€29 / month';     // price shown on the site (the real price is set in Stripe)
+var SITE_PRICE = '€49 / month';     // price shown on the site (the real price is set in Stripe)
 var BINANCE_REF_LINK = 'https://www.binance.com/register?ref=21903892';   // your Binance referral link (empty = Binance sign-up page)
 var MEXC_REF_LINK = 'https://promote.mexc.com/r/MA1RGTsxcY';   // your MEXC referral link
 var CONTACT_EMAIL = 'cryptoforexsp500@gmail.com';   // support e-mail shown on AI PRO (empty = not shown)
@@ -1008,10 +1008,14 @@ body.na-ai #content{display:none}
   border:1px solid var(--border2);border-left:3px solid var(--amber);font-size:10.5px;line-height:1.65;color:var(--text2)}
 .jd-demo-uvod .jd-demo-t{flex:1 1 420px;min-width:0}
 .jd-demo-uvod b{color:var(--text);font-weight:normal}
+.jf-kot{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin:0 0 10px;padding:7px 10px;border:1px dashed var(--border2);
+  font-size:9px;letter-spacing:.12em;color:var(--text2)}
+.jf-kot .b1p-seg{margin:0}
+.jf-tf-n2 a{color:var(--amber);text-decoration:none;border-bottom:1px dotted var(--amber);letter-spacing:.08em}
 .jd-zak a{color:var(--amber);text-decoration:none;border-bottom:1px dotted var(--amber);font-size:9.5px;letter-spacing:.06em;white-space:nowrap}
 .jd-zak a:hover{color:var(--text)}
-.jf-test5-v a,.jf-uvod a{color:var(--amber);text-decoration:none;border-bottom:1px dotted var(--amber)}
-.jf-test5-v a:hover,.jf-uvod a:hover{color:var(--text)}
+.jf-test5-v a,.jf-uvod a,.jf-test5 p a{color:var(--amber);text-decoration:none;border-bottom:1px dotted var(--amber)}
+.jf-test5-v a:hover,.jf-uvod a:hover,.jf-test5 p a:hover{color:var(--text)}
 .jd-povz{display:flex;flex-wrap:wrap;gap:4px 18px;align-items:baseline;font-size:10px;color:var(--text2);margin:0 0 9px;line-height:1.6}
 .jd-povz b{font-size:15px;font-weight:normal;font-variant-numeric:tabular-nums}
 .jd-povz .jd-x{color:var(--text)}
@@ -1456,7 +1460,7 @@ body.javno .jv-paper,body.javno #paper-summary-cr{display:none!important}
       </div>
       <div class="sidebar-block portal-promo">
         <div class="sb-hdr">LIVE DIVERGENCE SIGNALS</div>
-        <div class="pp-tekst">Our robot trades RSI divergences on a real Binance Futures account — 1-hour to weekly charts and a 5-minute strategy. Free: its results on 1-hour to weekly signals since 14 Oct 2026 in R, and the 5-minute testing robot live. AI PRO: every trade since 14 Oct 2026 including the 5-minute 1G strategy, in R with growth charts, live signals and e-mail alerts.</div>
+        <div class="pp-tekst">Our robot trades RSI divergences on a real Binance Futures account — 1-hour to weekly charts and a 5-minute strategy. Free: its results on 1-hour to weekly signals since 14 Oct 2026 in R, and the 5-minute testing robot live. AI PRO: every trade since 14 Oct 2026 including the 5-minute 1G scalping strategy, in R with growth charts, live signals and e-mail alerts.</div>
         <button class="pp-gumb" onclick="nav('df')">OPEN DIVERGENCE FEED</button>
         <div class="pp-pod" onclick="nav('ai')">LIVE signals + e-mail alerts · <span id="pp-cena"></span> →</div>
       </div>
@@ -2105,7 +2109,7 @@ body.javno .jv-paper,body.javno #paper-summary-cr{display:none!important}
           <div>✅ Real-time cloud sinhronizacija</div>
         </div>
         <!-- Price -->
-        <div style="font-size:26px;font-weight:bold;color:#a855f7;margin-bottom:4px">29 €<span style="font-size:11px;color:#4a5a7a;font-weight:normal">/mesec</span></div>
+        <div style="font-size:26px;font-weight:bold;color:#a855f7;margin-bottom:4px">49 €<span style="font-size:11px;color:#4a5a7a;font-weight:normal">/mesec</span></div>
         <div style="font-size:8px;color:#2a3a5a;margin-bottom:14px;letter-spacing:.08em">BREZ VEZAVE · ODPOVESTE KADARKOLI</div>
         <!-- Email input -->
         <div style="font-size:8px;color:#4a5a7a;letter-spacing:.1em;text-align:left;margin-bottom:5px">VAS EMAIL NASLOV</div>
@@ -2113,7 +2117,7 @@ body.javno .jv-paper,body.javno #paper-summary-cr{display:none!important}
           style="width:100%;box-sizing:border-box;background:#060b18;border:1px solid #1a2a4a;color:#c0d0f0;padding:10px 12px;font-family:inherit;font-size:11px;outline:none;letter-spacing:.05em;margin-bottom:10px"/>
         <!-- Pay button -->
         <button onclick="gateRegister()" style="width:100%;padding:12px;background:linear-gradient(135deg,#7c3aed,#a855f7);border:none;color:#fff;font-family:'Courier New',monospace;font-size:11px;font-weight:bold;letter-spacing:.12em;cursor:pointer;margin-bottom:8px;transition:opacity .2s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
-          💳 PLAČAJ Z KARTICO — 29 €/mesec
+          💳 PLAČAJ Z KARTICO — 49 €/mesec
         </button>
         <div id="gate-reg-status" style="font-size:8.5px;color:#4a5a7a;line-height:1.6;margin-top:4px">
           Po potrditvi plačila prejmete aktivacijsko kodo na vaš email.<br>Varno plačilo prek Stripe.
@@ -2180,7 +2184,7 @@ body.javno .jv-paper,body.javno #paper-summary-cr{display:none!important}
       <!-- Buy button -->
       <div style="padding:16px 20px;text-align:center;border-bottom:1px solid var(--border)">
         <div style="font-size:9px;color:var(--text3);letter-spacing:.1em;margin-bottom:10px">MESEČNA NAROČNINA</div>
-        <div id="ai-price-display" style="font-size:24px;font-weight:bold;color:#a855f7;margin-bottom:12px">29 €<span style="font-size:10px;color:var(--text3);font-weight:normal">/mesec</span></div>
+        <div id="ai-price-display" style="font-size:24px;font-weight:bold;color:#a855f7;margin-bottom:12px">49 €<span style="font-size:10px;color:var(--text3);font-weight:normal">/mesec</span></div>
         <a id="stripe-buy-btn" href="#" onclick="openStripePayment()" style="display:inline-block;padding:10px 32px;background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;font-family:'Courier New',monospace;font-size:11px;font-weight:bold;letter-spacing:.1em;cursor:pointer;text-decoration:none;border:none;transition:opacity .2s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
           💳 PLAČAJ Z STRIPE
         </a>
@@ -12880,9 +12884,14 @@ function jfTabIzberi(v){
   JF.slikeV = ''; JF.podpis = ''; JF.opozorilo = (JF.tab === 'free' ? JF.opozorilo : '');
   jfNalozi(false);
 }
-function jfZivo(){ return jfTab() === 'live' && (jfLokalno() || portalImaDostop()); }
+// 7 Nov 2026: the local preview shows LIVE as a subscriber or as a visitor without a subscription (the results and the way to subscribe)
+function jfKot(){ if(!jfLokalno()) return ''; if(!JF.kot){ var k = ''; try{ k = localStorage.getItem('tc_df_kot') || ''; }catch(e){}
+  JF.kot = (k === 'obiskovalec' ? 'obiskovalec' : 'narocnik'); } return JF.kot; }
+function jfKotIzberi(v){ JF.kot = (v === 'obiskovalec' ? 'obiskovalec' : 'narocnik'); try{ localStorage.setItem('tc_df_kot', JF.kot); }catch(e){}
+  JF.slikeV = ''; JF.podpis = ''; jfNalozi(false); }
+function jfZivo(){ return jfTab() === 'live' && (jfLokalno() ? jfKot() !== 'obiskovalec' : portalImaDostop()); }
 // a visitor without a subscription on the LIVE tab: the offer instead of live data
-function jfZaklenjeno(){ return jfTab() === 'live' && !jfLokalno() && !portalImaDostop(); }
+function jfZaklenjeno(){ return jfTab() === 'live' && (jfLokalno() ? jfKot() === 'obiskovalec' : !portalImaDostop()); }
 // the free package has the 5-minute trades live (waiting, open, closed) since 24 Oct 2026 — older packages only closed ones
 function jf5mZivo(){ return !!(JF.podatki && JF.podatki.free_5m === 'live'); }
 function jfVZivo(){ return JF.nacin === 'live' || JF.nacin === 'preview-live'; }
@@ -12987,14 +12996,20 @@ function jfStanjeVrstice(r){
 // ── timeframe: the robot's 5-minute trades or one TEST timeframe ──
 function jfJeTest(){ return JF.f.tf !== '5M'; }
 function jfTest(){ return (JF.podatki && JF.podatki.test) || null; }
+// 7 Nov 2026, 13:24 — Matic: "1G priključi live robotu": in LIVE, 5 MIN is the 1G strategy on our real Binance account
+// (with stop loss and take profit); the 5-minute testing robot (demo) is only in DEMO, without stop loss and take profit.
+function jfG1(){ return (JF.podatki && JF.podatki.g1) || null; }
+function jfJe1G(){ return jfVZivo() && JF.f.tf === '5M'; }
 function jfTrejdiTf(){
   if(!JF.podatki) return [];
+  if(jfJe1G()){ var G = jfG1(); return (G && G.trades) || []; }
   if(!jfJeTest()) return JF.podatki.trades || [];
   var t = jfTest(); return ((t && t.trades) || []).filter(function(x){ return x.tf === JF.f.tf; });
 }
 function jfFilterTf(v){ JF.f.tf = (JF_TF.indexOf(v) >= 0 ? v : 'H1'); if(jfVZivo()) JF.f.tfL = JF.f.tf; jfShraniIzbiro(); JF.podpis = ''; jfPrikazi(); }
 // 6 Nov 2026: FREE is only the 5-minute testing robot; LIVE keeps the visitor's timeframe
-function jfTfUskladi(){ var t = jfVZivo() ? (JF.f.tfL || 'H1') : '5M'; if(JF.f.tf !== t) JF.f.tf = t; if(!jfVZivo() && JF.f.n > 50) JF.f.n = 50; }
+function jfTfUskladi(){ var t = jfVZivo() ? (JF.f.tfL || 'H1') : '5M'; if(JF.f.tf !== t) JF.f.tf = t; if(!jfVZivo() && JF.f.n > 50) JF.f.n = 50;
+  if(jfJe1G() ? (JF.f.s !== 'all' && JF.f.s !== '1G') : JF.f.s === '1G') JF.f.s = 'all'; }
 
 // ── cards: one per signal ──
 function jfKarte(trades){
@@ -13002,7 +13017,7 @@ function jfKarte(trades){
   (trades || []).forEach(function(t){
     var k = t.pic || ('id:' + t.id), c = po[k];
     if(!c){ c = po[k] = {k: k, sym: t.sym, side: t.side, t: t.t, type: t.type, str: t.str, sig_px: t.sig_px, pic: t.pic, tf: t.tf || '5M',
-                         vrstice: []}; karte.push(c); }
+                         g1: !!t.g1, vrstice: []}; karte.push(c); }
     c.vrstice.push(t);
     if(t.t && (!c.t || t.t < c.t)) c.t = t.t;
   });
@@ -13103,9 +13118,10 @@ function jfVirRender(){
   if(jfVZivo() && jfPogled() === 'dnevnik'){ var J = jdDnevnik();
     jfVir((JF.nacin.indexOf('preview') === 0 ? 'preview · ' : '') + 'TRADE JOURNAL · ' + (J ? J.rows_total + ' closed trades since ' + jfDatumMs(J.since) : 'waiting for data') + kdaj); return; }
   if(!jfVZivo()){ var nf = jfKarte(jfTrejdiTf()).length;
-    jfVir((JF.nacin.indexOf('preview') === 0 ? 'preview · ' : '') + 'DEMO · closed trades of the live robot · 5 MIN testing robot · last ' + nf + ' signals live' + kdaj); return; }
+    jfVir((JF.nacin.indexOf('preview') === 0 ? 'preview · ' : '') + 'DEMO · 5 MIN scalping testing robot · last ' + nf + ' signals live, without SL/TP · closed trades of the live robot, without results' + kdaj); return; }
   var n = jfTrejdiTf().length, pred = (JF.nacin.indexOf('preview') === 0 ? 'preview · ' : '');
-  var t = JF.f.tf === '5M' ? '5 MIN testing robot · demo · ' + (jfKarteZive() ? 'live · ' + n + ' trades' : 'last ' + n + ' closed')
+  var t = jfJe1G() ? 'LIVE ROBOT 5M · SCALPING 1G · real account · ' + n + ' trades'
+        : JF.f.tf === '5M' ? '5 MIN testing robot · demo · ' + (jfKarteZive() ? 'live · ' + n + ' trades' : 'last ' + n + ' closed')
                            : 'LIVE ROBOT ' + JF.f.tf + ' · ' + (jfVZivo() ? 'live · ' + n + ' trades' : 'free · ' + n + ' closed trades');
   jfVir(pred + (jfVZivo() ? 'LIVE · ' : 'FREE · ') + t + kdaj);
 }
@@ -13134,7 +13150,7 @@ function jfGlava(){
   var c = robot ? ((T && T.counts && T.counts[tf]) || {}) : (o.counts || {});
   if(JF.nacin === 'preview-live' || JF.nacin === 'preview-free'){
     h += '<div class="jf-ban jf-ban-pred"><b>LOCAL PREVIEW</b> · data straight from your robot through OBJAVI-SIGNALE — visible only on this '
-      + 'computer. The FREE and LIVE tabs show exactly what visitors and subscribers see.</div>';
+      + 'computer. The DEMO and LIVE tabs show exactly what visitors and subscribers see — in LIVE choose SUBSCRIBER or VISITOR.</div>';
   }
   var opoz = JF.opozorilo || ((!jfLokalno() && portalKljuc() && PORTAL.veljavna === false)
     ? 'Your access key is not valid or the subscription has expired, so you see the free feed. Renew in AI PRO.' : '');
@@ -13143,8 +13159,7 @@ function jfGlava(){
   if(jfZaklenjeno()) return h + jfZaklep();
   if(zivo) h += jfPogledi();
   if(!zivo){
-    h += jdDemoUvod();
-    h += jdDemoHtml();
+    h += jdDemoUvod();          // 13:24: the closed trades of the live robot are below the testing robot's cards (jfPrikazi)
   } else if(jfPogled() === 'racun') return h + jfRacunHtml();
   else if(jfPogled() === 'dnevnik') return h + (jdHtml() || jfSporocilo('<b>TRADE JOURNAL</b> — the journal is being prepared and appears '
     + 'here with the next update of the robot.'));
@@ -13153,6 +13168,7 @@ function jfGlava(){
   if(star > 15 * 60000){
     h += '<div class="jf-ban jf-ban-opoz">Last update ' + jfPred(o.updated) + ' — the robot may be offline, so the data shown can be out of date.</div>';
   }
+  if(zivo && jfJe1G()) h += jf1gGlava();
   if(robot && zivo){
     h += jtSled() ? jtHtml() : jfRobotGlava();
     if(!zivo){
@@ -13175,17 +13191,19 @@ function jfGlava(){
     h += '<div class="jf-ban jf-ban-live"><span class="jf-ban-t"><span class="pt-live">● LIVE</span> AI PRO · '
       + (robot ? '<b>' + tf + '</b> — ' + JF_TF_NAPIS[tf] + ' signals of our live robot the moment they fire, all four strategies · '
                  + 'an e-mail for every signal, take profit and stop loss'
-               : '<b>5 MIN</b> <span class="jf-5m-z">TESTING · DEMO</span> — our testing robot on a Binance demo account')
+               : '<b>5 MIN · SCALPING 1G</b> — 5-minute scalping trades of our live robot on our real Binance account, with stop loss and take profit')
       + (PORTAL.do ? ' · subscription active until <b>' + jfEsc(jfDatum(PORTAL.do)) + '</b>' : '')
       + ' · <a href="#" class="jf-moja" onclick="nav(\'ai\');return false;">MY SUBSCRIPTION</a></span></div>';
   }
-  h += robot ? jfTestTabela() + jfTestUvod() : jf5mUvod();
-  if(!zivo) h += '<div class="jf-uvod" style="margin-top:-4px">Free: the last 50 signals of the testing robot — stop loss and take profit are in '
-    + '<a href="#" onclick="jfTabIzberi(\'live\');return false;">LIVE</a>. Click a coin to open it on Binance.</div>';
+  h += robot ? jfTestTabela() + jfTestUvod() : (jfJe1G() ? jf1gUvod() : jf5mUvod());
+  if(!zivo) h += '<div class="jf-uvod" style="margin-top:-4px">Free: the last 50 signals of the testing robot, <b>without stop loss and take profit</b> '
+    + '(it is a demo). Stop loss and take profit of our live robot — 1-hour to weekly and the 5-minute 1G scalping strategy — are in '
+    + '<a href="#" onclick="jfTabIzberi(\'live\');return false;">LIVE</a>' + (portalImaDostop() ? '' : ' · <a href="#" onclick="jfNarocilo();return false;">subscribe</a>')
+    + ' · <a href="' + jfEsc(portalBinance()) + '" target="_blank" rel="noopener sponsored">open a Binance account ↗</a>. Click a coin to open it on Binance.</div>';
   var zk = jfKarteZive();
   var tools = '<div class="b1p-orodja">';
   var st = function(x){ return tr.filter(function(t){ return x === 'all' || t.s === x; }).length; };
-  tools += jfSeg(JF.f.s, [['all', 'ALL <span class="b1p-st">' + st('all') + '</span>']].concat(JF_STRAT.map(function(s){
+  tools += jfSeg(JF.f.s, [['all', 'ALL <span class="b1p-st">' + st('all') + '</span>']].concat((jfJe1G() ? ['1G'] : JF_STRAT).map(function(s){
     return [s, s + ' <span class="b1p-st">' + st(s) + '</span>']; })), 'jfFilterS');
   if(zk){
     var sk = function(x){ return tr.filter(function(t){ return (JF.f.s === 'all' || t.s === JF.f.s) && (x === 'all' || t.state === x); }).length; };
@@ -13202,37 +13220,41 @@ function jfGlava(){
 function jfTabi(){
   var t = jfTab(), lok = jfLokalno(), dostop = lok || portalImaDostop();
   var opis = t === 'live'
-    ? (dostop ? 'Every trade of our live robot since 14 Oct 2026 in R, the full trade journal to export — and live signals the moment '
-                + 'they fire, with an e-mail for every new signal, take profit and stop loss.'
-              : 'Our robot trades these signals on a real Binance account — its results since 14 Oct 2026 in R. Signals with stop loss and '
-                + 'take profit, the trade journal and e-mail alerts are part of AI PRO.')
-    : 'DEMO, free for everyone: the closed trades of our live robot (results only) and the last 50 signals of our 5-minute testing '
-      + 'robot on a Binance demo account, live. Stop loss and take profit are in LIVE.';
+    ? (!jfZaklenjeno() ? 'Our live robot — 1-hour to weekly signals and the 5-minute 1G scalping strategy: every trade since 14 Oct 2026 in R, the '
+                + 'full trade journal with stop loss and take profit to export, and its signals the moment they fire with stop loss and take profit.'
+              : 'Our robot trades on a real Binance account — 1-hour to weekly signals and the 5-minute 1G scalping strategy. Its results since 14 Oct '
+                + '2026 in R are below; its trades with stop loss and take profit, the trade journal and e-mail alerts are part of AI PRO.')
+    : 'DEMO, free for everyone: our 5-minute scalping testing robot on a Binance demo account, live — without stop loss and take profit — '
+      + 'and the closed trades of our live robot, without results. Our live robot\'s results and signals with stop loss and take profit are in LIVE.';
   return '<div class="jf-zavi" role="tablist" aria-label="Free or live feed">'
     + '<button role="tab" aria-selected="' + (t === 'free') + '" class="jf-zav' + (t === 'free' ? ' on' : '') + '" onclick="jfTabIzberi(\'free\')">'
     + 'DEMO <small>free · everyone</small></button>'
     + '<button role="tab" aria-selected="' + (t === 'live') + '" class="jf-zav jf-zav-live' + (t === 'live' ? ' on' : '') + '" onclick="jfTabIzberi(\'live\')">'
     + '<span class="jf-zav-tocka" aria-hidden="true">●</span>LIVE <small>' + (lok ? 'our robot · subscribers' : (dostop ? 'our robot · AI PRO' : 'our robot on Binance')) + '</small></button>'
-    + '<span class="jf-zavi-opis">' + opis + '</span></div>';
+    + '<span class="jf-zavi-opis">' + opis + '</span></div>'
+    + (lok && t === 'live' ? '<div class="jf-kot"><span>LOCAL PREVIEW · SHOW LIVE AS</span>'
+       + jfSeg(jfKot(), [['narocnik', 'SUBSCRIBER'], ['obiskovalec', 'VISITOR · NOT SUBSCRIBED YET']], 'jfKotIzberi') + '</div>' : '');
 }
 // a visitor without a subscription picked LIVE: what it is and the way to the subscription
 function jfZaklep(){
-  var R = jfRobotPovzetek(), T = jfTest(), cn = (T && T.counts) || {}, odp = 0, ck = 0;
+  var R = jfRobotPovzetek(), T = jfTest(), cn = (T && T.counts) || {}, odp = 0, ck = 0, g1c = (JF.podatki && JF.podatki.g1_counts) || {};
   JF_TF_TEST.forEach(function(x){ odp += (cn[x] && cn[x].open) || 0; ck += (cn[x] && cn[x].pending) || 0; });
+  odp += g1c.open || 0; ck += g1c.pending || 0;
   var cena = ''; try{ cena = portalCena(); }catch(e){}
   return jlHtml() + jdVaba() + '<div class="jf-zaklep">'
     + '<div class="jf-zaklep-n"><span class="pt-live">● LIVE</span> is part of <b>TradeCore AI PRO</b></div>'
     + '<p>See our real Binance account trade by trade, and every signal of our live robot the moment it fires.</p>'
     + '<ul class="jf-zaklep-s">'
-    + '<li><b>LIVE ACCOUNT</b>: every trade of our live robot since 14 Oct 2026 — 1 hour to 1 week and the 5-minute 1G strategy — '
+    + '<li><b>LIVE ACCOUNT</b>: every trade of our live robot since 14 Oct 2026 — 1 hour to 1 week and the 5-minute 1G scalping strategy — '
     + 'with its result in R, the growth chart, and results by timeframe and strategy</li>'
     + '<li><b>TRADE JOURNAL</b>: every closed trade since 14 Oct 2026 with its entry, stop loss, take profit, exit and R — filter it '
     + 'and export it to CSV or Excel</li>'
-    + '<li>New 1-hour, 4-hour, daily and weekly signals at once: the chart, our entry, stop loss and take profit for 1B, 1C, 1D, 1E and 1F</li>'
-    + '<li>An e-mail for every new signal (with the chart) and for every take profit and stop loss</li>'
+    + '<li>Every signal of our live robot the moment it fires — 1-hour, 4-hour, daily and weekly (1B, 1C, 1D, 1E, 1F) and the 5-minute '
+    + '1G scalping strategy on our real account: the chart, our entry, stop loss and take profit</li>'
+    + '<li>An e-mail for every new 1-hour to weekly signal (with the chart) and for every take profit and stop loss</li>'
     + '<li>Waiting entries and open trades with their current result</li></ul>'
     + (odp + ck ? '<div class="jf-zdaj">Right now in LIVE: <b>' + odp + '</b> open trade' + (odp === 1 ? '' : 's') + ' and <b>' + ck
-                  + '</b> waiting entr' + (ck === 1 ? 'y' : 'ies') + ' on 1-hour to weekly charts.</div>' : '')
+                  + '</b> waiting entr' + (ck === 1 ? 'y' : 'ies') + ' of our live robot.</div>' : '')
 
     + '<div class="jf-zaklep-g"><button class="jf-cta" onclick="jfNarocilo()">SUBSCRIBE' + (cena ? ' · ' + jfEsc(cena) : '') + ' →</button>'
     + (typeof portalProsnjaHtml === 'function' ? ''
@@ -13283,13 +13305,34 @@ function jfRobotGlava(){
 }
 // 5 MIN: the testing robot (different strategies, Binance demo account)
 function jf5mUvod(){
-  return '<div class="jf-test5"><div class="jf-robot-n"><span class="jf-5m-z">5 MIN · TESTING ROBOT · DEMO</span></div>'
-    + '<p><b>On 5-minute charts we test different strategies.</b> Our testing robot trades every 5-minute signal automatically on a '
+  return '<div class="jf-test5"><div class="jf-robot-n"><span class="jf-5m-z">5-MIN SCALPING · TESTING ROBOT · DEMO</span></div>'
+    + '<p><b>On 5-minute charts we test different scalping strategies.</b> Our testing robot trades every 5-minute signal automatically on a '
     + 'Binance Futures <b>demo account — not real money</b>. ' + (jfKarteZive() ? 'Live for everyone, free: waiting entries, open trades and '
-    + 'results. ' : '') + 'These are tests, not recommendations — our live robot trades the 1-hour to weekly signals.</p>' + jfKako('5M') + '</div>';
+    + 'results — <b>without stop loss and take profit</b>. ' : '') + 'These are tests, not recommendations — our live robot trades the 1-hour '
+    + 'to weekly signals and the 5-minute 1G scalping strategy on a real Binance account (in <a href="#" onclick="jfTabIzberi(\'live\');return false;">LIVE</a>).</p>'
+    + jfKako('5M') + '</div>';
+}
+// 5 MIN in LIVE: strategy 1G of our live robot on our real Binance account
+function jf1gUvod(){
+  return '<div class="jf-uvod jf-glavni-uvod"><b>These are the stop loss and take profit our robot uses on our real account.</b> Every card is one '
+    + '5-minute signal: the chart shows the divergence our scanner found, the table the 1G trade our robot took on it — entry, stop loss, take '
+    + 'profit and result. <b>Treat every signal as a suggestion</b> — whether and how you trade it is your own decision; not financial advice.'
+    + jfKako('5M', true) + '</div>';
+}
+function jf1gGlava(){
+  var J = jdPovzetek(), g = (J && J.by_tf && J.by_tf['5M']) || {}, G = jfG1(), cn = (G && G.counts) || {};
+  var od = (J && J.real_since) ? jfDatumMs(J.real_since) : '';
+  return '<div class="jf-robot"><div class="jf-robot-l"><div class="jf-robot-n"><span class="jf-robot-z">● LIVE ROBOT</span>5 MIN · SCALPING STRATEGY 1G</div>'
+    + '<p><b>1G is our 5-minute scalping strategy.</b> Our robot trades every 5-minute 1G signal on our <b>real Binance Futures account</b>, with the stop loss and take profit shown on every '
+    + 'card. 1G trades <b>against</b> the 5-minute divergence: a bullish divergence → short, a bearish one → long.</p></div>'
+    + (g.n ? '<div class="jf-robot-d"><div class="jf-robot-r" style="color:' + jfBarva(g.r_sum) + '">' + jfR(g.r_sum) + '</div>'
+             + '<div class="jf-s-pod">' + g.n + ' closed trade' + (g.n === 1 ? '' : 's') + (od ? ' since ' + jfEsc(od) : '') + ' · ' + jrWin(g) + ' won'
+             + ((cn.open || cn.pending) ? ' · now ' + (cn.open || 0) + ' open' + (cn.pending ? ', ' + cn.pending + ' waiting' : '') : '') + '</div></div>' : '')
+    + '<div class="jf-robot-pod"><b>R</b> = result ÷ risk: 1 R is what one trade risks down to its stop loss. Real trades on our Binance account. '
+    + 'Past results do not guarantee future results; not financial advice.</div></div>';
 }
 
-function jfKako(tf){
+function jfKako(tf, g1){
   var sveca = JF_TF_NAPIS[tf] || '5-minute';
   return '<details class="jf-kako"' + (JF.kako ? ' open' : '') + ' ontoggle="JF.kako=this.open"><summary>How to read a card</summary>'
     + '<p>One card is one signal. The chart shows the ' + sveca + ' candles and the RSI as our scanner saw them when the signal fired. '
@@ -13297,9 +13340,11 @@ function jfKako(tf){
     + 'the orange bar between the charts shows how long it lasted. The lighter band is the last 50 closed candles the scanner checks; '
     + 'the dashed vertical line is the moment of the signal; <span style="color:var(--green)">green</span> is the take profit and '
     + '<span style="color:var(--red)">red</span> the stop loss of the selected strategy — click a row in the table to switch.</p>'
-    + '<p><b>1B</b> enters at market at the signal. <b>1C, 1D and 1E</b> place a limit entry 0.1% from the signal price, so they can wait '
-    + 'for a fill or stay unfilled; 1C uses the tightest stop, 1D a stop of at least 1%, 1E aims for a target about as far as its stop. '
-    + '<b>1F</b> enters at market like 1B, but its take profit is never closer than its stop loss. '
+    + (g1 ? '<p><b>1G</b> (our 5-minute scalping strategy) enters at market against the divergence (a bullish divergence → short, a bearish one → long), with the stop loss '
+            + 'and take profit in the table, on our real Binance Futures account. '
+          : '<p><b>1B</b> enters at market at the signal. <b>1C, 1D and 1E</b> place a limit entry 0.1% from the signal price, so they can wait '
+            + 'for a fill or stay unfilled; 1C uses the tightest stop, 1D a stop of at least 1%, 1E aims for a target about as far as its stop. '
+            + '<b>1F</b> enters at market like 1B, but its take profit is never closer than its stop loss. ')
     + 'Result is the price move from entry to exit (fees not included); R is the result in units of the risk taken (distance to the stop)'
     + (tf === '5M' ? '' : ', fees included') + '. Times are in your time zone (' + jfPas() + ').</p></details>';
 }
@@ -13308,12 +13353,12 @@ function jfKako(tf){
 // pri 5 min navedi, da je še v testiranju … napiši pri 1h, da to so naši SL in TP, vsak user naj vzame signal kot nasvet".
 // 1 hour and longer are the main signals; their results are simulated (not the robot's trades) and the page says so. ──
 function jfTfIzbira(){
-  var T = jfTest(), sez = (T && T.trades) || [];
-  var n = function(x){ return x === '5M' ? (JF.podatki.trades || []).length : sez.filter(function(t){ return t.tf === x; }).length; };
-  return '<div class="jf-tf"><span class="jf-tf-n">LIVE ROBOT</span>'
-    + jfSeg(JF.f.tf, JF_TF_TEST.map(function(x){ return [x, x + ' <span class="b1p-st">' + n(x) + '</span>']; }), 'jfFilterTf')
-    + '<span class="jf-tf-n jf-tf-n2">TESTING ROBOT</span>'
-    + jfSeg(JF.f.tf, [['5M', '5 MIN <span class="jf-5m-z">DEMO</span> <span class="b1p-st">' + n('5M') + '</span>']], 'jfFilterTf')
+  var T = jfTest(), sez = (T && T.trades) || [], G = jfG1();
+  var n = function(x){ return x === '5M' ? ((G && G.trades) || []).length : sez.filter(function(t){ return t.tf === x; }).length; };
+  return '<div class="jf-tf"><span class="jf-tf-n"><span class="pt-live" style="font-size:9px;margin:0 4px 0 0">●</span>LIVE ROBOT</span>'
+    + jfSeg(JF.f.tf, JF_TF_TEST.map(function(x){ return [x, x + ' <span class="b1p-st">' + n(x) + '</span>']; })
+        .concat([['5M', '5 MIN · SCALPING 1G <span class="b1p-st">' + n('5M') + '</span>']]), 'jfFilterTf')
+    + '<span class="jf-tf-n jf-tf-n2">5-MIN SCALPING TESTING ROBOT (DEMO, WITHOUT SL/TP): <a href="#" onclick="jfTabIzberi(\'free\');return false;">DEMO TAB</a></span>'
     + '</div>';
 }
 function jfDatumMs(ms){ try{ return new Date(ms).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'}); }catch(e){ return ''; } }
@@ -13391,6 +13436,7 @@ function jfPrikazi(tiho){
   } else {
     h += '<div class="jf-mreza">' + JF.prikaz.map(jfKartaHtml).join('') + '</div>';
   }
+  if(!jfVZivo()) h += jdDemoHtml();
   el.innerHTML = h;
   if(tiho) el.scrollTop = top;
   jfNarisiVse();
@@ -13406,7 +13452,7 @@ var JR_TF = ['H1', 'H4', 'D1', 'W1', '5M'];
 var JR_TF_NAPIS = {H1: '1 hour', H4: '4 hours', D1: '1 day', W1: '1 week', '5M': '5 minutes'};
 var JR_STRAT = {'1B': 'market entry at the signal', '1C': 'limit entry · tightest stop', '1D': 'limit entry · stop at least 1%',
                 '1E': 'limit entry · target about the stop', '1F': 'market entry · target at least the stop',
-                '1G': '5 min · against the 1B signal'};
+                '1G': '5-min scalping · against the 1B signal'};
 var JR_IZHOD = {target: 'TAKE PROFIT', stop: 'STOP LOSS', market: 'AT MARKET', harvest: 'EARLY PROFIT', manual: 'CLOSED', other: 'CLOSED'};
 function jfPogled(){ return (JF.pogled === 'signali' || JF.pogled === 'dnevnik') ? JF.pogled : 'racun'; }
 function jfPogledIzberi(v){
@@ -13582,7 +13628,7 @@ function jtHtml(){
   h += '<div class="jr-opomba"><b>How these results are counted.</b> Every RSI divergence our scanner found on Binance 1-hour to weekly charts since '
     + jfEsc(od) + ', taken by all five strategies (1B–1F) with the stop loss and take profit you see on each signal, wins and losses, '
     + 'simulated minute by minute on Binance Futures prices with fees; since 27 Oct our robot also trades them on a real Binance account. '
-    + 'Every one of these trades, with our 5-minute 1G strategy, is in the <b>TRADE JOURNAL</b> of AI PRO. Past results do not '
+    + 'Every one of these trades, with our 5-minute 1G scalping strategy, is in the <b>TRADE JOURNAL</b> of AI PRO. Past results do not '
     + 'guarantee future results; not financial advice.</div>';
   return h + '</div>';
 }
@@ -13668,7 +13714,7 @@ function jdVaba(){
     + '<div class="jd-vaba-n">The full journal of the trades that made <b style="color:' + jfBarva(S.r_sum) + ';font-weight:normal">' + jfR(S.r_sum) + '</b> since '
     + jfEsc(od) + ' is available in AI PRO.</div>'
     + '<div class="jr-pod" style="max-width:760px">All ' + S.n + ' closed trades behind this result — ' + nH + ' on 1-hour to weekly signals'
-    + (g5.n ? ' and ' + g5.n + ' of our 5-minute 1G strategy on our real Binance account' : '')
+    + (g5.n ? ' and ' + g5.n + ' of our 5-minute 1G scalping strategy on our real Binance account' : '')
     + ' — each with its entry, stop loss, take profit, exit and result in R. Filter by timeframe and strategy and export the journal '
     + 'to CSV or Excel.</div></div>'
     + '<button class="jf-cta" onclick="' + (jfZaklenjeno() ? 'jfNarocilo()' : 'jdOdpri()') + '">OPEN THE TRADE JOURNAL →</button></div>';
@@ -13705,7 +13751,7 @@ function jlHtml(){
   h += '<div class="jr-hero"><div><div class="jr-z"><span class="pt-live">● LIVE</span>OUR ROBOT ON BINANCE · RESULTS SINCE ' + jfEsc(od).toUpperCase() + '</div>'
     + '<div class="jr-big" style="color:' + jfBarva(S.r_sum) + '">' + jfR(S.r_sum) + '</div>'
     + '<div class="jr-pod">' + S.n + ' closed trades · ' + jrWin(S) + ' won' + (S.pf ? ' · profit factor ' + S.pf.toFixed(2) : '')
-    + ' — 1-hour to weekly signals and our 5-minute 1G strategy · 1 R = the risk of one trade, from entry to its stop loss</div></div>'
+    + ' — 1-hour to weekly signals and our 5-minute 1G scalping strategy · 1 R = the risk of one trade, from entry to its stop loss</div></div>'
     + jlGumbi() + '</div>';
   h += '<div class="jl-tekst"><b>Our robot trades these signals on Binance.</b> Every signal comes with the <b>stop loss and take profit our robot '
     + 'uses</b> — they are listed with each signal in LIVE. An RSI divergence is a strong signal, and our scanner finds them for you on the 200 '
@@ -13714,7 +13760,7 @@ function jlHtml(){
   h += '<div class="jr-plosce">' + JL_TF.map(function(tf){
       var g = BT[tf] || {};
       return '<div class="jr-pl" style="cursor:pointer" onclick="jlTf(\'' + tf + '\')" title="show the ' + JR_TF_NAPIS[tf] + ' growth on the chart">'
-        + '<div class="jr-pl-n">' + tf + ' · ' + JR_TF_NAPIS[tf].toUpperCase() + (tf === '5M' ? ' · 1G' : '') + '</div>'
+        + '<div class="jr-pl-n">' + tf + ' · ' + JR_TF_NAPIS[tf].toUpperCase() + (tf === '5M' ? ' · SCALPING 1G' : '') + '</div>'
         + '<div class="jr-pl-v" style="color:' + (g.n ? jfBarva(g.r_sum) : 'var(--text2)') + '">' + (g.n ? jfR(g.r_sum) : '—') + '</div>'
         + '<div class="jr-pl-p">' + (g.n ? g.n + ' closed · ' + jrWin(g) + ' won' : 'no closed trades yet') + '</div></div>';
     }).join('')
@@ -13729,23 +13775,25 @@ function jlHtml(){
     + '<canvas class="jr-platno" id="jl-g1" role="img" aria-label="growth in R of our live robot since ' + jfEsc(od) + '"></canvas></div>';
   h += '<div class="jr-opomba"><b>How these results are counted.</b> 1B–1F: every RSI divergence our scanner found on Binance 1-hour to weekly charts '
     + 'since ' + jfEsc(od) + ', with the stop loss and take profit of each signal, simulated minute by minute on Binance Futures prices with fees; '
-    + 'since 27 Oct our robot also trades them on a real Binance account. 1G (5-minute signals): real trades on our Binance Futures account'
+    + 'since 27 Oct our robot also trades them on a real Binance account. 1G (5-minute scalping): real trades on our Binance Futures account'
     + (J.real_since ? ' since ' + jfEsc(jfDatumMs(J.real_since)) : '') + '. Past results do not guarantee future results; not financial advice.</div>';
   return h + '</div>';
 }
 function jdDemoUvod(){
   var J = jdPovzetek(), S = J && J.summary;
-  return '<div class="jd-demo-uvod"><div class="jd-demo-t"><b>DEMO — free for everyone:</b> the closed trades of our live robot with their results, '
-    + 'and our 5-minute testing robot on a Binance demo account. Signals with <b>stop loss and take profit</b>, the trade journal and e-mail '
-    + 'alerts are in <b><span class="pt-live" style="font-size:9px;margin:0 3px 0 0">●</span>LIVE</b>.</div>'
-    + (S ? '<button class="jf-cta" onclick="jfTabIzberi(\'live\')">LIVE RESULTS: ' + jfR(S.r_sum) + ' SINCE ' + jfEsc(jfDatumMs(J.since)).toUpperCase() + ' →</button>' : '')
+  return '<div class="jd-demo-uvod"><div class="jd-demo-t"><b>DEMO — free for everyone:</b> our 5-minute scalping testing robot on a Binance demo '
+    + 'account, live and <b>without stop loss and take profit</b>, and below it the closed trades of our live robot — without stop loss, '
+    + 'take profit and results. '
+    + 'Our live robot — 1-hour to weekly signals and the 5-minute 1G scalping strategy — with its <b>results, stop loss and take profit</b>, the trade journal '
+    + 'and e-mail alerts is in <b><span class="pt-live" style="font-size:9px;margin:0 3px 0 0">●</span>LIVE</b>.</div>'
+    + (S ? '<button class="jf-cta" onclick="jfTabIzberi(\'live\')">SEE THE RESULTS OF OUR LIVE ROBOT →</button>' : '')
     + '<a class="jl-bn" href="' + jfEsc(portalBinance()) + '" target="_blank" rel="noopener sponsored">OPEN A BINANCE ACCOUNT ↗</a></div>';
 }
 function jdDemoVrstice(){
   var J = jdPovzetek(); if(!J || !J.recent || !J.recent_cols) return [];
   var ix = {}; J.recent_cols.forEach(function(k, i){ ix[k] = i; });
-  return J.recent.map(function(r){ return {exit_t: r[ix.closed], tf: r[ix.tf], s: r[ix.s], sym: r[ix.sym], side: r[ix.side], exit: r[ix.exit],
-                                           r: r[ix.r], src: r[ix.src]}; });
+  // 13:49: the free package carries no result and no exit of these trades (no profits in DEMO)
+  return J.recent.map(function(r){ return {exit_t: r[ix.closed], tf: r[ix.tf], s: r[ix.s], sym: r[ix.sym], side: r[ix.side], src: r[ix.src]}; });
 }
 function jdDemoN(n){ JF.jd.dn = n; JF.podpis = ''; jfPrikazi(true); }
 function jdDemoHtml(){
@@ -13753,27 +13801,25 @@ function jdDemoHtml(){
   var n = JF.jd.dn || 20, tr = V.slice(0, n), od = jfDatumMs(J.since);
   var h = '<div class="jr jd-demo"><div class="jr-blok"><div class="jr-blok-g"><span class="jr-blok-n"><span class="pt-live" style="font-size:9px;margin:0 5px 0 0">●</span>'
     + 'CLOSED TRADES OF OUR LIVE ROBOT</span><span class="jr-blok-p">the latest ' + V.length + ' of ' + J.rows_total + ' since ' + jfEsc(od)
-    + ' · result in R · stop loss and take profit are in LIVE</span>' + jlGumbi() + '</div>';
-  h += '<div class="jf-ovoj"><table class="jf-tab jr-tr"><thead><tr><th>CLOSED</th><th>TF</th><th>STRAT.</th><th>COIN</th><th>SIDE</th><th>EXIT</th>'
-    + '<th class="st">RESULT</th><th>STOP LOSS · TAKE PROFIT</th><th></th></tr></thead><tbody>'
+    + ' · results, stop loss and take profit are in LIVE</span>' + jlGumbi() + '</div>';
+  h += '<div class="jf-ovoj"><table class="jf-tab jr-tr"><thead><tr><th>CLOSED</th><th>TF</th><th>STRAT.</th><th>COIN</th><th>SIDE</th>'
+    + '<th>STOP LOSS · TAKE PROFIT · RESULT</th><th></th></tr></thead><tbody>'
     + tr.map(function(t){
         var sym = String(t.sym || '').replace(/USDT$/, ''), d = t.side === 'LONG';
         return '<tr onclick="jfOdpriBinance(\'' + jfEsc(t.sym) + '\')" title="open ' + jfEsc(sym) + ' on Binance Futures">'
           + '<td>' + (t.exit_t ? jfCas(t.exit_t) : '—') + '</td>'
-          + '<td>' + (t.tf === '5M' ? '<span class="jf-5m-z">5M</span>' : '<span class="jf-tf-z">' + jfEsc(t.tf) + '</span>') + '</td>'
+          + '<td>' + (t.tf === '5M' ? '<span class="jf-5m-z">5M SCALPING</span>' : '<span class="jf-tf-z">' + jfEsc(t.tf) + '</span>') + '</td>'
           + '<td>' + jfEsc(t.s) + (t.src === 'real' ? ' <span class="pt-live" style="font-size:8px;margin:0" title="real trade on our Binance account">●</span>' : '') + '</td>'
           + '<td><b>' + jfEsc(sym) + '</b></td>'
           + '<td style="color:' + (d ? 'var(--green)' : 'var(--red)') + '">' + (d ? 'LONG' : 'SHORT') + '</td>'
-          + '<td>' + (JR_IZHOD[t.exit] || 'CLOSED') + '</td>'
-          + '<td class="st"><span style="color:' + jfBarva(t.r) + '">' + jfR(t.r) + '</span></td>'
           + '<td class="jd-zak">' + jdZaklep() + '</td>'
           + '<td class="jr-bn">BINANCE ↗</td></tr>';
       }).join('') + '</tbody></table></div>';
   if(V.length > tr.length) h += '<button class="dn-vec jf-mini" style="margin-top:8px" onclick="jdDemoN(' + (n + 30) + ')">SHOW 30 MORE · ' + (V.length - tr.length) + ' left</button>';
   h += '<div class="jr-opomba" style="margin-bottom:0">1B–1F on 1-hour to weekly signals (every signal counted, simulated on Binance Futures prices with '
-    + 'fees; traded on our real account since 27 Oct) and 1G <span class="pt-live" style="font-size:8px;margin:0">●</span> on 5-minute signals '
-    + '(real trades on our Binance account). The full journal of all ' + J.rows_total + ' trades with entry, stop loss, take profit and export is '
-    + 'part of LIVE. Not financial advice.</div>';
+    + 'fees; traded on our real account since 27 Oct) and 1G <span class="pt-live" style="font-size:8px;margin:0">●</span>, our 5-minute scalping '
+    + 'strategy (real trades on our Binance account). Results, stop loss and take profit of these trades — the full journal of all ' + J.rows_total
+    + ' trades with entry, exit, result in R and export — are in LIVE. Not financial advice.</div>';
   return h + '</div></div>';
 }
 function jdHtml(){
@@ -13787,7 +13833,7 @@ function jdHtml(){
   h += '<div class="jd-povz"><span><b style="color:' + jfBarva(S.r_sum) + '">' + jfR(S.r_sum) + '</b> all ' + S.n + ' closed trades since ' + jfEsc(od)
     + (S.n ? ' · ' + jrWin(S) + ' won' : '') + (S.pf ? ' · profit factor ' + S.pf.toFixed(2) : '') + '</span>'
     + (sim.n ? '<span><span class="jd-x">1B–1F · 1 hour to 1 week</span> ' + '<span style="color:' + jfBarva(sim.r) + '">' + jfR(sim.r) + '</span> · ' + sim.n + ' trades</span>' : '')
-    + (real.n ? '<span><span class="jd-x">1G · 5 min <span class="pt-live" style="font-size:8px;margin:0">●</span> real account</span> '
+    + (real.n ? '<span><span class="jd-x">1G · 5-min scalping <span class="pt-live" style="font-size:8px;margin:0">●</span> real account</span> '
                 + '<span style="color:' + jfBarva(real.r) + '">' + jfR(real.r) + '</span> · ' + real.n + ' trades</span>' : '')
     + (filt ? '<span><span class="jd-x">this filter</span> <span style="color:' + jfBarva(F.r) + '">' + jfR(F.r) + '</span> · ' + F.n + ' trade'
               + (F.n === 1 ? '' : 's') + (F.w !== null ? ' · ' + F.w + '% won' : '') + '</span>' : '') + '</div>';
@@ -13963,13 +14009,16 @@ function jrGrafDni(cv, dni, en){
 window.addEventListener('resize', function(){ try{ if(jfVZivo() && jfPogled() === 'racun') jrNarisi(); }catch(e){} });
 
 function jfKartaHtml(c, i){
-  var dolga = (c.side === 'LONG'), st = jfStanjeKarte(c.v), pic = c.pic ? JF.slike[c.pic] : null, zakl = !jfVZivo();
+  var dolga = (c.side === 'LONG'), st = jfStanjeKarte(c.v), pic = c.pic ? JF.slike[c.pic] : null;
+  // 13:24: the 5-minute testing robot (demo) is shown without stop loss and take profit to everyone — no columns for them at all
+  var demo = !c.g1 && (!c.tf || c.tf === '5M'), zakl = !demo && !jfVZivo();
   var traj = pic ? jfTrajanje(pic) : null, sel = jfIzbrana(c), sym = String(c.sym || '').replace(/USDT$/, '');
   var h = '<div class="jf-k jf-k-' + st + '" id="jf-k-' + i + '">'
     + '<div class="jf-gl"><a class="jf-sym jf-sym-a" href="' + jfBinance(c.sym) + '" target="_blank" rel="noopener sponsored" '
     + 'title="open ' + jfEsc(sym) + ' on Binance Futures">' + jfEsc(sym) + '</a>'
     + (c.tf && c.tf !== '5M' ? '<span class="jf-tf-z" title="signal on ' + JF_TF_NAPIS[c.tf] + ' candles — our live robot trades it">' + jfEsc(c.tf) + '</span>'
-       : '<span class="jf-5m-z" title="5-minute signal — our testing robot trades it on a Binance demo account">5M · TESTING · DEMO</span>')
+       : (c.g1 ? '<span class="jf-tf-z" title="5-minute signal — our live robot trades it with its scalping strategy 1G on our real Binance account">5M SCALPING · 1G · LIVE</span>'
+               : '<span class="jf-5m-z" title="5-minute signal — our testing robot trades it on a Binance demo account">5M SCALPING · TESTING · DEMO</span>'))
     + '<span style="color:' + (dolga ? 'var(--green)' : 'var(--red)') + '">' + (dolga ? 'LONG' : 'SHORT') + '</span>'
     + '<span class="jf-vrsta">' + jfEsc(jfVrsta(c.type)) + (c.str ? ' · strength ' + jfEsc(c.str) : '') + '</span>'
     + (jfDvojna(c, pic) ? '<span class="jf-dvojna" title="special: double divergence — three price points in a row against RSI">★ DOUBLE DIVERGENCE</span>' : '')
@@ -13981,29 +14030,32 @@ function jfKartaHtml(c, i){
            : '<div class="b1f-brez">no chart was saved for this signal</div>')
     + '<div class="jf-opis">' + jfOpis(pic) + '</div>'
     + '<div class="jf-ovoj"><table class="jf-tab"><thead><tr><th>STRATEGY</th><th class="st">ENTRY</th>'
-    + (zakl ? '<th class="st" colspan="2">STOP LOSS · TAKE PROFIT</th>' : '<th class="st">STOP LOSS</th><th class="st">TAKE PROFIT</th>')
+    + (demo ? '' : (zakl ? '<th class="st" colspan="2">STOP LOSS · TAKE PROFIT</th>' : '<th class="st">STOP LOSS</th><th class="st">TAKE PROFIT</th>'))
     + '<th>STATUS · RESULT</th></tr></thead><tbody>'
     + c.v.map(function(r, j){
         var sl = jfOdmik(r, r.sl), tp = jfOdmik(r, r.tp);
         return '<tr class="' + (j === sel ? 'on' : '') + '" id="jf-r-' + i + '-' + j + '" onclick="jfIzberiVrstico(' + i + ',' + j + ')" '
-          + 'title="' + (zakl ? 'stop loss and take profit of this strategy are in LIVE' : 'show this strategy\'s stop loss and take profit on the chart') + '">'
+          + 'title="' + (demo ? 'demo trade of our testing robot — shown without stop loss and take profit'
+                         : (zakl ? 'stop loss and take profit of this strategy are in LIVE' : 'show this strategy\'s stop loss and take profit on the chart')) + '">'
           + '<td><b>' + jfEsc(r.s) + '</b> <span class="jf-s-pod">' + (r.et === 'market' ? 'market' : 'limit') + '</span></td>'
           + '<td class="st">' + jfSt(r.entry) + '</td>'
-          + (zakl ? '<td class="st jd-zak" colspan="2">' + jdZaklep() + '</td>'
+          + (demo ? '' : zakl ? '<td class="st jd-zak" colspan="2">' + jdZaklep() + '</td>'
                   : '<td class="st">' + jfSt(r.sl) + ' <span class="jf-s-pod">' + jfPct(sl) + '</span></td>'
                     + '<td class="st">' + jfSt(r.tp) + ' <span class="jf-s-pod">' + jfPct(tp) + '</span></td>')
           + '<td id="jf-z-' + i + '-' + j + '">' + jfStanjeVrstice(r) + '</td></tr>';
       }).join('')
     + '</tbody></table></div>'
-    + (c.tf && c.tf !== '5M'
+    + (c.g1
+       ? '<div class="jf-robot-v"><span class="jf-robot-z">● LIVE ROBOT · SCALPING 1G</span>Our robot trades this 5-minute signal on our real Binance account '
+         + 'with this stop loss and take profit — against the divergence.</div>'
+       : c.tf && c.tf !== '5M'
        ? '<div class="jf-robot-v"><span class="jf-robot-z">● LIVE ROBOT</span>Our robot trades these signals with this stop loss and take profit'
          + (JF.robot && JF.robot.zaprtih ? ' — profitable on our statistics since ' + jfEsc(jfRobotOd(JF.robot)) + ': <b style="color:'
             + jfBarva(JF.robot.r) + '">' + jfR(JF.robot.r) + '</b>' : '') + '.</div>'
-       : (zakl ? '<div class="jf-test5-v"><span class="jf-5m-z">TESTING ROBOT · DEMO</span> Stop loss and take profit of every signal are '
-                 + 'in <a href="#" onclick="jfTabIzberi(\'live\');return false;">LIVE</a> — <a href="#" onclick="jfNarocilo();return false;">'
-                 + 'subscribe</a> · <a href="' + jfEsc(portalBinance()) + '" target="_blank" rel="noopener sponsored">open a Binance account ↗</a></div>'
-               : '<div class="jf-test5-v"><span class="jf-5m-z">TESTING ROBOT · DEMO</span> Stop loss and take profit of our testing robot on a '
-                 + 'Binance demo account — a test of a strategy, not a recommendation.</div>'))
+       : '<div class="jf-test5-v"><span class="jf-5m-z">TESTING ROBOT · DEMO</span> A test of a strategy on a Binance demo account, shown without '
+         + 'stop loss and take profit. Our live robot\'s signals with stop loss and take profit are in <a href="#" onclick="jfTabIzberi(\'live\');return false;">'
+         + 'LIVE</a>' + (portalImaDostop() ? '' : ' — <a href="#" onclick="jfNarocilo();return false;">subscribe</a>')
+         + ' · <a href="' + jfEsc(portalBinance()) + '" target="_blank" rel="noopener sponsored">open a Binance account ↗</a></div>')
     + '<div class="b1f-noga">'
     + (pic ? '<button class="jf-mini" onclick="jfShrani(' + i + ')" title="save this chart as a PNG image">SAVE IMAGE</button>' : '')
     + '<a class="jf-mini" href="' + jfBinance(c.sym) + '" target="_blank" rel="noopener sponsored" style="color:#f0b90b;border-color:rgba(240,185,11,.5)">TRADE ON BINANCE ↗</a></div>'
@@ -14044,7 +14096,7 @@ function jfOsveziOdprte(){
     var ima = false;
     c.v.forEach(function(r, j){
       var n = po[r.id]; if(!n || r.state !== 'open') return;
-      r.now_px = n.now_px; ima = true;
+      r.now_px = n.now_px; if(n.now_r !== undefined) r.now_r = n.now_r; ima = true;
       var e = document.getElementById('jf-z-' + i + '-' + j); if(e) e.innerHTML = jfStanjeVrstice(r);
     });
     if(ima){ var cv = document.getElementById('jf-c-' + i); if(cv) jfNarisi(cv, c, c.v[jfIzbrana(c)]); }
@@ -14486,7 +14538,7 @@ var PORTAL_OPOZORILO = '<b>Not financial advice.</b> TradeCore signals are infor
 
 // ── AI PRO page: activation, my subscription, or the offer ──
 function portalVkljucenoHtml(){
-  return '<li><b>LIVE ACCOUNT</b> — every trade of our live robot since 14 Oct 2026 (1 hour to 1 week and the 5-minute 1G strategy): '
+  return '<li><b>LIVE ACCOUNT</b> — every trade of our live robot since 14 Oct 2026 (1 hour to 1 week and the 5-minute 1G scalping strategy): '
     + 'results in R, growth charts, by timeframe and strategy</li>'
     + '<li>Live signals of our live robot on 1-hour, 4-hour, daily and weekly charts — the moment they fire</li>'
     + '<li>An e-mail for every new signal — with the chart, entry, stop loss and take profit — and for every take profit and stop loss hit</li>'
@@ -14589,7 +14641,7 @@ function portalPonudbaHtml(){
     + '</div></div>'
     + '<div class="lic-robot lic-robot-live"><b>OUR LIVE ROBOT · 1 HOUR TO 1 WEEK</b>'
     + '<span>Our robot trades the 1-hour, 4-hour, daily and weekly signals with the stop loss and take profit you see, on a real Binance '
-    + 'Futures account. Every one of its trades since 14 Oct 2026, with the 5-minute 1G strategy, is in LIVE ACCOUNT (AI PRO) — in R.</span>'
+    + 'Futures account. Every one of its trades since 14 Oct 2026, with the 5-minute 1G scalping strategy, is in LIVE ACCOUNT (AI PRO) — in R.</span>'
     + '<span class="lic-5m">5-minute signals: our testing robot tries different strategies on a Binance demo account — free for everyone, live.</span>'
     + '<span class="lic-kmalu">Robot access for users — coming soon.</span>'
     + '<span class="lic-kmalu">Telegram alerts — coming soon.</span></div>'
@@ -14666,7 +14718,7 @@ function renderAff(){
 //   · E-MAIL ALERTS: a subscriber with any code enters an e-mail in MY SUBSCRIPTION → a confirmation e-mail from
 //     cryptoforexsp500@gmail.com (sent by OBJAVI-SIGNALE on the robot's computer) → every new signal and every TP / SL by e-mail.
 // ══════════════════════════════════════
-var PORTAL_ADMIN = 'tc_admin', PORTAL_MAIL = 'tc_email', PORTAL_OD = 'cryptoforexsp500@gmail.com';
+var PORTAL_ADMIN = 'tc_admin', PORTAL_MAIL = 'tc_email', PORTAL_OD = 'matic.hocevar.1@gmail.com';
 var PA = {veljavna: null, pokazi: false, kode: null, nalagam: false, filter: 'valid', isci: '', nova: null, vrsta: 'paid',
           odprta: '', emaili: {}, brisem: '', brisemT: 0, prosnje: null, prosnja: null};
 PORTAL.mail = {};
