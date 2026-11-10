@@ -11,7 +11,7 @@ var TC_JAVNO = true;
 var JAVNO_API = 'https://tradecore-api.matic-hocevar-1.workers.dev';                 // your Cloudflare Worker, e.g. 'https://tradecore-api.yourname.workers.dev'
 var STRIPE_LINK = '';               // Stripe Payment Link — leave empty when STRIPE_LINK is set in Cloudflare (Worker settings)
 var SITE_PRICE = '€49 / month';     // price shown on the site (the real price is set in Stripe)
-var BINANCE_REF_LINK = 'https://www.binance.com/register?ref=21903892';   // your Binance referral link (empty = Binance sign-up page)
+var BINANCE_REF_LINK = '';   // 7 Nov 2026: no Binance referral (not supported) — every sign-up link goes to MEXC
 var MEXC_REF_LINK = 'https://promote.mexc.com/r/MA1RGTsxcY';   // your MEXC referral link
 var CONTACT_EMAIL = 'cryptoforexsp500@gmail.com';   // support e-mail shown on AI PRO (empty = not shown)
 var X_HANDLE = 'Chollocar1';         // X (Twitter) account: pay with crypto, access codes (empty = not shown)
@@ -848,6 +848,11 @@ body.javno #login-gate,body.javno #ai-stara-vsebina,body.javno #zm-opozorilo,bod
 .lic-kljuc button:hover{border-color:var(--green);color:var(--green)}
 .lic-kupi:focus-visible,.lic-odpri:focus-visible,.lic-kljuc button:focus-visible,.lic-kljuc input:focus-visible,.pp-gumb:focus-visible{outline:1px solid var(--blue);outline-offset:2px}
 .lic-stanje{font-size:10px;line-height:1.6;min-height:16px;color:var(--text2)}
+.lic-ostane{display:inline-block;margin-left:10px;padding:1px 8px;border:1px solid currentColor;border-radius:999px;font-size:10px;letter-spacing:.04em}
+.lic-ostane.konec{color:var(--amber)}
+.lic-trak{height:4px;max-width:260px;margin:8px 0 2px;background:rgba(127,140,170,.18);border-radius:2px;overflow:hidden}
+.lic-trak i{display:block;height:100%;background:var(--green);border-radius:2px}
+.lic-st.opoz .lic-trak i,.lic-trak.konec i{background:var(--amber)}
 .lic-stanje.ok{color:var(--green)} .lic-stanje.nap{color:var(--red)} .lic-stanje.opoz{color:var(--amber)}
 .lic-opozorilo{color:var(--text2);font-size:9px;line-height:1.6;border-top:1px solid var(--border);padding-top:10px;margin-top:10px;max-width:80ch}
 .lic-admin{margin-top:12px;border:1px dashed var(--amber);padding:9px 12px;display:flex;flex-direction:column;gap:3px;font-size:10px;color:var(--text2)}
@@ -986,7 +991,10 @@ body.na-ai #content{display:none}
 .jr-tab td.jr-ime b{color:var(--text)}
 .jr-tr tbody tr{cursor:pointer}
 .jr-tr tbody tr:hover td{background:rgba(240,185,11,.07)}
-.jr-tr td.jr-bn{color:#f0b90b;font-size:9px;letter-spacing:.06em}
+.jr-tr td.jr-bn{color:var(--amber);font-size:9px;letter-spacing:.06em}
+.jr-pct{display:inline-block;margin-left:7px;font-size:9px;opacity:.85}
+.jr-pct-b{font-weight:normal}
+.jr-big-pct{font-size:18px;margin-left:10px;letter-spacing:.02em;opacity:.9}
 .jr-preg{color:var(--amber)}
 .jr-opomba{color:var(--text2);font-size:9.5px;line-height:1.65;max-width:1000px;margin:4px 0 14px}
 .jr-opomba b{color:var(--text);font-weight:normal}
@@ -998,9 +1006,9 @@ body.na-ai #content{display:none}
 .jd-vaba .jr-z b{color:#c084fc;font-weight:normal;letter-spacing:.14em}
 .jd-izvoz .jf-cta{padding:6px 12px;font-size:9.5px}
 .jl-gumbi{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-left:auto}
-.jl-bn{display:inline-block;flex:0 0 auto;padding:8px 14px;border:1px solid #f0b90b;color:#f0b90b;background:rgba(240,185,11,.08);
+.jl-bn{display:inline-block;flex:0 0 auto;padding:8px 14px;border:1px solid var(--amber);color:var(--amber);background:rgba(240,165,0,.08);
   font-size:10px;letter-spacing:.12em;font-weight:bold;text-decoration:none;font-family:inherit;white-space:nowrap}
-.jl-bn:hover{background:rgba(240,185,11,.16)}
+.jl-bn:hover{background:rgba(240,165,0,.16)}
 .jl-tekst{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--green);padding:11px 14px;margin:0 0 10px;
   font-size:10.5px;line-height:1.7;color:var(--text2);max-width:1200px}
 .jl-tekst b{color:var(--text);font-weight:normal}
@@ -1453,8 +1461,8 @@ body.javno .jv-paper,body.javno #paper-summary-cr{display:none!important}
       <div class="sidebar-block">
         <div class="sb-hdr">🏆 BEST BROKERS</div>
         <div class="sb-br" style="padding:8px 0">
-          <a href="https://www.binance.com/en/register" id="sb-br-binance" target="_blank" rel="noopener sponsored" style="color:#f0b90b;border-color:#f0b90b;background:rgba(240,185,11,.08)">BINANCE → OPEN ACCOUNT</a>
           <a href="https://www.mexc.com/register" id="sb-br-mexc" target="_blank" rel="noopener sponsored" style="color:var(--amber);border-color:var(--amber);background:rgba(240,165,0,.08)">MEXC → OPEN ACCOUNT</a>
+          <a href="https://www.binance.com/en/register" id="sb-br-binance" target="_blank" rel="noopener sponsored" style="color:#f0b90b;border-color:#f0b90b;background:rgba(240,185,11,.08)">BINANCE → OPEN ACCOUNT</a>
         </div>
         <div style="margin-top:6px"><span onclick="nav('aff')" style="color:var(--amber);cursor:pointer;font-size:9px">→ BEST BROKERS</span></div>
       </div>
@@ -12963,8 +12971,10 @@ function jfVrsta(t){
 }
 // 6 Nov 2026: every trade opens Binance Futures with our referral code (from BINANCE_REF_LINK, "…?ref=CODE")
 function jfRefKoda(){ var u = ''; try{ u = String(BINANCE_REF_LINK || ''); }catch(e){} var m = /[?&]ref=([A-Za-z0-9_\-]+)/.exec(u); return m ? m[1] : ''; }
-function jfBinance(sym){ var k = jfRefKoda();
-  return 'https://www.binance.com/en/futures/' + encodeURIComponent(sym || 'BTCUSDT') + (k ? '?ref=' + encodeURIComponent(k) : ''); }
+// 7 Nov 2026: a coin opens on MEXC Futures (our partner exchange): BTCUSDT → BTC_USDT, 1000PEPEUSDT → PEPE_USDT
+function jfBinance(sym){
+  var b = String(sym || 'BTCUSDT').toUpperCase().replace(/USDT$/, '').replace(/^(1000000|10000|1000)(?=[A-Z])/, '');
+  return 'https://www.mexc.com/futures/' + encodeURIComponent(b || 'BTC') + '_USDT'; }
 function jfOdpriBinance(sym){ try{ window.open(jfBinance(sym), '_blank', 'noopener'); }catch(e){} }
 
 // ── one trade (row) ──
@@ -13192,14 +13202,15 @@ function jfGlava(){
       + (robot ? '<b>' + tf + '</b> — ' + JF_TF_NAPIS[tf] + ' signals of our live robot the moment they fire, all four strategies · '
                  + 'an e-mail for every signal, take profit and stop loss'
                : '<b>5 MIN · SCALPING 1G</b> — 5-minute scalping trades of our live robot on our real Binance account, with stop loss and take profit')
-      + (PORTAL.do ? ' · subscription active until <b>' + jfEsc(jfDatum(PORTAL.do)) + '</b>' : '')
+      + (PORTAL.do ? ' · subscription active until <b>' + jfEsc(jfDatum(PORTAL.do)) + '</b>'
+                     + (portalOstane(PORTAL.do) ? ' (<b>' + jfEsc(portalOstane(PORTAL.do)) + '</b>)' : '') : '')
       + ' · <a href="#" class="jf-moja" onclick="nav(\'ai\');return false;">MY SUBSCRIPTION</a></span></div>';
   }
   h += robot ? jfTestTabela() + jfTestUvod() : (jfJe1G() ? jf1gUvod() : jf5mUvod());
   if(!zivo) h += '<div class="jf-uvod" style="margin-top:-4px">Free: the last 50 signals of the testing robot, <b>without stop loss and take profit</b> '
     + '(it is a demo). Stop loss and take profit of our live robot — 1-hour to weekly and the 5-minute 1G scalping strategy — are in '
     + '<a href="#" onclick="jfTabIzberi(\'live\');return false;">LIVE</a>' + (portalImaDostop() ? '' : ' · <a href="#" onclick="jfNarocilo();return false;">subscribe</a>')
-    + ' · <a href="' + jfEsc(portalBinance()) + '" target="_blank" rel="noopener sponsored">open a Binance account ↗</a>. Click a coin to open it on Binance.</div>';
+    + ' · <a href="' + jfEsc(portalMexc()) + '" target="_blank" rel="noopener sponsored">open a MEXC account ↗</a>. Click a coin to open it on MEXC Futures.</div>';
   var zk = jfKarteZive();
   var tools = '<div class="b1p-orodja">';
   var st = function(x){ return tr.filter(function(t){ return x === 'all' || t.s === x; }).length; };
@@ -13466,12 +13477,21 @@ function jfPogledi(){
   function b(k, n, pod){ return '<button role="tab" aria-selected="' + (p === k) + '" class="' + (p === k ? 'on' : '') + '" onclick="jfPogledIzberi(\'' + k + '\')">'
     + n + '<small>' + pod + '</small></button>'; }
   return '<div class="jf-pogledi" role="tablist" aria-label="Live account or live signals">'
-    + b('racun', '<span class="pt-live" style="margin:0 5px 0 0">●</span>LIVE ACCOUNT', 'all results since 14 Oct 2026, in R')
+    + b('racun', '<span class="pt-live" style="margin:0 5px 0 0">●</span>LIVE ACCOUNT', 'all results since 14 Oct 2026, in R and %')
     + b('dnevnik', 'TRADE JOURNAL', 'every closed trade · export CSV')
     + b('signali', 'LIVE SIGNALS', 'new signals, open trades, e-mail alerts') + '</div>';
 }
 function jrPct(v, d){ if(v === null || v === undefined || isNaN(v)) return '—';
   return (v > 0 ? '+' : (v < 0 ? '−' : '')) + Math.abs(v).toFixed(d === undefined ? 2 : d) + '%'; }
+// 8 Nov 2026: a trade's result in % of its position (after fees) = R × the risk in % (|entry − stop| / entry); the feed sends it as
+// pct / now_pct, older feeds get it worked out here from the same numbers
+function jrTPct(t, r){
+  if(r === null || r === undefined || isNaN(r)) return null;
+  var e = +t.entry, s = +t.sl; if(!e || !s || e === s) return null;
+  return r * Math.abs(e - s) / e * 100;
+}
+function jrPctSpan(v, cls){ return v === null || v === undefined || isNaN(v) ? ''
+  : '<span class="' + (cls || 'jr-pct') + '" style="color:' + jfBarva(v) + '">' + jrPct(v) + '</span>'; }
 function jrWin(g){ return g && g.n ? Math.round(g.wins / g.n * 100) + '%' : '—'; }
 function jrRacunTrejdi(){
   var A = jfRacun(); if(!A) return [];
@@ -13488,15 +13508,18 @@ function jrPloscica(n, v, p, barva){
 }
 function jrSkupinaVrstica(ime, pod, g){
   if(!g || !g.n) return '<tr><td class="jr-ime"><b>' + ime + '</b> <span class="jf-s-pod">' + pod + '</span></td>'
-    + '<td class="st" colspan="4"><span class="jf-s-pod">no closed trades yet</span></td></tr>';
+    + '<td class="st" colspan="6"><span class="jf-s-pod">no closed trades yet</span></td></tr>';
   return '<tr><td class="jr-ime"><b>' + ime + '</b> <span class="jf-s-pod">' + pod + '</span></td>'
     + '<td class="st">' + g.n + '</td><td class="st">' + jrWin(g) + '</td>'
     + '<td class="st" style="color:' + jfBarva(g.r_sum) + '">' + jfR(g.r_sum) + '</td>'
-    + '<td class="st" style="color:' + jfBarva(g.r_avg) + '">' + jfR(g.r_avg) + '</td></tr>';
+    + '<td class="st" style="color:' + jfBarva(g.pct_sum) + '">' + jrPct(g.pct_sum) + '</td>'
+    + '<td class="st" style="color:' + jfBarva(g.r_avg) + '">' + jfR(g.r_avg) + '</td>'
+    + '<td class="st" style="color:' + jfBarva(g.pct_avg) + '">' + jrPct(g.pct_avg) + '</td></tr>';
 }
 function jrSkupinaTabela(naslov, vrstice){
   return '<div class="jr-blok"><div class="jr-blok-g"><span class="jr-blok-n">' + naslov + '</span></div><div class="jf-ovoj"><table class="jf-tab jr-tab">'
-    + '<thead><tr><th></th><th class="st">TRADES</th><th class="st">WON</th><th class="st">RESULT</th><th class="st">AVG / TRADE</th>'
+    + '<thead><tr><th></th><th class="st">TRADES</th><th class="st">WON</th><th class="st">RESULT R</th><th class="st">RESULT %</th>'
+    + '<th class="st">AVG R</th><th class="st">AVG %</th>'
     + '</tr></thead><tbody>' + vrstice + '</tbody></table></div></div>';
 }
 // 7 Nov 2026 (Matic): "live account za naročnike — celoten live vključi tudi 5 min 1G strategijo … grafe in statistiko od vsega
@@ -13517,23 +13540,28 @@ function jfRacunHtml(){
   var S = A.summary, od = jfDatumMs(A.since), BT = A.by_tf || {}, BS = A.by_strategy || {};
   var h = '<div class="jr">';
   h += '<div class="jr-hero"><div><div class="jr-z"><span class="pt-live">● LIVE</span>ALL STRATEGIES · RESULTS SINCE ' + jfEsc(od).toUpperCase() + '</div>'
-    + '<div class="jr-big" style="color:' + jfBarva(S.r_sum) + '">' + jfR(S.r_sum) + '</div>'
+    + '<div class="jr-big" style="color:' + jfBarva(S.r_sum) + '">' + jfR(S.r_sum)
+    + (S.pct_sum !== null && S.pct_sum !== undefined ? ' <span class="jr-big-pct" style="color:' + jfBarva(S.pct_sum) + '">' + jrPct(S.pct_sum) + '</span>' : '')
+    + '</div>'
     + '<div class="jr-pod">all closed trades: 1B–1F on 1-hour, 4-hour, daily and weekly signals and 1G on 5-minute signals · '
-    + '1 R = the risk of one trade, from entry to its stop loss</div></div>'
+    + '1 R = the risk of one trade, from entry to its stop loss · % = each trade\'s result in % of its position, after fees, added up</div></div>'
     + '<div><div class="jr-big2">' + jrWin(S) + '</div><div class="jr-pod">won · ' + S.n + ' closed trade' + (S.n === 1 ? '' : 's')
     + (S.pf ? ' · profit factor ' + S.pf.toFixed(2) : '') + (S.r_avg !== null && S.r_avg !== undefined ? ' · ' + jfR(S.r_avg) + ' per trade' : '')
+    + (S.pct_avg !== null && S.pct_avg !== undefined ? ' (' + jrPct(S.pct_avg) + ')' : '')
     + '</div></div></div>';
   h += '<div class="jr-plosce">' + JR_TF.map(function(tf){
       var g = BT[tf] || {};
       return '<div class="jr-pl" style="cursor:pointer" onclick="jrGrafTf(\'' + tf + '\')" title="show the ' + JR_TF_NAPIS[tf] + ' growth on the chart">'
         + '<div class="jr-pl-n">' + tf + ' · ' + JR_TF_NAPIS[tf].toUpperCase() + '</div>'
         + '<div class="jr-pl-v" style="color:' + (g.n ? jfBarva(g.r_sum) : 'var(--text2)') + '">' + (g.n ? jfR(g.r_sum) : '—') + '</div>'
-        + '<div class="jr-pl-p">' + (g.n ? g.n + ' closed · ' + jrWin(g) + ' won' : 'no closed trades yet') + '</div></div>';
+        + '<div class="jr-pl-p">' + (g.n ? (g.pct_sum !== null && g.pct_sum !== undefined ? jrPctSpan(g.pct_sum, 'jr-pct-b') + ' · ' : '')
+                                   + g.n + ' closed · ' + jrWin(g) + ' won' : 'no closed trades yet') + '</div></div>';
     }).join('')
     + jrPloscica('OPEN NOW', String((S.open || 0) + (S.pending || 0)), (S.open || 0) + ' open · ' + (S.pending || 0) + ' waiting for entry')
     + jrPloscica('MAX DRAWDOWN', S.max_dd_r ? '−' + (+S.max_dd_r).toFixed(1) + ' R' : '0 R', 'deepest fall from a high')
     + jrPloscica('BEST · WORST', '<span style="color:' + jfBarva(S.best) + '">' + jfR(S.best) + '</span> <span class="jf-s-pod">·</span> <span style="color:'
-                 + jfBarva(S.worst) + '">' + jfR(S.worst) + '</span>', 'single trade')
+                 + jfBarva(S.worst) + '">' + jfR(S.worst) + '</span>', 'single trade'
+                 + (S.pct_best !== null && S.pct_best !== undefined ? ' · in %: ' + jrPct(S.pct_best) + ' · ' + jrPct(S.pct_worst) : ''))
     + '</div>';
   h += '<div class="jr-blok"><div class="jr-blok-g"><span class="jr-blok-n">GROWTH IN R</span><span class="jr-blok-p">every closed trade since ' + jfEsc(od) + '</span>'
     + '<span id="jr-seg">' + jrSegTf() + '</span><span class="jr-odcitek" id="jr-g1-v" aria-live="polite"></span></div>'
@@ -13548,7 +13576,7 @@ function jfRacunHtml(){
   // trades
   var vse = jrRacunTrejdi(), tr = vse.slice(0, JF.rac.n), vseA = A.trades || [];
   var stTf = function(x){ return vseA.filter(function(t){ return x === 'all' || t.tf === x; }).length; };
-  h += '<div class="jr-blok"><div class="jr-blok-g"><span class="jr-blok-n">ALL TRADES</span><span class="jr-blok-p">newest first · click a trade to open the coin on Binance Futures</span>'
+  h += '<div class="jr-blok"><div class="jr-blok-g"><span class="jr-blok-n">ALL TRADES</span><span class="jr-blok-p">newest first · click a trade to open the coin on MEXC Futures</span>'
     + jdGumbi('jrIzvoz', 'closed trades of this timeframe') + '</div>'
     + '<div class="b1p-orodja">'
     + jfSeg(JF.rac.tf, [['all', 'ALL <span class="b1p-st">' + stTf('all') + '</span>']].concat(JR_TF.map(function(x){ return [x, x + ' <span class="b1p-st">' + stTf(x) + '</span>']; })), 'jrFilterTf')
@@ -13563,9 +13591,10 @@ function jfRacunHtml(){
           var izhod = z ? (JR_IZHOD[t.exit] || 'CLOSED') + (t.exit_px ? ' <span class="jf-s-pod">' + jfSt(t.exit_px) + '</span>' : '')
                         : (t.state === 'check' ? '<span class="jr-preg" title="the result of this trade is being checked against the exchange">UNDER REVIEW</span>'
                                                : (t.state === 'pending' ? '<span class="jf-s-pend">WAITING</span>' : '<span class="jf-s-odprt">OPEN</span>'));
-          var rez = z ? '<span style="color:' + jfBarva(t.r) + '">' + jfR(t.r) + '</span>'
-                      : (t.now_r !== null && t.now_r !== undefined ? '<span class="jf-s-pod">now </span><span style="color:' + jfBarva(t.now_r) + '">' + jfR(t.now_r) + '</span>' : '—');
-          return '<tr onclick="jfOdpriBinance(\'' + jfEsc(t.sym) + '\')" title="open ' + jfEsc(sym) + ' on Binance Futures">'
+          var pr = z ? (t.pct !== undefined && t.pct !== null ? t.pct : jrTPct(t, t.r)) : (t.now_pct !== undefined && t.now_pct !== null ? t.now_pct : jrTPct(t, t.now_r));
+          var rez = z ? '<span style="color:' + jfBarva(t.r) + '">' + jfR(t.r) + '</span>' + jrPctSpan(pr)
+                      : (t.now_r !== null && t.now_r !== undefined ? '<span class="jf-s-pod">now </span><span style="color:' + jfBarva(t.now_r) + '">' + jfR(t.now_r) + '</span>' + jrPctSpan(pr) : '—');
+          return '<tr onclick="jfOdpriBinance(\'' + jfEsc(t.sym) + '\')" title="open ' + jfEsc(sym) + ' on MEXC Futures">'
             + '<td>' + (t.exit_t ? jfCas(t.exit_t) : '<span class="jf-s-pod">opened ' + jfCas(t.entry_t || t.t) + '</span>') + '</td>'
             + '<td>' + (t.tf === '5M' ? '<span class="jf-5m-z">5M</span>' : '<span class="jf-tf-z">' + jfEsc(t.tf) + '</span>') + '</td>'
             + '<td>' + jfEsc(t.s) + (t.src === 'real' ? ' <span class="pt-live" style="font-size:8px;margin:0" title="real trade on our Binance account">●</span>' : '') + '</td>'
@@ -13573,7 +13602,7 @@ function jfRacunHtml(){
             + '<td style="color:' + (d ? 'var(--green)' : 'var(--red)') + '">' + (d ? 'LONG' : 'SHORT') + '</td>'
             + '<td class="st">' + jfSt(t.entry) + '</td><td class="st">' + jfSt(t.sl) + '</td><td class="st">' + jfSt(t.tp) + '</td>'
             + '<td>' + izhod + '</td><td class="st">' + rez + '</td>'
-            + '<td class="jr-bn">BINANCE ↗</td></tr>';
+            + '<td class="jr-bn">MEXC ↗</td></tr>';
         }).join('') + '</tbody></table></div>';
     if(vse.length > tr.length) h += '<button class="dn-vec jf-mini" style="margin-top:8px" onclick="jrFilter(\'n\',' + (JF.rac.n + 50) + ')">SHOW 50 MORE · '
       + (vse.length - tr.length) + ' left</button>';
@@ -13584,7 +13613,9 @@ function jfRacunHtml(){
     + 'minute by minute on Binance Futures prices with fees; since 27 Oct our robot also trades these signals on a real Binance account. '
     + '<b>1G</b> <span class="pt-live" style="font-size:8px;margin:0">●</span> (5-minute signals, against the 1B direction): real trades on our '
     + 'Binance Futures account. <b>R</b> is a result in units of risk: 1 R is what a trade loses if it hits its stop loss, so +2 R made twice '
-    + 'that. We show R only — position sizes change, R does not. ' + (S.check ? S.check + ' trade' + (S.check === 1 ? ' is' : 's are')
+    + 'that. <b>%</b> is the result of each trade in % of its position, after fees (R × the distance from entry to stop loss): '
+    + 'a trade with a very close stop loss can make many R from a small move, so the % shows how big the move really was. '
+    + 'Results in % are added up trade by trade, not compounded. ' + (S.check ? S.check + ' trade' + (S.check === 1 ? ' is' : 's are')
     + ' under review and not counted yet. ' : '') + 'Times are in your time zone (' + jfPas() + '). Past results do not guarantee future '
     + 'results; not financial advice.</div>';
   return h + '</div>';
@@ -13728,8 +13759,8 @@ var JL_TF = ['H1', 'H4', 'D1', 'W1', '5M'];
 function jlGumbi(){
   var cena = ''; try{ cena = portalCena(); }catch(e){}
   return '<div class="jl-gumbi"><button class="jf-cta" onclick="jfNarocilo()">SUBSCRIBE TO LIVE' + (cena ? ' · ' + jfEsc(cena) : '') + ' →</button>'
-    + '<a class="jl-bn" href="' + jfEsc(portalBinance()) + '" target="_blank" rel="noopener sponsored" title="open a Binance account with our referral link">'
-    + 'OPEN A BINANCE ACCOUNT ↗</a></div>';
+    + '<a class="jl-bn" href="' + jfEsc(portalMexc()) + '" target="_blank" rel="noopener sponsored" title="open a MEXC account with our referral link">'
+    + 'OPEN A MEXC ACCOUNT ↗</a></div>';
 }
 function jdZaklep(){
   return '<a href="#" onclick="event.stopPropagation();jfTabIzberi(\'live\');return false;" title="stop loss and take profit are part of LIVE — '
@@ -13787,7 +13818,7 @@ function jdDemoUvod(){
     + 'Our live robot — 1-hour to weekly signals and the 5-minute 1G scalping strategy — with its <b>results, stop loss and take profit</b>, the trade journal '
     + 'and e-mail alerts is in <b><span class="pt-live" style="font-size:9px;margin:0 3px 0 0">●</span>LIVE</b>.</div>'
     + (S ? '<button class="jf-cta" onclick="jfTabIzberi(\'live\')">SEE THE RESULTS OF OUR LIVE ROBOT →</button>' : '')
-    + '<a class="jl-bn" href="' + jfEsc(portalBinance()) + '" target="_blank" rel="noopener sponsored">OPEN A BINANCE ACCOUNT ↗</a></div>';
+    + '<a class="jl-bn" href="' + jfEsc(portalMexc()) + '" target="_blank" rel="noopener sponsored">OPEN A MEXC ACCOUNT ↗</a></div>';
 }
 function jdDemoVrstice(){
   var J = jdPovzetek(); if(!J || !J.recent || !J.recent_cols) return [];
@@ -13806,14 +13837,14 @@ function jdDemoHtml(){
     + '<th>STOP LOSS · TAKE PROFIT · RESULT</th><th></th></tr></thead><tbody>'
     + tr.map(function(t){
         var sym = String(t.sym || '').replace(/USDT$/, ''), d = t.side === 'LONG';
-        return '<tr onclick="jfOdpriBinance(\'' + jfEsc(t.sym) + '\')" title="open ' + jfEsc(sym) + ' on Binance Futures">'
+        return '<tr onclick="jfOdpriBinance(\'' + jfEsc(t.sym) + '\')" title="open ' + jfEsc(sym) + ' on MEXC Futures">'
           + '<td>' + (t.exit_t ? jfCas(t.exit_t) : '—') + '</td>'
           + '<td>' + (t.tf === '5M' ? '<span class="jf-5m-z">5M SCALPING</span>' : '<span class="jf-tf-z">' + jfEsc(t.tf) + '</span>') + '</td>'
           + '<td>' + jfEsc(t.s) + (t.src === 'real' ? ' <span class="pt-live" style="font-size:8px;margin:0" title="real trade on our Binance account">●</span>' : '') + '</td>'
           + '<td><b>' + jfEsc(sym) + '</b></td>'
           + '<td style="color:' + (d ? 'var(--green)' : 'var(--red)') + '">' + (d ? 'LONG' : 'SHORT') + '</td>'
           + '<td class="jd-zak">' + jdZaklep() + '</td>'
-          + '<td class="jr-bn">BINANCE ↗</td></tr>';
+          + '<td class="jr-bn">MEXC ↗</td></tr>';
       }).join('') + '</tbody></table></div>';
   if(V.length > tr.length) h += '<button class="dn-vec jf-mini" style="margin-top:8px" onclick="jdDemoN(' + (n + 30) + ')">SHOW 30 MORE · ' + (V.length - tr.length) + ' left</button>';
   h += '<div class="jr-opomba" style="margin-bottom:0">1B–1F on 1-hour to weekly signals (every signal counted, simulated on Binance Futures prices with '
@@ -13828,7 +13859,7 @@ function jdHtml(){
   var vse = jdFiltrirane(), tr = vse.slice(0, JF.jd.n), F = jdSkupaj(vse), filt = JF.jd.tf !== 'all' || JF.jd.s !== 'all';
   var sim = jdSkupaj(jdVrstice().filter(function(t){ return t.src !== 'real'; })), real = jdSkupaj(jdVrstice().filter(function(t){ return t.src === 'real'; }));
   var h = '<div class="jr jd" id="jd"><div class="jr-blok"><div class="jr-blok-g"><span class="jr-blok-n">TRADE JOURNAL</span>'
-    + '<span class="jr-blok-p">every closed trade since ' + jfEsc(od) + ' · newest first · result in R · click a trade to open the coin on Binance</span>'
+    + '<span class="jr-blok-p">every closed trade since ' + jfEsc(od) + ' · newest first · result in R · click a trade to open the coin on MEXC</span>'
     + jdGumbi('jdIzvoz', 'trades of this filter') + '</div>';
   h += '<div class="jd-povz"><span><b style="color:' + jfBarva(S.r_sum) + '">' + jfR(S.r_sum) + '</b> all ' + S.n + ' closed trades since ' + jfEsc(od)
     + (S.n ? ' · ' + jrWin(S) + ' won' : '') + (S.pf ? ' · profit factor ' + S.pf.toFixed(2) : '') + '</span>'
@@ -13852,7 +13883,7 @@ function jdHtml(){
       + '<th></th></tr></thead><tbody>'
       + tr.map(function(t){
           var sym = String(t.sym || '').replace(/USDT$/, ''), d = t.side === 'LONG';
-          return '<tr onclick="jfOdpriBinance(\'' + jfEsc(t.sym) + '\')" title="open ' + jfEsc(sym) + ' on Binance Futures">'
+          return '<tr onclick="jfOdpriBinance(\'' + jfEsc(t.sym) + '\')" title="open ' + jfEsc(sym) + ' on MEXC Futures">'
             + '<td>' + (t.exit_t ? jfCas(t.exit_t) : '—') + '</td><td><span class="jf-s-pod">' + (t.entry_t ? jfCas(t.entry_t) : '—') + '</span></td>'
             + '<td>' + (t.tf === '5M' ? '<span class="jf-5m-z">5M</span>' : '<span class="jf-tf-z">' + jfEsc(t.tf) + '</span>') + '</td>'
             + '<td>' + jfEsc(t.s) + (t.src === 'real' ? ' <span class="pt-live" style="font-size:8px;margin:0" title="real trade on our Binance account">●</span>' : '') + '</td>'
@@ -13861,7 +13892,7 @@ function jdHtml(){
             + '<td class="st">' + jfSt(t.entry) + '</td><td class="st">' + jfSt(t.sl) + '</td><td class="st">' + jfSt(t.tp) + '</td>'
             + '<td>' + (JR_IZHOD[t.exit] || 'CLOSED') + (t.exit_px ? ' <span class="jf-s-pod">' + jfSt(t.exit_px) + '</span>' : '') + '</td>'
             + '<td class="st"><span style="color:' + jfBarva(t.r) + '">' + jfR(t.r) + '</span></td>'
-            + '<td class="jr-bn">BINANCE ↗</td></tr>';
+            + '<td class="jr-bn">MEXC ↗</td></tr>';
         }).join('') + '</tbody></table></div>';
     if(vse.length > tr.length) h += '<button class="dn-vec jf-mini" style="margin-top:8px" onclick="jdFilter(\'n\',' + (JF.jd.n + 100) + ')">SHOW 100 MORE · '
       + (vse.length - tr.length) + ' left</button>';
@@ -14015,7 +14046,7 @@ function jfKartaHtml(c, i){
   var traj = pic ? jfTrajanje(pic) : null, sel = jfIzbrana(c), sym = String(c.sym || '').replace(/USDT$/, '');
   var h = '<div class="jf-k jf-k-' + st + '" id="jf-k-' + i + '">'
     + '<div class="jf-gl"><a class="jf-sym jf-sym-a" href="' + jfBinance(c.sym) + '" target="_blank" rel="noopener sponsored" '
-    + 'title="open ' + jfEsc(sym) + ' on Binance Futures">' + jfEsc(sym) + '</a>'
+    + 'title="open ' + jfEsc(sym) + ' on MEXC Futures">' + jfEsc(sym) + '</a>'
     + (c.tf && c.tf !== '5M' ? '<span class="jf-tf-z" title="signal on ' + JF_TF_NAPIS[c.tf] + ' candles — our live robot trades it">' + jfEsc(c.tf) + '</span>'
        : (c.g1 ? '<span class="jf-tf-z" title="5-minute signal — our live robot trades it with its scalping strategy 1G on our real Binance account">5M SCALPING · 1G · LIVE</span>'
                : '<span class="jf-5m-z" title="5-minute signal — our testing robot trades it on a Binance demo account">5M SCALPING · TESTING · DEMO</span>'))
@@ -14055,10 +14086,10 @@ function jfKartaHtml(c, i){
        : '<div class="jf-test5-v"><span class="jf-5m-z">TESTING ROBOT · DEMO</span> A test of a strategy on a Binance demo account, shown without '
          + 'stop loss and take profit. Our live robot\'s signals with stop loss and take profit are in <a href="#" onclick="jfTabIzberi(\'live\');return false;">'
          + 'LIVE</a>' + (portalImaDostop() ? '' : ' — <a href="#" onclick="jfNarocilo();return false;">subscribe</a>')
-         + ' · <a href="' + jfEsc(portalBinance()) + '" target="_blank" rel="noopener sponsored">open a Binance account ↗</a></div>')
+         + ' · <a href="' + jfEsc(portalMexc()) + '" target="_blank" rel="noopener sponsored">open a MEXC account ↗</a></div>')
     + '<div class="b1f-noga">'
     + (pic ? '<button class="jf-mini" onclick="jfShrani(' + i + ')" title="save this chart as a PNG image">SAVE IMAGE</button>' : '')
-    + '<a class="jf-mini" href="' + jfBinance(c.sym) + '" target="_blank" rel="noopener sponsored" style="color:#f0b90b;border-color:rgba(240,185,11,.5)">TRADE ON BINANCE ↗</a></div>'
+    + '<a class="jf-mini" href="' + jfBinance(c.sym) + '" target="_blank" rel="noopener sponsored" style="color:var(--amber);border-color:rgba(240,165,0,.5)">TRADE ON MEXC ↗</a></div>'
     + '</div>';
   return h;
 }
@@ -14333,6 +14364,16 @@ function portalStanjeIzpis(t, vrsta){
   var e = document.getElementById('lic-stanje'); if(!e) return;
   e.className = 'lic-stanje' + (vrsta ? ' ' + vrsta : ''); e.innerHTML = t;
 }
+// 8 Nov 2026: whole days left until the last valid day (the server's date is UTC; the key is valid through that whole day)
+function portalDniDo(ymd){
+  var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(ymd || ''); if(!m) return null;
+  var d = new Date(), danes = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+  return Math.round((Date.UTC(+m[1], +m[2] - 1, +m[3]) - danes) / 86400000);
+}
+function portalOstane(ymd){
+  var n = portalDniDo(ymd); if(n === null || n < 0) return '';
+  return n === 0 ? 'last day today' : n === 1 ? '1 day left' : n + ' days left';
+}
 function portalDatum(ymd){
   var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(ymd || ''); if(!m) return portalEsc(ymd || '');
   return (+m[3]) + ' ' + ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m[2] - 1] + ' ' + m[1];
@@ -14539,7 +14580,7 @@ var PORTAL_OPOZORILO = '<b>Not financial advice.</b> TradeCore signals are infor
 // ── AI PRO page: activation, my subscription, or the offer ──
 function portalVkljucenoHtml(){
   return '<li><b>LIVE ACCOUNT</b> — every trade of our live robot since 14 Oct 2026 (1 hour to 1 week and the 5-minute 1G scalping strategy): '
-    + 'results in R, growth charts, by timeframe and strategy</li>'
+    + 'results in R and %, growth charts, by timeframe and strategy</li>'
     + '<li>Live signals of our live robot on 1-hour, 4-hour, daily and weekly charts — the moment they fire</li>'
     + '<li>An e-mail for every new signal — with the chart, entry, stop loss and take profit — and for every take profit and stop loss hit</li>'
     + '<li>Our entry, stop loss and take profit for each of the five strategies (1B, 1C, 1D, 1E and 1F)</li>'
@@ -14582,12 +14623,19 @@ function portalNarocnikHtml(){
   } else {
     stanje = 'Active' + (datum ? ' until ' + d : '');
   }
+  var dni = datum && PORTAL.veljavna === true ? portalDniDo(PORTAL.do) : null, ostane = dni !== null ? portalOstane(PORTAL.do) : '';
+  var konec = dni !== null && dni >= 0 && dni <= 7 && !i.renews;
+  if(konec && !razred) razred = ' opoz';
   return '<div class="lic">'
     + (PORTAL.nov ? '<div class="lic-hvala"><b>Welcome to AI PRO!</b> Your payment went through and live signals are unlocked on this device. '
                   + 'Save your access key below to use them on your other devices too.</div>' : '')
     + '<div class="lic-glava"><div class="lic-oznaka">TRADECORE AI PRO · MY SUBSCRIPTION</div>'
     + '<h2>' + (PORTAL.veljavna === true ? 'Your subscription is active' : 'Your subscription') + '</h2>'
-    + '<div class="lic-st' + razred + '"><span class="lic-tocka" aria-hidden="true"></span><span>' + stanje + '</span></div>'
+    + '<div class="lic-st' + razred + '"><span class="lic-tocka" aria-hidden="true"></span><span>' + stanje + '</span>'
+    + (ostane ? '<span class="lic-ostane' + (konec ? ' konec' : '') + '">' + ostane + '</span>' : '') + '</div>'
+    + (ostane && dni !== null && dni <= 31 ? '<div class="lic-trak' + (konec ? ' konec' : '') + '" role="img" aria-label="' + ostane + '"><i style="width:'
+       + Math.max(2, Math.min(100, Math.round((dni + 1) / 31 * 100))) + '%"></i></div>' : '')
+    + (konec ? '<div class="lic-pod2">Your access ends soon — to extend it, ' + portalKontaktHtml() + '.</div>' : '')
     + (i.email ? '<div class="lic-pod2">Subscribed as ' + portalEsc(i.email) + (i.test ? ' · <b>TEST PAYMENT</b>' : '') + '</div>' : '')
     + '</div>'
     + portalMailPozivHtml()
@@ -14671,11 +14719,12 @@ function portalOglasRender(){ var c = document.getElementById('pp-cena'); if(c) 
 // ── BEST BROKERS: Binance and MEXC ──
 function portalBinance(){ try{ return BINANCE_REF_LINK || 'https://www.binance.com/en/register'; }catch(e){ return 'https://www.binance.com/en/register'; } }
 function portalMexc(){ try{ return MEXC_REF_LINK || 'https://www.mexc.com/register'; }catch(e){ return 'https://www.mexc.com/register'; } }
+function portalMexcKoda(){ var m = /\/r\/([A-Za-z0-9]+)|[?&]inviteCode=([A-Za-z0-9-]+)/.exec(portalMexc()); return m ? (m[1] || m[2]) : ''; }
 function renderAff(){
   var el = document.getElementById('aff-cols'); if(!el) return;
   function karta(o){
     return '<div class="br-k' + (o.prvi ? ' br-prvi' : '') + '">'
-      + (o.prvi ? '<div class="br-znak">OUR ROBOT TRADES HERE</div>' : '')
+      + (o.prvi ? '<div class="br-znak">' + (o.znak || 'RECOMMENDED') + '</div>' : '')
       + '<div class="br-ime" style="color:' + o.barva + '">' + o.ime + '</div>'
       + '<div class="br-pod">' + o.pod + '</div>'
       + '<div class="br-st">' + o.st.map(function(s){ return '<div><b style="color:' + s[2] + '">' + s[0] + '</b><span>' + s[1] + '</span></div>'; }).join('') + '</div>'
@@ -14684,20 +14733,21 @@ function renderAff(){
       + '</div>';
   }
   el.innerHTML = '<div class="br">'
-    + '<div class="br-glava"><div class="br-n">BEST BROKERS</div><p>Where to trade the signals. Our robot runs on Binance Futures; '
-    + 'MEXC is a popular alternative with a very wide choice of pairs.</p></div>'
+    + '<div class="br-glava"><div class="br-n">BEST BROKERS</div><p>Where to trade the signals. We recommend MEXC — a very wide choice of '
+    + 'futures pairs and low fees (our partner link). Our robot itself runs on Binance Futures.</p></div>'
     + '<div class="br-mreza">'
-    + karta({prvi: true, ime: 'BINANCE', barva: '#f0b90b', pod: 'The world’s largest crypto exchange by trading volume',
-             st: [['SPOT', 'and futures', 'var(--green)'], ['USDⓈ-M', 'perpetual futures', 'var(--amber)'], ['24/7', 'trading', 'var(--blue)']],
-             sez: ['Spot and USDⓈ-M perpetual futures on hundreds of pairs', 'Deep liquidity on the major pairs',
-                   'The same futures market our robot trades — the signal symbols open directly on Binance',
-                   'Mobile app for iOS and Android'],
-             url: portalBinance(), gumb: 'OPEN AN ACCOUNT ON BINANCE →'})
-    + karta({ime: 'MEXC', barva: 'var(--amber)', pod: 'Crypto · Spot · Futures',
+    + karta({prvi: true, znak: 'RECOMMENDED · OUR PARTNER', ime: 'MEXC', barva: 'var(--amber)', pod: 'Crypto · Spot · Futures',
              st: [['1700+', 'trading pairs', 'var(--green)'], ['0%', 'maker fee', 'var(--amber)'], ['200x', 'max leverage', 'var(--blue)']],
              sez: ['Spot trading — 1700+ pairs, low fees', 'Futures — up to 200x leverage on crypto',
-                   'Copy trading — follow successful traders', 'Mobile app for iOS and Android'],
+                   'Copy trading — follow successful traders', 'Mobile app for iOS and Android']
+                  .concat(portalMexcKoda() ? ['Signing up in the app? Referral code: <b>' + portalEsc(portalMexcKoda()) + '</b>'] : []),
              url: portalMexc(), gumb: 'OPEN AN ACCOUNT ON MEXC →'})
+    + karta({ime: 'BINANCE', barva: '#f0b90b', pod: 'The world’s largest crypto exchange by trading volume',
+             st: [['SPOT', 'and futures', 'var(--green)'], ['USDⓈ-M', 'perpetual futures', 'var(--amber)'], ['24/7', 'trading', 'var(--blue)']],
+             sez: ['Spot and USDⓈ-M perpetual futures on hundreds of pairs', 'Deep liquidity on the major pairs',
+                   'The futures market our robot trades on',
+                   'Mobile app for iOS and Android'],
+             url: portalBinance(), gumb: 'OPEN AN ACCOUNT ON BINANCE →'})
     + '</div>'
     + '<div class="br-opomba">Affiliate links: if you open an account through them, TradeCore may receive a commission at no extra cost to you. '
     + 'Availability of exchanges and products depends on your country of residence. Leverage multiplies losses as well as gains.</div>'
@@ -14818,10 +14868,13 @@ function portalMailIzpis(t, vrsta){
 }
 function portalMailHtml(poziv){
   var M = PORTAL.mail || {}, e = portalBeri(PORTAL_MAIL);
+  // 7 Nov 2026: the code already has a confirmed e-mail (sent with the code) — no question, just "alerts are on"
+  var vklj = M.nalozeno && (M.stanje === 'confirmed' || (M.stanje !== 'pending' && M.karta && M.kartaStanje === 'confirmed'));
   var h = '<div class="lic-mail' + (poziv ? ' lic-mail-velik' : '') + '" id="lic-mail">'
     + (poziv ? '<div class="lic-poziv-n"><span class="lic-tocka" aria-hidden="true"></span>CODE ACCEPTED — LIVE IS UNLOCKED ON THIS DEVICE</div>'
-             + '<h3>Where should we send your alerts?</h3>' : '<label>E-MAIL ALERTS</label>');
-  var ne = poziv ? '<button class="lic-mail-ne" onclick="portalMailPozivZapri()">' + (M.stanje === 'confirmed' ? 'DONE' : 'NOT NOW') + '</button>' : '';
+             + '<h3>' + (vklj ? 'Your e-mail alerts are on' : (M.nalozeno ? 'Where should we send your alerts?' : 'E-mail alerts')) + '</h3>'
+             : '<label>E-MAIL ALERTS</label>');
+  var ne = poziv ? '<button class="lic-mail-ne" onclick="portalMailPozivZapri()">' + (vklj ? 'DONE' : 'NOT NOW') + '</button>' : '';
   var opis = 'One e-mail for every new signal of our live robot (1 hour to 1 week) and for every take profit and stop loss, from <i>'
     + PORTAL_OD + '</i>. Unsubscribe anytime.';
   var st = '<div id="lic-mail-st" class="lic-stanje"></div>';
