@@ -14979,8 +14979,10 @@ function paUra(u){                      // last visit: '2026-10-13T19' (UTC hour
 }
 function paZagon(){
   var h = ''; try{ h = location.hash || ''; }catch(e){}
-  if(h === '#admin'){ PA.pokazi = true; setTimeout(function(){ try{ nav('adm'); }catch(e){} }, 0); }
-  try{ window.addEventListener('hashchange', function(){ if(location.hash === '#admin'){ PA.pokazi = true; nav('adm'); } }); }catch(e){}
+  if(h === '#admin'){ PA.pokazi = true; setTimeout(function(){ try{ nav('adm'); }catch(e){} }, 0);
+    try{ history.replaceState(null, '', location.pathname + location.search); }catch(e){} }   // 10. 11. 2026: #admin samo enkrat — naslednjič se odpre navadna stran
+  try{ window.addEventListener('hashchange', function(){ if(location.hash === '#admin'){ PA.pokazi = true; nav('adm');
+    try{ history.replaceState(null, '', location.pathname + location.search); }catch(e){} } }); }catch(e){}
   if(portalBeri(PORTAL_ADMIN) && !portalAdmin()) portalPisi(PORTAL_ADMIN, '');        // session ended
   if(portalAdmin() && portalApi()){
     paKlic('/admin/check').then(function(){ PA.veljavna = true; portalZavihekFeed(); paNaloziProsnje(); }).catch(function(){});
